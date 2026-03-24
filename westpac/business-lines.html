@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Westpac — Business Lines & Processes · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #edf0f5;
+    --bg-card: #ffffff;
+    --bg-section: #f5f7fa;
+    --border: #dde3ec;
+    --border-dark: #c8d1de;
+    --text: #0f1e33;
+    --text-sub: #445570;
+    --text-muted: #8496ae;
+    --accent: #a81030;
+    --accent-bg: #f9eaed;
+    --accent-mid: #f0c0cb;
+    --font-ui: 'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  /* ACCENT STRIPE */
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 40px;
+    border-radius: 2px;
+  }
+
+  /* CONTENT */
+  .content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 48px;
+  }
+
+  .content h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+
+  .content h2 {
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--accent-mid);
+    letter-spacing: -0.01em;
+  }
+
+  .content h2:first-of-type { margin-top: 28px; }
+
+  .content h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin: 16px 0 6px;
+  }
+
+  .content p {
+    color: var(--text-sub);
+    margin: 10px 0;
+    line-height: 1.75;
+  }
+
+  .content strong { color: var(--text); font-weight: 600; }
+  .content em { font-style: italic; color: var(--text-sub); }
+  .content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .content ul { margin: 8px 0 16px 20px; }
+  .content ul.ol { list-style: decimal; }
+  .content ul li { color: var(--text-sub); margin-bottom: 5px; line-height: 1.65; }
+
+  .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-mid); transition: border-color 0.15s; }
+  .content a:hover { border-bottom-color: var(--accent); }
+
+  .content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 16px 0 24px; border-radius: 5px; border: 1px solid var(--border); }
+  .content table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .content thead { background: var(--accent-bg); }
+  .content th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--accent-mid);
+  }
+  .content td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .content tr:last-child td { border-bottom: none; }
+  .content tbody tr:hover td { background: var(--bg-section); }
+
+  /* METADATA BAR */
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 14px 0 28px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* NAV FOOTER */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .content { padding: 24px 20px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Westpac</span>
+    <span class="sep">/</span>
+    <span class="current">Business Lines & Processes</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>📄 Westpac — Business Lines & Processes</h1>
+      <div class="sub">Westpac · ASX: WBC · Research date: March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: WBC</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+<h1>Westpac Banking Corporation — Business Lines & Processes</h1>
+<p><strong>Research date:</strong> 2026-03-18</p>
+<hr>
+<h2>Consumer Bank</h2>
+<p>Services ~9 million Australian consumer customers across multiple brands.</p>
+<p><strong>Brands:</strong> Westpac, St George, BankSA, Bank of Melbourne, RAMS</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Savings and transaction accounts</li>
+<li>Home loans (owner-occupier and investment)</li>
+<li>Personal loans</li>
+<li>Credit cards</li>
+<li>Foreign exchange and travel banking</li>
+<li>Insurance (home, car, life)</li>
+<li>Online and mobile banking</li>
+</ul>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>Multi-brand retail strategy across Australian states</li>
+<li>Digital onboarding and servicing via Westpac app and online banking</li>
+<li>Mortgage origination via branch, broker, and digital channels</li>
+</ul>
+<p><strong>FY2025:</strong> Net profit A$2.9B (+4% on FY2024)</p>
+<hr>
+<h2>Business & Wealth</h2>
+<p>Combines commercial/business banking and BT wealth management. Largest profit contributor in 1H25.</p>
+<p><strong>Business banking products:</strong></p>
+<ul>
+<li>SME and commercial lending</li>
+<li>Agribusiness banking</li>
+<li>Cash flow finance and trade finance</li>
+<li>Asset and equipment finance</li>
+<li>Business transaction banking and treasury services</li>
+<li>Merchant services and payments</li>
+</ul>
+<p><strong>Wealth products (BT Financial Group):</strong></p>
+<ul>
+<li>Superannuation (BT Super)</li>
+<li>Managed funds and investment platforms (Panorama, BT Wrap)</li>
+<li>Wealth advisory services</li>
+</ul>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>Relationship manager-led commercial banking</li>
+<li>BT Panorama: digital investment platform for advisers and self-directed investors</li>
+<li>UNITE transformation driving operational efficiency in this division</li>
+</ul>
+<p><strong>FY2025:</strong> Net profit A$2.2B (-7%, UNITE investment drag)</p>
+<p><strong>1H25:</strong> Net profit A$1.14B (+20%) — became largest contributor for the half</p>
+<hr>
+<h2>Westpac Institutional Bank (WIB)</h2>
+<p>Services corporations, government entities, and institutional investors in Australia, NZ, and internationally.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Financial and debt capital markets</li>
+<li>Corporate and structured finance</li>
+<li>Trade and supply chain finance</li>
+<li>Foreign exchange and interest rate risk management</li>
+<li>Transaction banking (cash management, payments)</li>
+<li>Project and infrastructure finance</li>
+</ul>
+<p><strong>International presence:</strong> UK, Singapore, Hong Kong, Tokyo, Beijing, Shanghai, Mumbai, Jakarta, New York, Fiji, Papua New Guinea</p>
+<p><strong>FY2025:</strong> Net profit A$1.6B (+15%) — strongest growth of any division</p>
+<hr>
+<h2>Westpac New Zealand</h2>
+<p>Full-service banking for NZ consumers, businesses, and institutions.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Retail banking (home loans, deposits, credit cards)</li>
+<li>Business banking (SME to corporate)</li>
+<li>Rural/agribusiness lending</li>
+<li>Insurance products</li>
+<li>Institutional banking</li>
+</ul>
+<p><strong>FY2025 highlights:</strong></p>
+<ul>
+<li>Net profit: NZD ~$1,197M (up 13%)</li>
+<li>Home lending: NZD $71.3B (up 5%)</li>
+<li>Business lending: NZD $34.2B (up 2%)</li>
+<li>Household deposits: ~NZD $81B (up 6%)</li>
+</ul>
+<hr>
+<h2>Technology & AI Strategy — UNITE Transformation</h2>
+<p><strong>UNITE</strong> is Westpac's multi-year, multi-billion-dollar technology simplification and transformation program.</p>
+<div class="table-wrap"><table>
+<tr><th>Metric</th><th>Value</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Total UNITE investment</td><td>~A$2B+</td></tr>
+<tr><td>FY25 actual UNITE spend</td><td>A$660M</td></tr>
+<tr><td>FY26 guided UNITE spend</td><td>A$850–950M</td></tr>
+<tr><td>Annual savings target (by 2030)</td><td>A$750M</td></tr>
+<tr><td>Full benefit accrual</td><td>Extended to FY29</td></tr>
+<tr><td>Initiatives (as at March 2025 update)</td><td>60 consolidated; 41 in progress; 4 completed</td></tr>
+</tbody></table></div>
+<p><strong>AI and digital initiatives:</strong></p>
+<div class="table-wrap"><table>
+<tr><th>Initiative</th><th>Description</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Intelligence Layer</td><td>Enterprise-wide centralised AI infrastructure — enables data-driven decisions across all business units</td></tr>
+<tr><td>AI call assistant</td><td>Real-time AI analysis of customer phone calls in fraud/scam specialist teams — flags scam coaching indicators live</td></tr>
+<tr><td>Conversational AI (Kasisto)</td><td>"Central conversational AI brain" for banking interactions</td></tr>
+<tr><td>SafeBlock / SafeCall</td><td>AI-driven fraud prevention tools; A$400M+ in customer losses prevented since 2023</td></tr>
+<tr><td>Dr Andrew McMullan (Chief Data, Digital & AI Officer)</td><td>Recruited from CBA (Sep 2025); mandate to accelerate AI adoption bank-wide</td></tr>
+</tbody></table></div>
+<p><strong>Responsible AI:</strong> Eight published Responsible AI Principles governing design, delivery, deployment, and use of AI systems.</p>
+<hr>
+<h2>Executive Statements</h2>
+<p><strong>Anthony Miller (CEO, since December 2024):</strong></p>
+<ul>
+<li><strong>Strategy:</strong> "Stay the course" — no radical pivot from predecessor's strategy; continued UNITE execution</li>
+<li><strong>Regional banking reset:</strong> "We haven't always got our regional banking strategy right in the past" — trialling banker services in communities without major bank branches; rolling out to all states through 2026</li>
+<li><strong>Capital:</strong> "We've managed margins in a competitive environment and our capital position is strong, providing us with plenty of flexibility"</li>
+<li><strong>Hiring:</strong> 350 additional customer-facing bankers added</li>
+<li><strong>Intelligence Layer:</strong> Cited as example of "enterprise-wide mindset" on AI adoption</li>
+<li><strong>AI call assistant:</strong> "A game-changer" for fraud/scam detection on live customer calls</li>
+<li><strong>March 2026:</strong> Commented on energy price spikes adding to RBA's challenge on rates/macro</li>
+<li><strong>Community investment:</strong> Reorienting toward education</li>
+</ul>
+<p><strong>Westpac cyber posture:</strong></p>
+<ul>
+<li>A$400M+ in customer losses prevented since 2023 via SafeBlock, SafeCall, and AI tools</li>
+<li>NZ fraud prevention up 11% (early 2025)</li>
+<li>76% decrease in customer scam losses from peak (H2 FY23 vs H2 FY25)</li>
+<li>APRA capital overlay removal (October 2025) confirmed completion of multi-year risk transformation</li>
+</ul>
+  </div>
+
+  <div class="page-footer">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link active">📄 Business Lines & Processes</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link">🔗 Sources & References</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

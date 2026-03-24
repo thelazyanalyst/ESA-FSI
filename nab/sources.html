@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAB — Sources & References · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #edf0f5;
+    --bg-card: #ffffff;
+    --bg-section: #f5f7fa;
+    --border: #dde3ec;
+    --border-dark: #c8d1de;
+    --text: #0f1e33;
+    --text-sub: #445570;
+    --text-muted: #8496ae;
+    --accent: #c0271d;
+    --accent-bg: #faecea;
+    --accent-mid: #f4c8c5;
+    --font-ui: 'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  /* ACCENT STRIPE */
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 40px;
+    border-radius: 2px;
+  }
+
+  /* CONTENT */
+  .content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 48px;
+  }
+
+  .content h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+
+  .content h2 {
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--accent-mid);
+    letter-spacing: -0.01em;
+  }
+
+  .content h2:first-of-type { margin-top: 28px; }
+
+  .content h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin: 16px 0 6px;
+  }
+
+  .content p {
+    color: var(--text-sub);
+    margin: 10px 0;
+    line-height: 1.75;
+  }
+
+  .content strong { color: var(--text); font-weight: 600; }
+  .content em { font-style: italic; color: var(--text-sub); }
+  .content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .content ul { margin: 8px 0 16px 20px; }
+  .content ul.ol { list-style: decimal; }
+  .content ul li { color: var(--text-sub); margin-bottom: 5px; line-height: 1.65; }
+
+  .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-mid); transition: border-color 0.15s; }
+  .content a:hover { border-bottom-color: var(--accent); }
+
+  .content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 16px 0 24px; border-radius: 5px; border: 1px solid var(--border); }
+  .content table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .content thead { background: var(--accent-bg); }
+  .content th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--accent-mid);
+  }
+  .content td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .content tr:last-child td { border-bottom: none; }
+  .content tbody tr:hover td { background: var(--bg-section); }
+
+  /* METADATA BAR */
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 14px 0 28px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* NAV FOOTER */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .content { padding: 24px 20px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>NAB</span>
+    <span class="sep">/</span>
+    <span class="current">Sources & References</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🔗 NAB — Sources & References</h1>
+      <div class="sub">NAB · ASX: NAB · Research date: March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: NAB</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+<h1>National Australia Bank (NAB) — Phase 1 Sources</h1>
+<p><strong>Research date:</strong> 2026-03-18</p>
+<hr>
+<h2>Primary Source URLs</h2>
+<div class="table-wrap"><table>
+<tr><th>Resource</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Shareholder Centre</td><td><a href="https://www.nab.com.au/about-us/shareholder-centre" target="_blank">https://www.nab.com.au/about-us/shareholder-centre</a></td></tr>
+<tr><td>Financial Disclosures & Reporting</td><td><a href="https://www.nab.com.au/about-us/shareholder-centre/financial-disclosures-and-reporting" target="_blank">https://www.nab.com.au/about-us/shareholder-centre/financial-disclosures-and-reporting</a></td></tr>
+<tr><td>Investor Briefings & Presentations</td><td><a href="https://www.nab.com.au/about-us/shareholder-centre/financial-disclosures-and-reporting/investor-briefings-and-presentations" target="_blank">https://www.nab.com.au/about-us/shareholder-centre/financial-disclosures-and-reporting/investor-briefings-and-presentations</a></td></tr>
+<tr><td>Regulatory Disclosures (Pillar 3)</td><td><a href="https://www.nab.com.au/about-us/shareholder-centre/regulatory-disclosures" target="_blank">https://www.nab.com.au/about-us/shareholder-centre/regulatory-disclosures</a></td></tr>
+<tr><td>News / Newsroom</td><td><a href="https://news.nab.com.au/" target="_blank">https://news.nab.com.au/</a></td></tr>
+<tr><td>BNZ Financials</td><td><a href="https://www.bnz.co.nz/about-us/governance/financials" target="_blank">https://www.bnz.co.nz/about-us/governance/financials</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Annual Reports & Full Year Results</h2>
+<div class="table-wrap"><table>
+<tr><th>Report</th><th>PDF URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>FY2024 Annual Report</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-annual-report.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-annual-report.pdf</a></td></tr>
+<tr><td>FY2024 Full Year Results MDA</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-full-year-results.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-full-year-results.pdf</a></td></tr>
+<tr><td>FY2024 Results Investor Presentation</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-full-year-results-investor-presentation.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-full-year-results-investor-presentation.pdf</a></td></tr>
+<tr><td>FY2025 Full Year Results MDA</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-management-discussion-and-analysis.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-management-discussion-and-analysis.pdf</a></td></tr>
+<tr><td>FY2025 Full Year Results Summary</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-summary.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-summary.pdf</a></td></tr>
+<tr><td>FY2025 Results Investor Presentation</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-investor-presentation.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-investor-presentation.pdf</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Half Year Results</h2>
+<div class="table-wrap"><table>
+<tr><th>Report</th><th>PDF URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>1H25 Results Announcement</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-half-year-results-announcement.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-half-year-results-announcement.pdf</a></td></tr>
+<tr><td>1H25 Results Summary</td><td><a href="https://news.nab.com.au/content/dam/nab-news/documents/nab-2025-half-year-results-summary.pdf" target="_blank">https://news.nab.com.au/content/dam/nab-news/documents/nab-2025-half-year-results-summary.pdf</a></td></tr>
+<tr><td>1H25 Results Investor Presentation</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-half-year-results-investor-presentation.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-half-year-results-investor-presentation.pdf</a></td></tr>
+<tr><td>Q3 2025 Trading Update</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-third-quarter-asx-announcement.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-third-quarter-asx-announcement.pdf</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>APRA Pillar 3 Disclosures</h2>
+<div class="table-wrap"><table>
+<tr><th>Quarter</th><th>PDF URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>FY25 (Sep 2025)</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/notice/corporate/2025-full-year-pillar-3-report.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/notice/corporate/2025-full-year-pillar-3-report.pdf</a></td></tr>
+<tr><td>1H25 (Mar 2025)</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/notice/corporate/2025-half-year-pillar-3-report.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/notice/corporate/2025-half-year-pillar-3-report.pdf</a></td></tr>
+<tr><td>Q3 FY24 (Jun 2024)</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/third-quarter-pillar-3-report-2024.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/third-quarter-pillar-3-report-2024.pdf</a></td></tr>
+<tr><td>Q1 FY24</td><td><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-first-quarter-pillar-3-report.pdf" target="_blank">https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-first-quarter-pillar-3-report.pdf</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Key Press Releases and Announcements</h2>
+<div class="table-wrap"><table>
+<tr><th>Topic</th><th>Date</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>NAB FY2024 Full Year Result</td><td>November 2024</td><td><a href="https://news.nab.com.au/news/nab-announces-its-2024-full-year-result" target="_blank">https://news.nab.com.au/news/nab-announces-its-2024-full-year-result</a></td></tr>
+<tr><td>NAB FY2025 Full Year Result</td><td>November 2025</td><td><a href="https://news.nab.com.au/news/nab-announces-its-2025-full-year-results" target="_blank">https://news.nab.com.au/news/nab-announces-its-2025-full-year-results</a></td></tr>
+<tr><td>2025 AGM — Chair and CEO Address</td><td>December 2025</td><td><a href="https://news.nab.com.au/tag/announcements/nab-chair-and-ceo-deliver-2025-agm-update-to-shareholders" target="_blank">https://news.nab.com.au/tag/announcements/nab-chair-and-ceo-deliver-2025-agm-update-to-shareholders</a></td></tr>
+<tr><td>2025 AGM Address PDF</td><td>December 2025</td><td><a href="https://news.nab.com.au/content/dam/nab-news/documents/NAB_2025_AGM_Chair_and_CEO_Address_and_Proxy_Summary.pdf" target="_blank">https://news.nab.com.au/content/dam/nab-news/documents/NAB_2025_AGM_Chair_and_CEO_Address_and_Proxy_Summary.pdf</a></td></tr>
+<tr><td>CEO on AI and Australia's economy</td><td>2025</td><td><a href="https://news.nab.com.au/tag/economic-market/nab-ceo-andrew-irvine-on-how-ai-will-transform-work--and-powerin" target="_blank">https://news.nab.com.au/tag/economic-market/nab-ceo-andrew-irvine-on-how-ai-will-transform-work--and-powerin</a></td></tr>
+<tr><td>Pete Steel appointed Group Executive — Digital, Data & AI</td><td>June 2025</td><td><a href="https://www.mi-3.com.au/24-06-2025/nab-appoints-pete-steel-group-executive-digital-data-ai" target="_blank">https://www.mi-3.com.au/24-06-2025/nab-appoints-pete-steel-group-executive-digital-data-ai</a></td></tr>
+<tr><td>NAB secure by design strategy — iTnews</td><td>2024</td><td><a href="https://www.itnews.com.au/news/nab-makes-secure-by-design-the-centrepiece-of-security-strategy-607719" target="_blank">https://www.itnews.com.au/news/nab-makes-secure-by-design-the-centrepiece-of-security-strategy-607719</a></td></tr>
+<tr><td>NAB + CrowdStrike (SMB cybersecurity)</td><td>2024</td><td><a href="https://ir.crowdstrike.com/news-releases/news-release-details/national-australia-bank-selects-crowdstrike-protect-smbs/" target="_blank">https://ir.crowdstrike.com/news-releases/news-release-details/national-australia-bank-selects-crowdstrike-protect-smbs/</a></td></tr>
+<tr><td>Amazon Q Developer case study (1,000 devs, 18% productivity)</td><td>2025</td><td><a href="https://aws.amazon.com/solutions/case-studies/generative-ai-national-australia-bank/" target="_blank">https://aws.amazon.com/solutions/case-studies/generative-ai-national-australia-bank/</a></td></tr>
+<tr><td>Debt Investor Update May 2025</td><td>May 2025</td><td><a href="https://capital.nab.com.au/content/dam/nab-capital/documents/debt-investor-presentations/NAB-May-2025-Debt-Investor-Update.pdf" target="_blank">https://capital.nab.com.au/content/dam/nab-capital/documents/debt-investor-presentations/NAB-May-2025-Debt-Investor-Update.pdf</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Regulatory Actions</h2>
+<div class="table-wrap"><table>
+<tr><th>Matter</th><th>Regulator</th><th>Penalty</th><th>Date</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Hardship response failures — 345 applications not processed in time</td><td>ASIC</td><td>$15.5M ($13M NAB + $2.5M AFSH)</td><td>2025</td><td><a href="https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2025-releases/25-165mr-nab-and-afsh-penalised-15-5-million-for-failing-customers-facing-financial-hardship/" target="_blank">https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2025-releases/25-165mr-nab-and-afsh-penalised-15-5-million-for-failing-customers-facing-financial-hardship/</a></td></tr>
+<tr><td>Periodic payment fees charged without entitlement (2017–2018)</td><td>ASIC</td><td>$2.1M + $9M remediation</td><td>September 2023</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>BNZ (Bank of New Zealand)</h2>
+<div class="table-wrap"><table>
+<tr><th>Report</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>BNZ FY2025 Full Year Result</td><td><a href="https://www.bnz.co.nz/about-us/news/bnz-2025-full-year-result" target="_blank">https://www.bnz.co.nz/about-us/news/bnz-2025-full-year-result</a></td></tr>
+<tr><td>BNZ FY2024 Blog Post</td><td><a href="https://blog.bnz.co.nz/2024/11/solid-result-as-more-new-zealanders-choose-to-bank-with-bnz" target="_blank">https://blog.bnz.co.nz/2024/11/solid-result-as-more-new-zealanders-choose-to-bank-with-bnz</a></td></tr>
+<tr><td>BNZ Disclosure Statement FY2024 (PDF)</td><td><a href="https://www.bnz.co.nz/assets/about-us/financials/pdfs/bnz-disclosure-statement-year-ended-30-september-2024.pdf" target="_blank">https://www.bnz.co.nz/assets/about-us/financials/pdfs/bnz-disclosure-statement-year-ended-30-september-2024.pdf</a></td></tr>
+<tr><td>BNZ Financials page</td><td><a href="https://www.bnz.co.nz/about-us/governance/financials" target="_blank">https://www.bnz.co.nz/about-us/governance/financials</a></td></tr>
+</tbody></table></div>
+  </div>
+
+  <div class="page-footer">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines & Processes</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link active">🔗 Sources & References</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

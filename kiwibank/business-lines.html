@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiwibank — Business Lines & Processes · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #edf0f5;
+    --bg-card: #ffffff;
+    --bg-section: #f5f7fa;
+    --border: #dde3ec;
+    --border-dark: #c8d1de;
+    --text: #0f1e33;
+    --text-sub: #445570;
+    --text-muted: #8496ae;
+    --accent: #1a8c50;
+    --accent-bg: #e8f7ee;
+    --accent-mid: #b8e8cc;
+    --font-ui: 'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  /* ACCENT STRIPE */
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 40px;
+    border-radius: 2px;
+  }
+
+  /* CONTENT */
+  .content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 48px;
+  }
+
+  .content h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+
+  .content h2 {
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--accent-mid);
+    letter-spacing: -0.01em;
+  }
+
+  .content h2:first-of-type { margin-top: 28px; }
+
+  .content h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin: 16px 0 6px;
+  }
+
+  .content p {
+    color: var(--text-sub);
+    margin: 10px 0;
+    line-height: 1.75;
+  }
+
+  .content strong { color: var(--text); font-weight: 600; }
+  .content em { font-style: italic; color: var(--text-sub); }
+  .content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .content ul { margin: 8px 0 16px 20px; }
+  .content ul.ol { list-style: decimal; }
+  .content ul li { color: var(--text-sub); margin-bottom: 5px; line-height: 1.65; }
+
+  .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-mid); transition: border-color 0.15s; }
+  .content a:hover { border-bottom-color: var(--accent); }
+
+  .content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 16px 0 24px; border-radius: 5px; border: 1px solid var(--border); }
+  .content table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .content thead { background: var(--accent-bg); }
+  .content th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--accent-mid);
+  }
+  .content td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .content tr:last-child td { border-bottom: none; }
+  .content tbody tr:hover td { background: var(--bg-section); }
+
+  /* METADATA BAR */
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 14px 0 28px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* NAV FOOTER */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .content { padding: 24px 20px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Kiwibank</span>
+    <span class="sep">/</span>
+    <span class="current">Business Lines & Processes</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>📄 Kiwibank — Business Lines & Processes</h1>
+      <div class="sub">Kiwibank · NZX: KWB · Research date: March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇳🇿</span>
+      <span class="bank-pill">NZX: KWB</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+<h1>Kiwibank — Business Lines & Processes</h1>
+<p><strong>Research date:</strong> 2026-03-18</p>
+<hr>
+<h2>Overview</h2>
+<p>Kiwibank is New Zealand's largest NZ-owned bank, fifth-largest overall by assets. Founded 2002, 100% Crown-owned (via Kiwi Group Capital). Over 1 million customers. Market share ~9%. HQ: Wellington.</p>
+<p><strong>Strategic direction:</strong> "Maverick" challenger to the Big Four Australian-owned banks. Growing lending at 1.6–3x market rate. Undergoing full core banking technology transformation.</p>
+<hr>
+<h2>Retail Banking (Personal)</h2>
+<p>Core consumer banking products.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Transaction and everyday accounts</li>
+<li>Savings accounts (notice saver, on-call)</li>
+<li>Term deposits</li>
+<li>Home loans (standard variable, fixed, offset, revolving credit)</li>
+<li>Co-own product (up to four applicants, including friends/whanau — innovative for NZ)</li>
+<li>Personal loans</li>
+<li>Credit cards</li>
+<li>Foreign exchange</li>
+<li>Digital banking (Kiwibank app, internet banking)</li>
+</ul>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>Digital-first onboarding and servicing</li>
+<li>Confirmation of Payee (anti-scam, deployed among first NZ banks)</li>
+<li>Open banking APIs (fees removed; open banking ready June–December 2026 under CDR)</li>
+<li>Physical branch network — largest in NZ; ongoing investment (e.g., Newmarket, Auckland)</li>
+</ul>
+<p><strong>Home loan market:</strong> ~8% of total NZ home loan stock; capturing ~25% of new originations (per ANZ analysis, 2024); growing 1.6–2.7x market rate.</p>
+<hr>
+<h2>Business Banking</h2>
+<p>Growing challenger in NZ business lending.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Business transaction accounts</li>
+<li>SME lending (term loans, overdrafts, revolving credit)</li>
+<li>Sustainable business loans (preferential rates for environmental outcomes)</li>
+<li>Commercial property lending</li>
+<li>Asset and equipment finance</li>
+<li>Business insurance (through partners)</li>
+</ul>
+<p><strong>Key metrics:</strong></p>
+<ul>
+<li>Business lending: NZD $8.7B (December 2025)</li>
+<li>Business lending grew 3x+ faster than market in FY2024</li>
+<li>Growing $400M per half-year in recent periods</li>
+</ul>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>Faster lending decisions for small businesses</li>
+<li>nCino platform for retail and business banking loan origination (part of tech transformation)</li>
+<li>First end-to-end business loan processed on new Thought Machine core banking platform (April 2025 — major milestone)</li>
+</ul>
+<hr>
+<h2>KiwiSaver and Insurance (Historical)</h2>
+<p><strong>Exited in 2022.</strong> Kiwibank sold Kiwi Wealth (KiwiSaver and investment management) in 2022 to refocus on core banking. KiwiSaver is now managed by Fisher Funds Management Limited under the Kiwibank brand.</p>
+<p>The sale proceeds funded a NZD $225M capital injection into the bank (July 2023), strengthening the balance sheet for growth.</p>
+<hr>
+<h2>Core Banking Technology Transformation</h2>
+<p>Kiwibank is mid-way through a full technology stack replacement. This is the defining operational initiative of the organisation.</p>
+<p><strong>Architecture approach:</strong> "Run-and-replace" — build new cloud-native stack alongside legacy systems; over half the platform being remediated or replaced simultaneously.</p>
+<div class="table-wrap"><table>
+<tr><th>Component</th><th>Technology</th><th>Status</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Core banking platform</td><td>Thought Machine Vault (cloud-native; same as Macquarie Bank AU)</td><td>First business loan processed April 2025</td></tr>
+<tr><td>Cloud infrastructure</td><td>AWS (primary)</td><td>In progress</td></tr>
+<tr><td>CRM</td><td>Microsoft Dynamics</td><td>Deployed</td></tr>
+<tr><td>Retail/business lending origination</td><td>nCino</td><td>Deployed</td></tr>
+<tr><td>Data platform</td><td>Snowflake + Apache Kafka</td><td>Deployed</td></tr>
+<tr><td>Product catalog</td><td>Zafin (deployed October 2025)</td><td>Live</td></tr>
+<tr><td>Contact centre / AI voicebot</td><td>Genesys Cloud</td><td>Live — 98% reduction in intents handled by live agents</td></tr>
+</tbody></table></div>
+<p><strong>Outcomes to date:</strong></p>
+<ul>
+<li>Sixfold improvement in service downtime</li>
+<li>70% of customers use the Kiwibank app more than once a day</li>
+<li>28% reduction in call abandonment (Genesys voicebot)</li>
+<li>19% reduction in average handling time</li>
+<li>27% decrease in transfer rates</li>
+<li>NZ CIO of the Year 2024 (Hamish Rumbold, CDTO)</li>
+<li>"Second-best reliability and availability of any bank in the Southern Hemisphere" (self-reported)</li>
+</ul>
+<p><strong>McKinsey case study:</strong> Recognised as a transformation model — cross-functional squads of engineers, architects, data scientists, and product owners; "people-first" change management.</p>
+<hr>
+<h2>AI Strategy</h2>
+<p><strong>Approach:</strong> "People first" — AI to reduce repetitive tasks and free staff for customer-facing work. CEO Steve Jurkovich: using AI to "bring a bit more humanity back into banking."</p>
+<p><strong>Current deployments:</strong></p>
+<ul>
+<li>Genesys AI voicebot (contact centre automation)</li>
+<li>AI-powered personalised in-app messaging (Atomic.io)</li>
+<li>Internal AI tools to reduce admin burden on staff</li>
+</ul>
+<p><strong>Cybersecurity and fraud:</strong></p>
+<ul>
+<li>"Secure by design" and "compliant by design" foundational principles</li>
+<li>Enhanced fraud protection delivered in FY25</li>
+<li>Among first NZ banks to deploy Confirmation of Payee</li>
+<li>Open banking API fees removed (only NZ bank to do so proactively)</li>
+</ul>
+<hr>
+<h2>Open Banking and Regulation</h2>
+<div class="table-wrap"><table>
+<tr><th>Requirement</th><th>Deadline</th><th>Notes</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Designated data holder</td><td>1 June 2026</td><td>Under Customer Data Right</td></tr>
+<tr><td>Payment APIs open banking ready</td><td>June 2026</td><td>Major banks required December 2025</td></tr>
+<tr><td>Broader open banking services</td><td>December 2026</td><td>—</td></tr>
+</tbody></table></div>
+<p>Kiwibank proactively removed open banking API fees ahead of regulatory requirements — the only NZ bank to do so.</p>
+<hr>
+<h2>Executive Statements</h2>
+<p><strong>Steve Jurkovich (CEO):</strong></p>
+<ul>
+<li>On growth: "We've doubled our size in five years and aim to do so again." (~10% annual growth without "edgy and risky" risk-taking)</li>
+<li>On technology: "Building a modern, resilient bank that can offer new and competitive products faster"</li>
+<li>On AI: "People first" — focus on using AI to reduce repetitive tasks and augment staff, not replace them; "bring a bit more humanity back into banking"</li>
+<li>On IPO: Advocates waiting until tech transformation is substantially complete (estimated 18 months–2 years further de-risking needed)</li>
+<li>On capital and ownership: Open to some foreign investment; government should retain a majority stake</li>
+<li>On economy (H1 FY26): "Lending and deposit growth continuing to outperform the market and business confidence expected to lift... economic activity is forecast to broaden through 2026"</li>
+</ul>
+<p><strong>Context — Commerce Commission (2024):</strong></p>
+<p>Commerce Commission 14-month market study found NZ personal banking is "a stable, highly profitable, two-tier oligopoly." Recommended government provide Kiwibank more capital to make it "a disruptive competitor." Government accepted all 14 recommendations — directly led to the (ultimately scrapped) $500M capital raise process.</p>
+  </div>
+
+  <div class="page-footer">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link active">📄 Business Lines & Processes</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="press-releases.html" class="sib-link">📰 Press Releases</a>
+      <a href="sources.html" class="sib-link">🔗 Sources & References</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

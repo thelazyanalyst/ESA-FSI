@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commonwealth Bank — Business Lines & Processes · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #edf0f5;
+    --bg-card: #ffffff;
+    --bg-section: #f5f7fa;
+    --border: #dde3ec;
+    --border-dark: #c8d1de;
+    --text: #0f1e33;
+    --text-sub: #445570;
+    --text-muted: #8496ae;
+    --accent: #b87200;
+    --accent-bg: #fef6e8;
+    --accent-mid: #fde5b0;
+    --font-ui: 'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  /* ACCENT STRIPE */
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 40px;
+    border-radius: 2px;
+  }
+
+  /* CONTENT */
+  .content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 48px;
+  }
+
+  .content h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+
+  .content h2 {
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--accent-mid);
+    letter-spacing: -0.01em;
+  }
+
+  .content h2:first-of-type { margin-top: 28px; }
+
+  .content h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin: 16px 0 6px;
+  }
+
+  .content p {
+    color: var(--text-sub);
+    margin: 10px 0;
+    line-height: 1.75;
+  }
+
+  .content strong { color: var(--text); font-weight: 600; }
+  .content em { font-style: italic; color: var(--text-sub); }
+  .content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .content ul { margin: 8px 0 16px 20px; }
+  .content ul.ol { list-style: decimal; }
+  .content ul li { color: var(--text-sub); margin-bottom: 5px; line-height: 1.65; }
+
+  .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-mid); transition: border-color 0.15s; }
+  .content a:hover { border-bottom-color: var(--accent); }
+
+  .content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 16px 0 24px; border-radius: 5px; border: 1px solid var(--border); }
+  .content table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .content thead { background: var(--accent-bg); }
+  .content th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--accent-mid);
+  }
+  .content td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .content tr:last-child td { border-bottom: none; }
+  .content tbody tr:hover td { background: var(--bg-section); }
+
+  /* METADATA BAR */
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 14px 0 28px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* NAV FOOTER */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .content { padding: 24px 20px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Commonwealth Bank</span>
+    <span class="sep">/</span>
+    <span class="current">Business Lines & Processes</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>📄 Commonwealth Bank — Business Lines & Processes</h1>
+      <div class="sub">Commonwealth Bank · ASX: CBA · Research date: March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: CBA</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+<h1>CBA — Business Lines & Processes</h1>
+<p><strong>Research date:</strong> 2026-03-18</p>
+<hr>
+<h2>Retail Banking Services</h2>
+<p>Australia's largest retail banking operation.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Savings and transaction accounts</li>
+<li>Home loans (including Unloan digital brand)</li>
+<li>Personal loans and car loans</li>
+<li>Credit cards</li>
+<li>Buy Now Pay Later (StepPay)</li>
+<li>Insurance: home, car, health, life, travel, pet</li>
+<li>Foreign exchange</li>
+<li>Digital banking via the CommBank app</li>
+</ul>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>Credit decisioning via ML models</li>
+<li>Digital origination (Unloan — fully digital home loan)</li>
+<li>Personalisation engine / Benefits Finder (AI-driven)</li>
+<li>Anti-scam tools: NameCheck, CallerCheck</li>
+<li>Customer onboarding via app (biometric ID verification)</li>
+</ul>
+<p><strong>Distribution:</strong></p>
+<ul>
+<li>Branch network (Australia-wide)</li>
+<li>CommBank app (8M+ digitally active customers, #1 ranked in Australia)</li>
+<li>Broker channel (home loans)</li>
+<li>ATM network</li>
+</ul>
+<hr>
+<h2>Business Banking</h2>
+<p>Services SMEs and commercial customers.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Business transaction and savings accounts</li>
+<li>Business lending (overdrafts, term loans, lines of credit)</li>
+<li>Merchant services and payment terminals</li>
+<li>Cash flow finance (invoice finance, trade finance)</li>
+<li>Asset and equipment finance</li>
+<li>Business insurance</li>
+<li>FX and international payments</li>
+</ul>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>Relationship manager-led coverage for commercial clients</li>
+<li>Digital business banking platform (NetBank Business)</li>
+<li>Integrated merchant acquiring and banking</li>
+</ul>
+<hr>
+<h2>Institutional Banking & Markets (IB&M)</h2>
+<p>Services large corporations, government, and institutional investors.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Corporate finance and advisory</li>
+<li>Debt capital markets (bonds, syndicated loans)</li>
+<li>Transaction banking (cash management, payments, custody)</li>
+<li>Risk management products (FX, interest rate derivatives)</li>
+<li>Trade and supply chain finance</li>
+<li>Equity capital markets access</li>
+<li>Project finance</li>
+</ul>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>Deal origination via coverage teams</li>
+<li>Markets trading and risk management</li>
+<li>Settlement and custody operations</li>
+<li>Correspondent banking and international payments</li>
+</ul>
+<hr>
+<h2>ASB Bank (New Zealand)</h2>
+<p>CBA's wholly owned NZ subsidiary. One of NZ's major banks.</p>
+<p><strong>Products & services:</strong></p>
+<ul>
+<li>Personal banking (home loans, deposits, credit cards, personal loans)</li>
+<li>Business banking (SME to corporate)</li>
+<li>Rural banking (agribusiness lending)</li>
+<li>KiwiSaver (retirement savings)</li>
+<li>Insurance products</li>
+<li>Foreign exchange</li>
+<li>Digital banking (ASB Mobile, FastNet Classic)</li>
+</ul>
+<p><strong>HQ:</strong> ASB North Wharf, 12 Jellicoe Street, Auckland CBD</p>
+<p><strong>Key processes:</strong></p>
+<ul>
+<li>NZ-specific credit and regulatory compliance (RBNZ, FMA)</li>
+<li>Rural relationship banking</li>
+<li>KiwiSaver fund management</li>
+</ul>
+<hr>
+<h2>x15ventures (Fintech Portfolio)</h2>
+<p>CBA's corporate venture and innovation arm.</p>
+<p><strong>Portfolio companies include:</strong></p>
+<ul>
+<li>Backr (business support platform for SMEs)</li>
+<li>Vonto (data intelligence for small business)</li>
+<li>Unloan (digital home loans)</li>
+<li>Other early-stage fintech ventures</li>
+</ul>
+<p><strong>Purpose:</strong> Incubate and scale adjacent financial services businesses outside the core bank.</p>
+<hr>
+<h2>Technology & AI Strategy</h2>
+<p><strong>Key platforms and initiatives:</strong></p>
+<ul>
+<li>CommBank app — ranked #1 in Australia; central to customer engagement</li>
+<li>Azure OpenAI integration — GenAI tools for 5,000+ staff (coding, customer service scripting, document summarisation)</li>
+<li>ML fraud models — NameCheck, CallerCheck (real-time payment fraud prevention)</li>
+<li>Benefits Finder — AI tool matching customers to government entitlements</li>
+<li>Multi-cloud architecture — AWS + Microsoft Azure</li>
+<li>Cyber operations centre — dedicated SOC; ~300 additional cyber staff hired 2022–2024</li>
+</ul>
+<p><strong>Strategic posture:</strong></p>
+<ul>
+<li>"Technology company with a banking licence" (Matt Comyn, recurring)</li>
+<li>AUD 2B+ annual technology investment</li>
+<li>Cost-to-income target: below 42%</li>
+<li>Cybersecurity cited as "top three" board-level risk</li>
+</ul>
+<hr>
+<h2>Executive Statements on AI & Cybersecurity</h2>
+<p><strong>Matt Comyn (CEO):</strong></p>
+<ul>
+<li>AFR Banking Summit, March 2024: "AI is the most significant technology shift in banking since the internet"</li>
+<li>Confirmed internal GenAI deployment (Azure OpenAI) to 5,000 staff, FY2024</li>
+<li>Fraud prevention via AI: ~AUD 350M prevented in FY2024</li>
+<li>Cybersecurity: "top three" board-level risk; ACSC Partnership Program member</li>
+</ul>
+<p><strong>Alan Docherty (CFO):</strong></p>
+<ul>
+<li>Technology investment described as a "strategic moat," protected from short-term cost reduction</li>
+<li>Cost-to-income ratio target: below 42%</li>
+</ul>
+  </div>
+
+  <div class="page-footer">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link active">📄 Business Lines & Processes</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link">🔗 Sources & References</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

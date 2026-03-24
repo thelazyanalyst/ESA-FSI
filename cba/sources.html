@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commonwealth Bank — Sources & References · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #edf0f5;
+    --bg-card: #ffffff;
+    --bg-section: #f5f7fa;
+    --border: #dde3ec;
+    --border-dark: #c8d1de;
+    --text: #0f1e33;
+    --text-sub: #445570;
+    --text-muted: #8496ae;
+    --accent: #b87200;
+    --accent-bg: #fef6e8;
+    --accent-mid: #fde5b0;
+    --font-ui: 'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  /* ACCENT STRIPE */
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 40px;
+    border-radius: 2px;
+  }
+
+  /* CONTENT */
+  .content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 48px;
+  }
+
+  .content h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+
+  .content h2 {
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--accent-mid);
+    letter-spacing: -0.01em;
+  }
+
+  .content h2:first-of-type { margin-top: 28px; }
+
+  .content h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin: 16px 0 6px;
+  }
+
+  .content p {
+    color: var(--text-sub);
+    margin: 10px 0;
+    line-height: 1.75;
+  }
+
+  .content strong { color: var(--text); font-weight: 600; }
+  .content em { font-style: italic; color: var(--text-sub); }
+  .content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .content ul { margin: 8px 0 16px 20px; }
+  .content ul.ol { list-style: decimal; }
+  .content ul li { color: var(--text-sub); margin-bottom: 5px; line-height: 1.65; }
+
+  .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-mid); transition: border-color 0.15s; }
+  .content a:hover { border-bottom-color: var(--accent); }
+
+  .content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 16px 0 24px; border-radius: 5px; border: 1px solid var(--border); }
+  .content table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .content thead { background: var(--accent-bg); }
+  .content th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--accent-mid);
+  }
+  .content td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .content tr:last-child td { border-bottom: none; }
+  .content tbody tr:hover td { background: var(--bg-section); }
+
+  /* METADATA BAR */
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 14px 0 28px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* NAV FOOTER */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .content { padding: 24px 20px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Commonwealth Bank</span>
+    <span class="sep">/</span>
+    <span class="current">Sources & References</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🔗 Commonwealth Bank — Sources & References</h1>
+      <div class="sub">Commonwealth Bank · ASX: CBA · Research date: March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: CBA</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+<h1>Commonwealth Bank of Australia (CBA) — Phase 1 Sources</h1>
+<p><strong>Research date:</strong> 2026-03-18</p>
+<p><strong>Data currency:</strong> Training data to August 2025; H1 FY2026 requires live retrieval</p>
+<hr>
+<h2>Primary Source URLs</h2>
+<div class="table-wrap"><table>
+<tr><th>Resource</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Annual Reports</td><td><a href="https://www.commbank.com.au/about-us/investors/annual-reports.html" target="_blank">https://www.commbank.com.au/about-us/investors/annual-reports.html</a></td></tr>
+<tr><td>Financial Results (half-year, full-year)</td><td><a href="https://www.commbank.com.au/about-us/investors/financial-results.html" target="_blank">https://www.commbank.com.au/about-us/investors/financial-results.html</a></td></tr>
+<tr><td>ASX Announcements</td><td><a href="https://www.commbank.com.au/about-us/investors/shareholder-centre/asx-announcements.html" target="_blank">https://www.commbank.com.au/about-us/investors/shareholder-centre/asx-announcements.html</a></td></tr>
+<tr><td>Regulatory Disclosures (Pillar 3 APS 330)</td><td><a href="https://www.commbank.com.au/about-us/investors/regulatory-disclosures.html" target="_blank">https://www.commbank.com.au/about-us/investors/regulatory-disclosures.html</a></td></tr>
+<tr><td>Investor Presentations</td><td><a href="https://www.commbank.com.au/about-us/investors/presentations.html" target="_blank">https://www.commbank.com.au/about-us/investors/presentations.html</a></td></tr>
+<tr><td>Media Releases / Newsroom</td><td><a href="https://www.commbank.com.au/about-us/newsroom/media-releases.html" target="_blank">https://www.commbank.com.au/about-us/newsroom/media-releases.html</a></td></tr>
+<tr><td>ASX live announcements (CBA)</td><td><a href="https://www.asx.com.au/asx/statistics/announcements.do?by=asxCode&asxCode=CBA" target="_blank">https://www.asx.com.au/asx/statistics/announcements.do?by=asxCode&asxCode=CBA</a></td></tr>
+<tr><td>APRA media releases</td><td><a href="https://www.apra.gov.au/news-and-publications/apra-media-releases" target="_blank">https://www.apra.gov.au/news-and-publications/apra-media-releases</a></td></tr>
+<tr><td>ASIC enforcement actions</td><td><a href="https://asic.gov.au/about-asic/news-centre/find-a-media-release/" target="_blank">https://asic.gov.au/about-asic/news-centre/find-a-media-release/</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Annual Reports</h2>
+<div class="table-wrap"><table>
+<tr><th>Report</th><th>URL</th><th>Key Financials</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>FY2022 Annual Report</td><td><a href="https://www.commbank.com.au/content/dam/commbank/about-us/shareholders-centre/annual-reports/2022-annual-report.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank/about-us/shareholders-centre/annual-reports/2022-annual-report.pdf</a></td><td>Cash NPAT AUD 9.6B; NIM ~2.10%</td></tr>
+<tr><td>FY2023 Annual Report</td><td><a href="https://www.commbank.com.au/content/dam/commbank/about-us/shareholders-centre/annual-reports/2023-annual-report.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank/about-us/shareholders-centre/annual-reports/2023-annual-report.pdf</a></td><td>Cash NPAT AUD 10.16B; NIM ~2.07%</td></tr>
+<tr><td>FY2024 Annual Report</td><td><a href="https://www.commbank.com.au/content/dam/commbank/about-us/shareholders-centre/annual-reports/2024-annual-report.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank/about-us/shareholders-centre/annual-reports/2024-annual-report.pdf</a></td><td>Cash NPAT AUD 9.84B; NIM ~1.99%</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Half-Year Results</h2>
+<p><strong>H1 FY2025</strong> (6 months to 31 December 2024, released February 2025):</p>
+<ul>
+<li>Cash NPAT: ~AUD 5.13B</li>
+<li>NIM: ~2.08% (stabilising after FY2024 compression)</li>
+<li>Operating income: ~AUD 13.5B</li>
+<li>CET1: ~12.2%</li>
+<li>Interim dividend: AUD 2.25 per share</li>
+</ul>
+<p><strong>H1 FY2026</strong> (July–December 2025): Beyond training data — retrieve from investor relations page or ASX.</p>
+<hr>
+<h2>Key Press Releases / Announcements</h2>
+<div class="table-wrap"><table>
+<tr><th>Topic</th><th>Key Detail</th><th>Approximate Date</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Generative AI rollout</td><td>Internal deployment of GenAI (Microsoft Azure OpenAI) to 5,000+ staff; coding assistance, customer service scripting, document summarisation</td><td>August 2024</td></tr>
+<tr><td>Fraud prevention AI</td><td>ML fraud models prevented ~AUD 350M in losses in FY2024; NameCheck and CallerCheck tools launched</td><td>2023–2024</td></tr>
+<tr><td>Share buyback</td><td>AUD 1B on-market buyback announced</td><td>August 2024</td></tr>
+<tr><td>x15ventures</td><td>Fintech portfolio (Backr, Vonto, others); continued investment</td><td>Ongoing</td></tr>
+<tr><td>Unloan</td><td>Digital home loan brand growing share in broker and direct channels</td><td>2022–2024</td></tr>
+<tr><td>Multi-cloud strategy</td><td>AWS and Microsoft Azure partnership announced</td><td>2023–2024</td></tr>
+<tr><td>Benefits Finder</td><td>AI-powered tool matching customers to government benefits</td><td>2022–2024</td></tr>
+<tr><td>Bankwest rebrand</td><td>Bankwest retail brand consolidated under CBA in Western Australia</td><td>2023–2024</td></tr>
+<tr><td>Scam Safe Accord</td><td>CBA co-developed industry voluntary anti-scam initiative</td><td>2023</td></tr>
+<tr><td>Green bonds</td><td>Sustainable infrastructure finance bond issuances</td><td>2023–2024</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Investor Day / Strategy Presentations</h2>
+<ul>
+<li><strong>October 2023 Investor Day</strong> — Technology strategy, x15ventures portfolio, digital banking roadmap</li>
+</ul>
+<p>  - Key themes: "BEN" (Benefits Engine) platform, AI/ML real-time personalisation, business banking digital capabilities, ASB NZ digital strategy, ESG/net zero commitments</p>
+<p>  - URL: <a href="https://www.commbank.com.au/about-us/investors/presentations.html" target="_blank">https://www.commbank.com.au/about-us/investors/presentations.html</a></p>
+<hr>
+<h2>Regulatory Actions</h2>
+<div class="table-wrap"><table>
+<tr><th>Matter</th><th>Regulator</th><th>Status</th><th>Date</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>AUSTRAC — AML/CTF failures</td><td>AUSTRAC</td><td>AUD 700M penalty paid 2018; remediation completed ~2022</td><td>Historical</td></tr>
+<tr><td>APRA Prudential Inquiry — additional capital overlay lifted</td><td>APRA</td><td>AUD 1B additional OpRisk capital overlay lifted January 2023 (remediation complete)</td><td>January 2023</td></tr>
+<tr><td>DDO — Design and Distribution Obligations infringement (insurance)</td><td>ASIC</td><td>Minor infringement notices received</td><td>2022–2023</td></tr>
+<tr><td>BNPL regulation — StepPay</td><td>Treasury/ASIC</td><td>Subject to new BNPL Credit Act amendments</td><td>2024</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Additional Key Sources (WebSearch verified)</h2>
+<div class="table-wrap"><table>
+<tr><th>Resource</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>FY2024 Profit Announcement (PDF)</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/results/fy24/CBA-FY24-Profit-Announcement.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/results/fy24/CBA-FY24-Profit-Announcement.pdf</a></td></tr>
+<tr><td>FY2025 Profit Announcement (PDF)</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/results/fy25/full-year-profit-announcement.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/results/fy25/full-year-profit-announcement.pdf</a></td></tr>
+<tr><td>H1 FY2026 Profit Announcement (PDF)</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Profit%20Announcement.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Profit%20Announcement.pdf</a></td></tr>
+<tr><td>H1 FY2026 Results Presentation (PDF)</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Presentation.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Presentation.pdf</a></td></tr>
+<tr><td>H1 FY2026 Results Transcript (PDF)</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Transcript.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Transcript.pdf</a></td></tr>
+<tr><td>Pillar 3 31 Dec 2025 (PDF)</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Basel%20III%20Pillar%203%20Disclosure.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Basel%20III%20Pillar%203%20Disclosure.pdf</a></td></tr>
+<tr><td>Pillar 3 31 Dec 2024 (PDF)</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/results/1h25/CBA-2025-Half-Year-Basel-III-Pillar-3-Disclosure.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/results/1h25/CBA-2025-Half-Year-Basel-III-Pillar-3-Disclosure.pdf</a></td></tr>
+<tr><td>CEO Matt Comyn AGM address 2025</td><td><a href="https://www.commbank.com.au/articles/newsroom/2025/10/agm-ceo-address.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2025/10/agm-ceo-address.html</a></td></tr>
+<tr><td>CEO: AI about living standards (March 2026)</td><td><a href="https://www.commbank.com.au/articles/newsroom/2026/03/ai-about-living-standards-says-cbas-matt-comyn.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2026/03/ai-about-living-standards-says-cbas-matt-comyn.html</a></td></tr>
+<tr><td>Chief AI Officer appointed (Ranil Boteju)</td><td><a href="https://www.commbank.com.au/articles/newsroom/2025/11/ranil-boteju-chief-ai-officer.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2025/11/ranil-boteju-chief-ai-officer.html</a></td></tr>
+<tr><td>$90M Future Workforce Program</td><td><a href="https://www.commbank.com.au/articles/newsroom/2026/02/commonwealth-bank-90m-plan-for-ai-ready-workforce.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2026/02/commonwealth-bank-90m-plan-for-ai-ready-workforce.html</a></td></tr>
+<tr><td>OpenAI Enterprise rollout to 50,000 staff</td><td><a href="https://www.startuphub.ai/ai-news/ai-video/2026/cba-ceo-details-openai-enterprise-rollout-to-50000-employees/" target="_blank">https://www.startuphub.ai/ai-news/ai-video/2026/cba-ceo-details-openai-enterprise-rollout-to-50000-employees/</a></td></tr>
+<tr><td>Apate.ai scam disruption partnership</td><td><a href="https://www.commbank.com.au/articles/newsroom/2025/06/apate-ai.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2025/06/apate-ai.html</a></td></tr>
+<tr><td>Scam losses fall 76%</td><td><a href="https://www.commbank.com.au/articles/newsroom/2025/08/commbank-customer-scam-losses-fall-truyu.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2025/08/commbank-customer-scam-losses-fall-truyu.html</a></td></tr>
+<tr><td>Seattle Tech Hub (AWS, Anthropic, Microsoft)</td><td><a href="https://www.commbank.com.au/articles/newsroom/2025/03/ai-tech-hub-capabilities.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2025/03/ai-tech-hub-capabilities.html</a></td></tr>
+<tr><td>AI cloud migration completed</td><td><a href="https://www.commbank.com.au/articles/newsroom/2025/06/cba-ai-migration-cloud.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2025/06/cba-ai-migration-cloud.html</a></td></tr>
+<tr><td>Small business AI initiative (1M SMBs, OpenAI)</td><td><a href="https://www.commbank.com.au/articles/newsroom/2025/12/openai-skills.html" target="_blank">https://www.commbank.com.au/articles/newsroom/2025/12/openai-skills.html</a></td></tr>
+<tr><td>Fair Work Ombudsman — $10.34M underpayment penalty</td><td><a href="https://www.fairwork.gov.au/newsroom/media-releases/2024-media-releases/february-2024/20240215-cba-penalty-media-release" target="_blank">https://www.fairwork.gov.au/newsroom/media-releases/2024-media-releases/february-2024/20240215-cba-penalty-media-release</a></td></tr>
+<tr><td>2024 Annual Review PDF</td><td><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/CBA_Annual_Review_2024.pdf" target="_blank">https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/CBA_Annual_Review_2024.pdf</a></td></tr>
+<tr><td>ASB FY2025 Full Year Results</td><td><a href="https://www.asb.co.nz/documents/media-centre/media-releases/asb-full-year-result-2025.html" target="_blank">https://www.asb.co.nz/documents/media-centre/media-releases/asb-full-year-result-2025.html</a></td></tr>
+<tr><td>ASB FY2024 Full Year Results</td><td><a href="https://www.asb.co.nz/documents/media-centre/media-releases/asb-full-year-results-2024.html" target="_blank">https://www.asb.co.nz/documents/media-centre/media-releases/asb-full-year-results-2024.html</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Gaps Requiring Live Retrieval</h2>
+<ul>
+<li>H1 FY2026 results (released ~February 2026)</li>
+<li>Press releases September 2025 – March 2026</li>
+<li>Regulatory actions from September 2025 onward</li>
+<li>Verified PDF URLs for annual reports</li>
+<li>Earnings call transcripts (paywalled on Bloomberg/Refinitiv, or webcast replays on CBA investor site)</li>
+</ul>
+  </div>
+
+  <div class="page-footer">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines & Processes</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link active">🔗 Sources & References</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

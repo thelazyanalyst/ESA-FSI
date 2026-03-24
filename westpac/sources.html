@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Westpac — Sources & References · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #edf0f5;
+    --bg-card: #ffffff;
+    --bg-section: #f5f7fa;
+    --border: #dde3ec;
+    --border-dark: #c8d1de;
+    --text: #0f1e33;
+    --text-sub: #445570;
+    --text-muted: #8496ae;
+    --accent: #a81030;
+    --accent-bg: #f9eaed;
+    --accent-mid: #f0c0cb;
+    --font-ui: 'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  /* ACCENT STRIPE */
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 40px;
+    border-radius: 2px;
+  }
+
+  /* CONTENT */
+  .content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 48px;
+  }
+
+  .content h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+
+  .content h2 {
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--accent-mid);
+    letter-spacing: -0.01em;
+  }
+
+  .content h2:first-of-type { margin-top: 28px; }
+
+  .content h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin: 16px 0 6px;
+  }
+
+  .content p {
+    color: var(--text-sub);
+    margin: 10px 0;
+    line-height: 1.75;
+  }
+
+  .content strong { color: var(--text); font-weight: 600; }
+  .content em { font-style: italic; color: var(--text-sub); }
+  .content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .content ul { margin: 8px 0 16px 20px; }
+  .content ul.ol { list-style: decimal; }
+  .content ul li { color: var(--text-sub); margin-bottom: 5px; line-height: 1.65; }
+
+  .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-mid); transition: border-color 0.15s; }
+  .content a:hover { border-bottom-color: var(--accent); }
+
+  .content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 16px 0 24px; border-radius: 5px; border: 1px solid var(--border); }
+  .content table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .content thead { background: var(--accent-bg); }
+  .content th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--accent-mid);
+  }
+  .content td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .content tr:last-child td { border-bottom: none; }
+  .content tbody tr:hover td { background: var(--bg-section); }
+
+  /* METADATA BAR */
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 14px 0 28px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* NAV FOOTER */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .content { padding: 24px 20px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Westpac</span>
+    <span class="sep">/</span>
+    <span class="current">Sources & References</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🔗 Westpac — Sources & References</h1>
+      <div class="sub">Westpac · ASX: WBC · Research date: March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: WBC</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+<h1>Westpac Banking Corporation — Phase 1 Sources</h1>
+<p><strong>Research date:</strong> 2026-03-18</p>
+<hr>
+<h2>Primary Source URLs</h2>
+<div class="table-wrap"><table>
+<tr><th>Resource</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Investor Centre</td><td><a href="https://www.westpac.com.au/about-westpac/investor-centre/" target="_blank">https://www.westpac.com.au/about-westpac/investor-centre/</a></td></tr>
+<tr><td>Annual Reports</td><td><a href="https://www.westpac.com.au/about-westpac/investor-centre/financial-information/annual-reports/" target="_blank">https://www.westpac.com.au/about-westpac/investor-centre/financial-information/annual-reports/</a></td></tr>
+<tr><td>Events & Presentations</td><td><a href="https://www.westpac.com.au/about-westpac/investor-centre/events-and-presentations/" target="_blank">https://www.westpac.com.au/about-westpac/investor-centre/events-and-presentations/</a></td></tr>
+<tr><td>Regulatory Disclosures (Pillar 3)</td><td><a href="https://www.westpac.com.au/about-westpac/investor-centre/financial-information/regulatory-disclosures/" target="_blank">https://www.westpac.com.au/about-westpac/investor-centre/financial-information/regulatory-disclosures/</a></td></tr>
+<tr><td>Media / Newsroom</td><td><a href="https://www.westpac.com.au/about-westpac/media/" target="_blank">https://www.westpac.com.au/about-westpac/media/</a></td></tr>
+<tr><td>Westpac NZ Media</td><td><a href="https://www.westpac.co.nz/about-us/media/" target="_blank">https://www.westpac.co.nz/about-us/media/</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Annual Reports</h2>
+<div class="table-wrap"><table>
+<tr><th>Report</th><th>PDF URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>FY2024 Annual Report</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-annual-report-2024.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-annual-report-2024.pdf</a></td></tr>
+<tr><td>FY2024 Results Presentation & IDP</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-presentation-and-IDP-2024.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-presentation-and-IDP-2024.pdf</a></td></tr>
+<tr><td>FY2025 Financial Results</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-financial-results-2025.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-financial-results-2025.pdf</a></td></tr>
+<tr><td>FY2025 Results Presentation & IDP</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-presentation-and-IDP-2025.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-presentation-and-IDP-2025.pdf</a></td></tr>
+<tr><td>1H25 Financial Results Announcement</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-1H25-financial-results-announcement-2025.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-1H25-financial-results-announcement-2025.pdf</a></td></tr>
+<tr><td>1H25 Presentation & IDP</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-1H25-presentation-IDP-2025.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-1H25-presentation-IDP-2025.pdf</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>APRA Pillar 3 Disclosures</h2>
+<div class="table-wrap"><table>
+<tr><th>Quarter</th><th>PDF URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>Jun 2024</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/Westpac-Pillar-3-Report-June-2024.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/Westpac-Pillar-3-Report-June-2024.pdf</a></td></tr>
+<tr><td>Sep 2024</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-pillar-3-report-september-2024.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-pillar-3-report-september-2024.pdf</a></td></tr>
+<tr><td>Dec 2024</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-december-pillar-3-report-2024.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-december-pillar-3-report-2024.pdf</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Key Press Releases and Announcements</h2>
+<div class="table-wrap"><table>
+<tr><th>Topic</th><th>Date</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>FY2024 Full Year Result</td><td>November 2024</td><td><a href="https://www.westpac.com.au/about-westpac/media/full-year-result/2024-full-year-result/" target="_blank">https://www.westpac.com.au/about-westpac/media/full-year-result/2024-full-year-result/</a></td></tr>
+<tr><td>1H25 Half Year Result</td><td>May 2025</td><td><a href="https://www.westpac.com.au/about-westpac/media/half-year-results/2025-half-year-result/" target="_blank">https://www.westpac.com.au/about-westpac/media/half-year-results/2025-half-year-result/</a></td></tr>
+<tr><td>FY2025 Full Year Result</td><td>November 2025</td><td><a href="https://www.westpac.com.au/about-westpac/media/full-year-result/2025-full-year-result/" target="_blank">https://www.westpac.com.au/about-westpac/media/full-year-result/2025-full-year-result/</a></td></tr>
+<tr><td>CEO Miller — First Full Year Result</td><td>November 2025</td><td><a href="https://www.westpac.com.au/news/making-news/2025/11/westpac-ceo-hands-down-first-full-year-result-says-aus-economy-in-a-good-place/" target="_blank">https://www.westpac.com.au/news/making-news/2025/11/westpac-ceo-hands-down-first-full-year-result-says-aus-economy-in-a-good-place/</a></td></tr>
+<tr><td>CEO Opening Statement to House Economics Committee</td><td>November 2025</td><td><a href="https://www.westpac.com.au/about-westpac/media/media-releases/2025/18-november/" target="_blank">https://www.westpac.com.au/about-westpac/media/media-releases/2025/18-november/</a></td></tr>
+<tr><td>CEO Miller on energy spike / RBA challenge</td><td>March 2026</td><td><a href="https://www.bloomberg.com/news/articles/2026-03-16/westpac-ceo-miller-says-energy-spike-adding-to-rba-s-challenge" target="_blank">https://www.bloomberg.com/news/articles/2026-03-16/westpac-ceo-miller-says-energy-spike-adding-to-rba-s-challenge</a></td></tr>
+<tr><td>UNITE technology simplification update</td><td>March 2024</td><td><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/Technology-simplification-update.pdf" target="_blank">https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/Technology-simplification-update.pdf</a></td></tr>
+<tr><td>UNITE replanning completion — iTnews</td><td>2025</td><td><a href="https://www.itnews.com.au/news/westpac-finishes-replanning-its-unite-tech-transformation-621490" target="_blank">https://www.itnews.com.au/news/westpac-finishes-replanning-its-unite-tech-transformation-621490</a></td></tr>
+<tr><td>Westpac Intelligence Layer</td><td>2025</td><td><a href="https://www.itnews.com.au/news/westpac-intelligence-layer-breaks-cover-621491" target="_blank">https://www.itnews.com.au/news/westpac-intelligence-layer-breaks-cover-621491</a></td></tr>
+<tr><td>Westpac hires CBA data chief (Dr Andrew McMullan)</td><td>2025</td><td><a href="https://www.itnews.com.au/news/westpac-hires-cbas-data-chief-to-lead-ai-data-and-digital-617419" target="_blank">https://www.itnews.com.au/news/westpac-hires-cbas-data-chief-to-lead-ai-data-and-digital-617419</a></td></tr>
+<tr><td>AI scam prevention</td><td>2025</td><td><a href="https://ffnews.com/newsarticle/fintech/westpac-is-using-ai-to-put-scammers-out-of-business/" target="_blank">https://ffnews.com/newsarticle/fintech/westpac-is-using-ai-to-put-scammers-out-of-business/</a></td></tr>
+<tr><td>AI at Westpac (governance)</td><td>Current</td><td><a href="https://www.westpac.com.au/about-westpac/westpac-group/corporate-governance/artificial-intelligence-at-westpac/" target="_blank">https://www.westpac.com.au/about-westpac/westpac-group/corporate-governance/artificial-intelligence-at-westpac/</a></td></tr>
+<tr><td>Westpac NZ Full Year Result FY2025</td><td>November 2025</td><td><a href="https://www.westpac.co.nz/about-us/media/westpac-nz-grows-key-segments-in-resilient-full-year-result/" target="_blank">https://www.westpac.co.nz/about-us/media/westpac-nz-grows-key-segments-in-resilient-full-year-result/</a></td></tr>
+<tr><td>Westpac NZ Half Year Result</td><td>May 2025</td><td><a href="https://www.westpac.co.nz/about-us/media/westpac-nz-posts-resilient-half-year-result/" target="_blank">https://www.westpac.co.nz/about-us/media/westpac-nz-posts-resilient-half-year-result/</a></td></tr>
+<tr><td>CEO "Stay the Course" strategy — Capital Brief</td><td>2024</td><td><a href="https://www.capitalbrief.com/newsletter/westpacs-new-ceo-stays-the-course-43db1b68-8d83-4eb6-b692-2b69c06d8c30/" target="_blank">https://www.capitalbrief.com/newsletter/westpacs-new-ceo-stays-the-course-43db1b68-8d83-4eb6-b692-2b69c06d8c30/</a></td></tr>
+</tbody></table></div>
+<hr>
+<h2>Regulatory Actions</h2>
+<div class="table-wrap"><table>
+<tr><th>Matter</th><th>Regulator</th><th>Date</th><th>URL</th></tr>
+<thead>
+</thead><tbody>
+<tr><td>AUSTRAC $1.3B civil penalty</td><td>AUSTRAC</td><td>2020</td><td><a href="https://www.austrac.gov.au/news-and-media/our-recent-work/westpac-penalty-ordered" target="_blank">https://www.austrac.gov.au/news-and-media/our-recent-work/westpac-penalty-ordered</a></td></tr>
+<tr><td>APRA capital overlay ($1B initial) — partially lifted July 2024 ($500M removed)</td><td>APRA</td><td>July 2024</td><td><a href="https://www.apra.gov.au/news-and-publications/update-on-apra%E2%80%99s-westpac-investigation" target="_blank">https://www.apra.gov.au/news-and-publications/update-on-apra%E2%80%99s-westpac-investigation</a></td></tr>
+<tr><td>APRA remaining $500M overlay removed</td><td>APRA</td><td>October 2025</td><td><a href="https://www.sharecafe.com.au/2025/10/15/apra-removes-westpacs-500m-capital-penalty/" target="_blank">https://www.sharecafe.com.au/2025/10/15/apra-removes-westpacs-500m-capital-penalty/</a></td></tr>
+<tr><td>ASIC: unconscionable conduct — interest rate swap ($12B)</td><td>ASIC</td><td>January 2024</td><td>—</td></tr>
+<tr><td>ASIC: financial hardship failures</td><td>ASIC</td><td>2025</td><td>—</td></tr>
+</tbody></table></div>
+  </div>
+
+  <div class="page-footer">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines & Processes</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link active">🔗 Sources & References</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
