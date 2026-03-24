@@ -3,1000 +3,1541 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ESA-FSI · Enterprise Security Assessment — Financial Services</title>
+<title>ESA-FSI · Financial Services Institution Research</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg: #080c10;
-    --bg-card: #0d1117;
-    --bg-card-hover: #111820;
-    --border: #1c2733;
-    --border-bright: #253545;
-    --text-primary: #e8edf2;
-    --text-secondary: #7a8fa3;
-    --text-muted: #3d5068;
-    --accent-grid: rgba(255,255,255,0.02);
+    --bg:           #edf0f5;
+    --bg-card:      #ffffff;
+    --bg-section:   #f5f7fa;
+    --border:       #dde3ec;
+    --border-dark:  #c8d1de;
+    --text:         #0f1e33;
+    --text-sub:     #445570;
+    --text-muted:   #8496ae;
+    --text-faint:   #b0bccf;
 
-    /* Bank accents */
-    --anz: #00a8e0;
-    --cba: #f5a623;
-    --nab: #e8453c;
-    --westpac: #d4163c;
-    --kiwibank: #2ecc71;
+    --anz:          #0076a8;
+    --anz-bg:       #e8f4fa;
+    --anz-mid:      #cce7f3;
 
-    --font-mono: 'Space Mono', monospace;
+    --cba:          #b87200;
+    --cba-bg:       #fef6e8;
+    --cba-mid:      #fde5b0;
+
+    --nab:          #c0271d;
+    --nab-bg:       #faecea;
+    --nab-mid:      #f4c8c5;
+
+    --westpac:      #a81030;
+    --westpac-bg:   #f9eaed;
+    --westpac-mid:  #f0c0cb;
+
+    --kiwibank:     #1a8c50;
+    --kiwibank-bg:  #e8f7ee;
+    --kiwibank-mid: #b8e8cc;
+
+    --font-ui:      'Figtree', sans-serif;
     --font-display: 'DM Serif Display', serif;
-    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+
+    --radius:       6px;
+    --shadow:       0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-hover: 0 2px 8px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.07);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { scroll-behavior: smooth; }
-
   body {
     background: var(--bg);
-    color: var(--text-primary);
-    font-family: var(--font-body);
+    color: var(--text);
+    font-family: var(--font-ui);
     font-size: 14px;
     line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
   }
 
-  /* Scanline texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.08) 2px,
-      rgba(0,0,0,0.08) 4px
-    );
-    pointer-events: none;
-    z-index: 100;
-  }
+  a { color: inherit; text-decoration: none; }
 
-  /* Grid background */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--accent-grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--accent-grid) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-    z-index: 0;
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
   }
+  .topbar-right { display: flex; gap: 24px; }
+  .topbar span { white-space: nowrap; }
+  .topbar .hi { color: rgba(255,255,255,0.85); }
 
+  /* ── WRAP ── */
   .wrap {
-    position: relative;
-    z-index: 1;
-    max-width: 1380px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 0 32px 80px;
+    padding: 0 40px 80px;
   }
 
   /* ── HEADER ── */
   header {
-    padding: 52px 0 40px;
+    padding: 48px 0 36px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 0;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 24px;
+    gap: 32px;
   }
 
-  .header-left { flex: 1; }
-
-  .header-eyebrow {
+  .eyebrow {
     font-family: var(--font-mono);
     font-size: 10px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
     color: var(--text-muted);
     text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .header-eyebrow::before {
-    content: '';
-    display: inline-block;
-    width: 24px;
-    height: 1px;
-    background: var(--text-muted);
+    margin-bottom: 10px;
   }
 
   h1 {
     font-family: var(--font-display);
-    font-size: clamp(28px, 4vw, 46px);
+    font-size: clamp(28px, 3.5vw, 44px);
     font-weight: 400;
     line-height: 1.1;
-    letter-spacing: -0.01em;
-    color: var(--text-primary);
+    color: var(--text);
   }
+  h1 em { font-style: italic; color: var(--text-sub); }
 
-  h1 em {
-    font-style: italic;
-    color: var(--text-secondary);
-  }
-
-  .header-sub {
-    font-family: var(--font-body);
-    font-size: 13px;
-    color: var(--text-secondary);
+  .header-desc {
     margin-top: 10px;
-    font-weight: 300;
-    letter-spacing: 0.01em;
+    font-size: 13.5px;
+    color: var(--text-sub);
+    font-weight: 400;
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  .header-right {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    align-items: flex-end;
+    padding-bottom: 4px;
+  }
+
+  .cov-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-dark);
+    color: var(--text-sub);
+    background: var(--bg-card);
   }
 
   /* ── STATS BAR ── */
   .stats-bar {
     display: flex;
-    align-items: stretch;
-    gap: 0;
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-top: none;
-    margin-bottom: 48px;
-    background: var(--bg-card);
-    overflow: hidden;
-    animation: fadeIn 0.6s ease 0.1s both;
+    margin-bottom: 44px;
+    box-shadow: var(--shadow);
   }
 
   .stat {
     flex: 1;
-    padding: 20px 28px;
+    padding: 18px 24px;
     border-right: 1px solid var(--border);
     position: relative;
+    overflow: hidden;
   }
   .stat:last-child { border-right: none; }
 
-  .stat-value {
+  .stat::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent, var(--border));
+  }
+
+  .stat-val {
     font-family: var(--font-mono);
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
     line-height: 1;
     margin-bottom: 4px;
-    letter-spacing: -0.02em;
   }
 
-  .stat-label {
+  .stat-lbl {
     font-family: var(--font-mono);
     font-size: 9px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     color: var(--text-muted);
     text-transform: uppercase;
   }
 
-  .stat-accent {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 100%;
-  }
-
-  /* ── SECTION HEADER ── */
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* ── BANK GRID ── */
+  /* ── GRID ── */
   .bank-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-bottom: 1px;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 20px;
   }
 
-  /* Make kiwibank span full width on last row if alone */
+  /* Kiwibank spans full width if it ends up alone */
   .bank-card:last-child:nth-child(odd) {
     grid-column: 1 / -1;
+    max-width: 760px;
   }
 
   /* ── BANK CARD ── */
   .bank-card {
     background: var(--bg-card);
-    padding: 32px;
-    position: relative;
-    transition: background 0.2s ease;
-    animation: slideUp 0.5s ease both;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.4s ease both;
   }
 
-  .bank-card:hover { background: var(--bg-card-hover); }
+  .bank-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
 
-  .bank-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
+  .bank-card:nth-child(1) { animation-delay: 0.05s; }
+  .bank-card:nth-child(2) { animation-delay: 0.10s; }
+  .bank-card:nth-child(3) { animation-delay: 0.15s; }
+  .bank-card:nth-child(4) { animation-delay: 0.20s; }
+  .bank-card:nth-child(5) { animation-delay: 0.25s; }
+
+  /* Accent stripe */
+  .card-stripe {
+    height: 3px;
     background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
   }
 
-  .bank-card:hover::before { transform: scaleX(1); }
+  .card-body { padding: 24px; flex: 1; }
 
-  /* Subtle radial glow on hover */
-  .bank-card::after {
-    content: '';
-    position: absolute;
-    top: -40px;
-    left: -40px;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, var(--accent-glow, transparent) 0%, transparent 70%);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .bank-card:hover::after { opacity: 1; }
-
-  /* stagger */
-  .bank-card:nth-child(1) { animation-delay: 0.1s; }
-  .bank-card:nth-child(2) { animation-delay: 0.15s; }
-  .bank-card:nth-child(3) { animation-delay: 0.2s; }
-  .bank-card:nth-child(4) { animation-delay: 0.25s; }
-  .bank-card:nth-child(5) { animation-delay: 0.3s; }
-
-  /* ANZ */
-  .bank-card.anz { --accent: var(--anz); --accent-glow: rgba(0,168,224,0.06); }
-  /* CBA */
-  .bank-card.cba { --accent: var(--cba); --accent-glow: rgba(245,166,35,0.06); }
-  /* NAB */
-  .bank-card.nab { --accent: var(--nab); --accent-glow: rgba(232,69,60,0.06); }
-  /* Westpac */
-  .bank-card.westpac { --accent: var(--westpac); --accent-glow: rgba(212,22,60,0.06); }
-  /* Kiwibank */
-  .bank-card.kiwibank { --accent: var(--kiwibank); --accent-glow: rgba(46,204,113,0.06); }
-
-  /* Card header */
-  .card-header {
+  /* Card top row */
+  .card-top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
+    gap: 12px;
   }
 
   .bank-name {
     font-family: var(--font-display);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 400;
-    color: var(--text-primary);
-    line-height: 1.2;
+    color: var(--text);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    line-height: 1.2;
   }
 
-  .bank-flag {
-    font-size: 18px;
-    line-height: 1;
+  .bank-flag { font-size: 18px; }
+
+  .card-badges {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
-  .bank-ticker {
+  .badge-ticker {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--accent-bg);
     color: var(--accent);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 2px 8px;
-    letter-spacing: 0.1em;
-    border-radius: 2px;
-    margin-top: 2px;
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
   }
 
-  /* Metrics row */
+  .badge-fy {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.07em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* Metrics */
   .metrics {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-bottom: 24px;
+    gap: 8px;
+    margin-bottom: 18px;
   }
 
   .metric {
-    background: rgba(255,255,255,0.015);
-    padding: 12px 14px;
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 12px;
   }
 
   .metric-val {
     font-family: var(--font-mono);
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--accent);
+    margin-bottom: 2px;
     line-height: 1;
-    margin-bottom: 3px;
     white-space: nowrap;
   }
 
   .metric-key {
     font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 0.15em;
-    color: var(--text-muted);
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
+    color: var(--text-muted);
   }
 
   /* Business lines */
-  .biz-lines {
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-    line-height: 1.7;
+  .biz-section { margin-bottom: 18px; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 7px;
+    display: block;
   }
 
-  .biz-lines strong {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 0.15em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 4px;
-  }
+  .biz-tags { display: flex; flex-wrap: wrap; gap: 5px; }
 
   .biz-tag {
-    display: inline-block;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    margin: 2px 3px 2px 0;
-    font-size: 11px;
-    color: var(--text-secondary);
-    border-radius: 2px;
+    font-size: 11.5px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
   }
 
-  /* Files */
-  .files-label {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 0.15em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    display: block;
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 18px 0;
   }
 
+  /* ── RESEARCH FILES ── */
   .file-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-  }
-
-  .file-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    gap: 3px;
   }
 
   .file-link {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-secondary);
-    text-decoration: none;
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 5px 10px;
+    padding: 6px 10px;
+    border-radius: 4px;
     border: 1px solid transparent;
-    border-radius: 2px;
+    color: var(--text-sub);
+    font-size: 12px;
     transition: all 0.15s ease;
-    flex: 1;
   }
 
   .file-link:hover {
-    color: var(--text-primary);
-    border-color: var(--border-bright);
-    background: rgba(255,255,255,0.03);
+    background: var(--bg-section);
+    border-color: var(--border);
+    color: var(--text);
   }
 
-  .file-link:hover .file-arrow { opacity: 1; transform: translateX(0); }
+  .file-link:hover .file-arrow { opacity: 1; }
 
-  .file-arrow {
-    margin-left: auto;
-    opacity: 0;
-    transform: translateX(-4px);
-    transition: all 0.15s ease;
-    color: var(--accent);
-    font-size: 10px;
+  .file-icon { font-size: 11px; opacity: 0.7; flex-shrink: 0; }
+
+  .file-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* File type badge */
-  .badge {
+  .file-badge {
     font-family: var(--font-mono);
     font-size: 8px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 2px 6px;
-    border-radius: 2px;
+    border-radius: 3px;
     white-space: nowrap;
+    flex-shrink: 0;
   }
 
-  .badge-biz { background: rgba(0,168,224,0.12); color: #5bc8f0; }
-  .badge-fin { background: rgba(245,166,35,0.12); color: #f5c76a; }
-  .badge-src { background: rgba(255,255,255,0.06); color: #7a8fa3; }
-  .badge-pr  { background: rgba(46,204,113,0.12); color: #5de8a0; }
+  .fb-biz  { background: #deeef7; color: #0076a8; }
+  .fb-fin  { background: #fdefd4; color: #9a6000; }
+  .fb-src  { background: #edf1f6; color: #6a7e96; }
+  .fb-pr   { background: #ddf4e9; color: #1a7a44; }
 
-  .file-icon {
-    font-size: 10px;
-    opacity: 0.5;
+  .file-arrow {
+    opacity: 0;
+    color: var(--text-faint);
+    font-size: 11px;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
   }
 
-  /* ── FY INFO TAG ── */
-  .fy-tag {
+  /* ── SOURCES PANEL ── */
+  .sources-panel {
+    background: var(--bg-section);
+    border-top: 1px solid var(--border);
+    padding: 18px 24px;
+  }
+
+  .sources-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    padding: 0;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    gap: 12px;
+  }
+
+  .sources-toggle-label {
     font-family: var(--font-mono);
     font-size: 9px;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    padding: 3px 8px;
-    border-radius: 2px;
-    display: inline-block;
-    margin-bottom: 16px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    font-weight: 500;
   }
 
-  /* ── DIVIDER ── */
-  .card-divider {
+  .sources-toggle-count {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-left: 8px;
+  }
+
+  .sources-toggle-icon {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .sources-toggle.open .sources-toggle-icon { transform: rotate(180deg); }
+
+  .sources-content {
+    display: none;
+    margin-top: 14px;
+  }
+
+  .sources-content.open { display: block; }
+
+  /* Source groups */
+  .src-group { margin-bottom: 14px; }
+  .src-group:last-child { margin-bottom: 0; }
+
+  .src-group-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .src-group-label::after {
+    content: '';
+    flex: 1;
     height: 1px;
-    background: var(--border);
-    margin: 20px 0;
+    background: var(--border-dark);
+  }
+
+  .src-links { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+
+  .src-link {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: background 0.12s ease;
+    color: var(--text-sub);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .src-link:hover {
+    background: var(--bg-card);
+    color: var(--accent);
+  }
+
+  .src-link-icon { flex-shrink: 0; font-size: 11px; opacity: 0.6; }
+
+  .src-link-text { flex: 1; }
+
+  .src-link-tag {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .src-link-tag.pdf {
+    color: var(--nab);
+    background: var(--nab-bg);
+    padding: 1px 5px;
+    border-radius: 2px;
   }
 
   /* ── FOOTER ── */
   footer {
+    margin-top: 52px;
+    padding-top: 24px;
     border-top: 1px solid var(--border);
-    padding: 28px 0 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    animation: fadeIn 0.6s ease 0.5s both;
+    flex-wrap: wrap;
   }
 
   .footer-left {
     font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-muted);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
   }
-
-  .footer-left a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-  .footer-left a:hover { color: var(--text-primary); }
+  .footer-left a { transition: color 0.15s; }
+  .footer-left a:hover { color: var(--text); }
 
   .footer-right {
+    display: flex;
+    gap: 20px;
     font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-muted);
     letter-spacing: 0.1em;
-    display: flex;
+    text-transform: uppercase;
     align-items: center;
-    gap: 16px;
   }
 
-  .status-dot {
+  .live-dot {
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--kiwibank);
-    box-shadow: 0 0 6px var(--kiwibank);
-    animation: pulse 2s ease infinite;
+    margin-right: 5px;
+    animation: pulse 2.5s ease infinite;
   }
 
   /* ── ANIMATIONS ── */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(16px); }
+    from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.85); }
   }
-
-  /* ── COVERAGE MAP (decorative header right) ── */
-  .coverage-map {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-
-  .cov-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .cov-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-
-  .cov-chip {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.05em;
-    padding: 3px 8px;
-    border-radius: 2px;
-    border: 1px solid;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-  }
-  .cov-chip:hover { opacity: 1; }
-
-  .cov-au { color: var(--anz); border-color: var(--anz); background: rgba(0,168,224,0.05); }
-  .cov-nz { color: var(--kiwibank); border-color: var(--kiwibank); background: rgba(46,204,113,0.05); }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 860px) {
-    .wrap { padding: 0 16px 60px; }
-    header { flex-direction: column; align-items: flex-start; }
+  @media (max-width: 900px) {
+    .wrap { padding: 0 20px 60px; }
+    header { flex-direction: column; align-items: flex-start; gap: 16px; }
     .bank-grid { grid-template-columns: 1fr; }
-    .bank-card:last-child:nth-child(odd) { grid-column: auto; }
+    .bank-card:last-child:nth-child(odd) { grid-column: auto; max-width: none; }
     .stats-bar { flex-wrap: wrap; }
     .stat { min-width: 50%; }
-    .coverage-map { display: none; }
+    .topbar { padding: 8px 20px; }
+    .topbar-right { gap: 12px; }
   }
 </style>
 </head>
 <body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div class="topbar-right">
+    <span>Phase 1 Research</span>
+    <span>5 institutions · 16 files</span>
+    <span>Research date: <span class="hi">March 2026</span></span>
+    <span><a href="https://github.com/thelazyanalyst/ESA-FSI" style="color:rgba(255,255,255,0.7)">github.com/thelazyanalyst/ESA-FSI</a></span>
+  </div>
+</div>
+
 <div class="wrap">
 
   <!-- HEADER -->
   <header>
-    <div class="header-left">
-      <div class="header-eyebrow">ESA-FSI · Phase 1 Research</div>
-      <h1>Enterprise Security<br>Assessment — <em>Financial Services</em></h1>
-      <p class="header-sub">Structured intelligence on Australasian major banks for security engagement scoping, presales, and threat modelling.</p>
+    <div>
+      <div class="eyebrow">Enterprise Security Assessment</div>
+      <h1>Financial Services <em>Institution Research</em></h1>
+      <p class="header-desc">Structured intelligence on Australasian major banks for security engagement scoping, presales, and threat modelling. Covers business lines, financials, technology initiatives, and regulatory history.</p>
     </div>
-    <div class="coverage-map">
-      <span class="cov-label">Coverage</span>
-      <div class="cov-row">
-        <span class="cov-chip cov-au">🇦🇺 Australia</span>
-        <span class="cov-chip cov-nz">🇳🇿 New Zealand</span>
-      </div>
-      <div class="cov-row" style="justify-content:flex-end;gap:5px;margin-top:4px;">
-        <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">Big 4 + Kiwibank</span>
-      </div>
+    <div class="header-right">
+      <span class="cov-chip">🇦🇺 Australia</span>
+      <span class="cov-chip">🇳🇿 New Zealand</span>
     </div>
   </header>
 
   <!-- STATS BAR -->
   <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-accent" style="background:var(--anz);"></div>
-      <div class="stat-value">5</div>
-      <div class="stat-label">Banks Covered</div>
+    <div class="stat" style="--accent:var(--anz)">
+      <div class="stat-val">5</div>
+      <div class="stat-lbl">Institutions</div>
     </div>
-    <div class="stat">
-      <div class="stat-accent" style="background:var(--cba);"></div>
-      <div class="stat-value">16</div>
-      <div class="stat-label">Research Files</div>
+    <div class="stat" style="--accent:var(--cba)">
+      <div class="stat-val">16</div>
+      <div class="stat-lbl">Research Files</div>
     </div>
-    <div class="stat">
-      <div class="stat-accent" style="background:var(--nab);"></div>
-      <div class="stat-value">Mar 2026</div>
-      <div class="stat-label">Research Date</div>
+    <div class="stat" style="--accent:var(--nab)">
+      <div class="stat-val">~A$38B</div>
+      <div class="stat-lbl">Combined FY Profit</div>
     </div>
-    <div class="stat">
-      <div class="stat-accent" style="background:var(--westpac);"></div>
-      <div class="stat-value">AU + NZ</div>
-      <div class="stat-label">Markets</div>
+    <div class="stat" style="--accent:var(--westpac)">
+      <div class="stat-val">AU + NZ</div>
+      <div class="stat-lbl">Markets</div>
     </div>
-    <div class="stat">
-      <div class="stat-accent" style="background:var(--kiwibank);"></div>
-      <div class="stat-value">~$38B</div>
-      <div class="stat-label">Combined FY Profit (AUD)</div>
+    <div class="stat" style="--accent:var(--kiwibank)">
+      <div class="stat-val">Mar 2026</div>
+      <div class="stat-lbl">Research Date</div>
     </div>
-  </div>
-
-  <!-- SECTION HEADER -->
-  <div class="section-header">
-    <span class="section-label">Institution Index</span>
-    <div class="section-line"></div>
-    <span class="section-label">5 entries</span>
   </div>
 
   <!-- BANK GRID -->
   <div class="bank-grid">
 
-    <!-- ANZ -->
-    <div class="bank-card anz">
-      <div class="card-header">
-        <div>
+    <!-- ── ANZ ── -->
+    <div class="bank-card" style="--accent:var(--anz);--accent-bg:var(--anz-bg);--accent-mid:var(--anz-mid)">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-top">
           <div class="bank-name"><span class="bank-flag">🇦🇺</span> ANZ Bank</div>
-          <div class="bank-ticker">ASX: ANZ</div>
+          <div class="card-badges">
+            <span class="badge-ticker">ASX: ANZ</span>
+            <span class="badge-fy">FY END: SEP</span>
+          </div>
         </div>
-        <div style="text-align:right;">
-          <div class="fy-tag">FY END: SEP</div>
-        </div>
-      </div>
 
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-val">A$6.9B</div>
-          <div class="metric-key">Cash Profit FY25</div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-val">A$6.9B</div>
+            <div class="metric-key">Cash Profit FY25</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">1.56%</div>
+            <div class="metric-key">NIM</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">12.0%</div>
+            <div class="metric-key">CET1</div>
+          </div>
         </div>
-        <div class="metric">
-          <div class="metric-val">1.56%</div>
-          <div class="metric-key">NIM</div>
-        </div>
-        <div class="metric">
-          <div class="metric-val">12.0%</div>
-          <div class="metric-key">CET1</div>
-        </div>
-      </div>
 
-      <div class="biz-lines">
-        <strong>Business Lines</strong>
-        <span class="biz-tag">Australia Retail</span>
-        <span class="biz-tag">Business & Private Bank</span>
-        <span class="biz-tag">Institutional</span>
-        <span class="biz-tag">New Zealand</span>
-      </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
-        Suncorp Bank integration underway (target Jun 2027). ANZ Plus next-gen digital platform. Record Institutional revenue FY24–25.
-      </div>
+        <div class="biz-section">
+          <span class="section-label">Business Lines</span>
+          <div class="biz-tags">
+            <span class="biz-tag">Australia Retail</span>
+            <span class="biz-tag">Business &amp; Private Bank</span>
+            <span class="biz-tag">Institutional</span>
+            <span class="biz-tag">New Zealand</span>
+          </div>
+        </div>
 
-      <div class="card-divider"></div>
-      <span class="files-label">Research Files</span>
-      <ul class="file-list">
-        <li class="file-item">
-          <a href="anz/business-lines.md" class="file-link">
+        <div class="divider"></div>
+
+        <span class="section-label">Research Files</span>
+        <ul class="file-list">
+          <li><a href="anz/business-lines.md" class="file-link">
             <span class="file-icon">📄</span>
-            <span>anz/business-lines.md</span>
-            <span class="badge badge-biz">Business Lines</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="anz/financial-summary.md" class="file-link">
+            <span class="file-name">anz/business-lines.md</span>
+            <span class="file-badge fb-biz">Business Lines</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="anz/financial-summary.md" class="file-link">
             <span class="file-icon">📊</span>
-            <span>anz/financial-summary.md</span>
-            <span class="badge badge-fin">Financials</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="anz/sources.md" class="file-link">
+            <span class="file-name">anz/financial-summary.md</span>
+            <span class="file-badge fb-fin">Financials</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="anz/sources.md" class="file-link">
             <span class="file-icon">🔗</span>
-            <span>anz/sources.md</span>
-            <span class="badge badge-src">Sources</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-      </ul>
+            <span class="file-name">anz/sources.md</span>
+            <span class="file-badge fb-src">Sources</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+        </ul>
+      </div>
+
+      <!-- SOURCES PANEL -->
+      <div class="sources-panel">
+        <button class="sources-toggle" onclick="toggleSources(this)">
+          <span>
+            <span class="sources-toggle-label">External Sources &amp; References</span>
+            <span class="sources-toggle-count">15 links</span>
+          </span>
+          <span class="sources-toggle-icon">▾</span>
+        </button>
+        <div class="sources-content">
+
+          <div class="src-group">
+            <div class="src-group-label">Investor Relations</div>
+            <ul class="src-links">
+              <li><a href="https://www.anz.com/shareholder/centre/reporting/annual-report-annual-review/" target="_blank" class="src-link">
+                <span class="src-link-icon">🏦</span>
+                <span class="src-link-text">Annual Reports &amp; Annual Review</span>
+              </a></li>
+              <li><a href="https://www.anz.com/shareholder/centre/reporting/investor-presentations/" target="_blank" class="src-link">
+                <span class="src-link-icon">📋</span>
+                <span class="src-link-text">Investor Presentations</span>
+              </a></li>
+              <li><a href="https://www.anz.com/shareholder/centre/reporting/regulatory-disclosure/" target="_blank" class="src-link">
+                <span class="src-link-icon">📑</span>
+                <span class="src-link-text">Regulatory Disclosures (Pillar 3)</span>
+              </a></li>
+              <li><a href="https://www.asx.com.au/asx/statistics/announcements.do?by=asxCode&asxCode=ANZ" target="_blank" class="src-link">
+                <span class="src-link-icon">📢</span>
+                <span class="src-link-text">ASX Announcements</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Annual Reports &amp; Results (PDF)</div>
+            <ul class="src-links">
+              <li><a href="https://www.anz.com.au/content/dam/anzcom/shareholder/ANZGHL-2024-Annual%20Report.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2024 Annual Report</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.anz.com/content/dam/anzcom/shareholder/full-year-results-announcement/2025-full-year-results-dividend-announcement-and-appendix-4E.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Full Year Results Announcement</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.anz.com/content/dam/anzcom/shareholder/full-year-results-announcement/2025-full-year-results-investor-discussion-pack.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Investor Discussion Pack</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.anz.com/content/dam/anzcom/shareholder/2025-half-year-results-announcement/ANZGHL-2025-Half-Year-Results-Dividend-Announcement-and-Appendix-4D.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">1H25 Results Announcement</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Press Releases &amp; News</div>
+            <ul class="src-links">
+              <li><a href="https://www.anz.com.au/newsroom/media/2025/november/2025-full-year-result---proposed-final-dividend/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">FY2025 Full Year Result</span>
+                <span class="src-link-tag">Nov 2025</span>
+              </a></li>
+              <li><a href="https://www.anz.com.au/newsroom/media/2025/october/ANZ-Chief-Executive-Officer-Nuno-Matos-and-Chief-Financial-Officer-Farhan-Faruqui-Remarks-Investor-Call/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">CEO ANZ 2030 Strategy Investor Briefing</span>
+                <span class="src-link-tag">Oct 2025</span>
+              </a></li>
+              <li><a href="https://www.anz.com.au/newsroom/media/2026/february/2026-firstquarter-trading-update/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">Q1 FY26 Trading Update</span>
+                <span class="src-link-tag">Feb 2026</span>
+              </a></li>
+              <li><a href="https://www.computerweekly.com/news/366638802/ANZ-rolls-out-AI-agents-for-business-bankers" target="_blank" class="src-link">
+                <span class="src-link-icon">🤖</span>
+                <span class="src-link-text">ANZ rolls out AI agents for business bankers (Salesforce Agentforce)</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+              <li><a href="https://www.anz.com/institutional/insights/articles/2025-10/the-future-of-cyber-resilience/" target="_blank" class="src-link">
+                <span class="src-link-icon">🔐</span>
+                <span class="src-link-text">The future of cyber resilience</span>
+                <span class="src-link-tag">Oct 2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Regulatory Actions</div>
+            <ul class="src-links">
+              <li><a href="https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2025-releases/25-201mr-anz-admits-widespread-misconduct-and-agrees-to-pay-240-million-in-penalties/" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">ASIC: ANZ admits widespread misconduct — $240M penalty agreed</span>
+                <span class="src-link-tag">Sep 2025</span>
+              </a></li>
+              <li><a href="https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2025-releases/25-314mr-federal-court-orders-250-million-combined-penalties-against-anz/" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">Federal Court orders $250M combined penalties (largest ever against a bank)</span>
+                <span class="src-link-tag">Dec 2025</span>
+              </a></li>
+              <li><a href="https://www.apra.gov.au/list-of-enforceable-undertakings" target="_blank" class="src-link">
+                <span class="src-link-icon">📌</span>
+                <span class="src-link-text">APRA Court Enforceable Undertaking — non-financial risk</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
     </div>
 
-    <!-- CBA -->
-    <div class="bank-card cba">
-      <div class="card-header">
-        <div>
+    <!-- ── CBA ── -->
+    <div class="bank-card" style="--accent:var(--cba);--accent-bg:var(--cba-bg);--accent-mid:var(--cba-mid)">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-top">
           <div class="bank-name"><span class="bank-flag">🇦🇺</span> Commonwealth Bank</div>
-          <div class="bank-ticker">ASX: CBA</div>
+          <div class="card-badges">
+            <span class="badge-ticker">ASX: CBA</span>
+            <span class="badge-fy">FY END: JUN</span>
+          </div>
         </div>
-        <div style="text-align:right;">
-          <div class="fy-tag">FY END: JUN</div>
-        </div>
-      </div>
 
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-val">A$10.25B</div>
-          <div class="metric-key">Cash NPAT FY25</div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-val">A$10.25B</div>
+            <div class="metric-key">Cash NPAT FY25</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">2.04%</div>
+            <div class="metric-key">NIM</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">12.2%</div>
+            <div class="metric-key">CET1</div>
+          </div>
         </div>
-        <div class="metric">
-          <div class="metric-val">2.04%</div>
-          <div class="metric-key">NIM</div>
-        </div>
-        <div class="metric">
-          <div class="metric-val">12.2%</div>
-          <div class="metric-key">CET1</div>
-        </div>
-      </div>
 
-      <div class="biz-lines">
-        <strong>Business Lines</strong>
-        <span class="biz-tag">Retail Banking Services</span>
-        <span class="biz-tag">Business Banking</span>
-        <span class="biz-tag">Institutional Banking & Markets</span>
-        <span class="biz-tag">New Zealand (ASB)</span>
-      </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
-        Australia's largest bank. 8M+ digitally active customers, #1 ranked app. ML-driven credit decisioning, NameCheck/CallerCheck anti-scam tools.
-      </div>
+        <div class="biz-section">
+          <span class="section-label">Business Lines</span>
+          <div class="biz-tags">
+            <span class="biz-tag">Retail Banking Services</span>
+            <span class="biz-tag">Business Banking</span>
+            <span class="biz-tag">Institutional B&amp;M</span>
+            <span class="biz-tag">New Zealand (ASB)</span>
+          </div>
+        </div>
 
-      <div class="card-divider"></div>
-      <span class="files-label">Research Files</span>
-      <ul class="file-list">
-        <li class="file-item">
-          <a href="cba/business-lines.md" class="file-link">
+        <div class="divider"></div>
+
+        <span class="section-label">Research Files</span>
+        <ul class="file-list">
+          <li><a href="cba/business-lines.md" class="file-link">
             <span class="file-icon">📄</span>
-            <span>cba/business-lines.md</span>
-            <span class="badge badge-biz">Business Lines</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="cba/financial-summary.md" class="file-link">
+            <span class="file-name">cba/business-lines.md</span>
+            <span class="file-badge fb-biz">Business Lines</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="cba/financial-summary.md" class="file-link">
             <span class="file-icon">📊</span>
-            <span>cba/financial-summary.md</span>
-            <span class="badge badge-fin">Financials</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="cba/sources.md" class="file-link">
+            <span class="file-name">cba/financial-summary.md</span>
+            <span class="file-badge fb-fin">Financials</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="cba/sources.md" class="file-link">
             <span class="file-icon">🔗</span>
-            <span>cba/sources.md</span>
-            <span class="badge badge-src">Sources</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-      </ul>
+            <span class="file-name">cba/sources.md</span>
+            <span class="file-badge fb-src">Sources</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+        </ul>
+      </div>
+
+      <div class="sources-panel">
+        <button class="sources-toggle" onclick="toggleSources(this)">
+          <span>
+            <span class="sources-toggle-label">External Sources &amp; References</span>
+            <span class="sources-toggle-count">18 links</span>
+          </span>
+          <span class="sources-toggle-icon">▾</span>
+        </button>
+        <div class="sources-content">
+
+          <div class="src-group">
+            <div class="src-group-label">Investor Relations</div>
+            <ul class="src-links">
+              <li><a href="https://www.commbank.com.au/about-us/investors/annual-reports.html" target="_blank" class="src-link">
+                <span class="src-link-icon">🏦</span>
+                <span class="src-link-text">Annual Reports</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/about-us/investors/financial-results.html" target="_blank" class="src-link">
+                <span class="src-link-icon">📈</span>
+                <span class="src-link-text">Financial Results (half-year &amp; full-year)</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/about-us/investors/presentations.html" target="_blank" class="src-link">
+                <span class="src-link-icon">📋</span>
+                <span class="src-link-text">Investor Presentations</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/about-us/investors/regulatory-disclosures.html" target="_blank" class="src-link">
+                <span class="src-link-icon">📑</span>
+                <span class="src-link-text">Regulatory Disclosures (Pillar 3 APS 330)</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Annual Reports &amp; Results (PDF)</div>
+            <ul class="src-links">
+              <li><a href="https://www.commbank.com.au/content/dam/commbank/about-us/shareholders-centre/annual-reports/2024-annual-report.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2024 Annual Report</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/docs/results/fy25/full-year-profit-announcement.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Profit Announcement</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Profit%20Announcement.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">H1 FY2026 Profit Announcement</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/content/dam/commbank-assets/investors/2026/CBA%202026%20Half%20Year%20Results%20Presentation.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">H1 FY2026 Results Presentation</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">AI &amp; Technology News</div>
+            <ul class="src-links">
+              <li><a href="https://www.commbank.com.au/articles/newsroom/2026/03/ai-about-living-standards-says-cbas-matt-comyn.html" target="_blank" class="src-link">
+                <span class="src-link-icon">🤖</span>
+                <span class="src-link-text">CEO: AI about living standards (Matt Comyn)</span>
+                <span class="src-link-tag">Mar 2026</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/articles/newsroom/2025/11/ranil-boteju-chief-ai-officer.html" target="_blank" class="src-link">
+                <span class="src-link-icon">👤</span>
+                <span class="src-link-text">Chief AI Officer appointed (Ranil Boteju)</span>
+                <span class="src-link-tag">Nov 2025</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/articles/newsroom/2026/02/commonwealth-bank-90m-plan-for-ai-ready-workforce.html" target="_blank" class="src-link">
+                <span class="src-link-icon">🎓</span>
+                <span class="src-link-text">$90M Future Workforce Program (AI readiness)</span>
+                <span class="src-link-tag">Feb 2026</span>
+              </a></li>
+              <li><a href="https://www.startuphub.ai/ai-news/ai-video/2026/cba-ceo-details-openai-enterprise-rollout-to-50000-employees/" target="_blank" class="src-link">
+                <span class="src-link-icon">🤖</span>
+                <span class="src-link-text">OpenAI Enterprise rollout to 50,000 staff</span>
+                <span class="src-link-tag">2026</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/articles/newsroom/2025/08/commbank-customer-scam-losses-fall-truyu.html" target="_blank" class="src-link">
+                <span class="src-link-icon">🛡️</span>
+                <span class="src-link-text">Scam losses fall 76% (AI prevention)</span>
+                <span class="src-link-tag">Aug 2025</span>
+              </a></li>
+              <li><a href="https://www.commbank.com.au/articles/newsroom/2025/03/ai-tech-hub-capabilities.html" target="_blank" class="src-link">
+                <span class="src-link-icon">🏗️</span>
+                <span class="src-link-text">Seattle Tech Hub (AWS, Anthropic, Microsoft)</span>
+                <span class="src-link-tag">Mar 2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Regulatory Actions</div>
+            <ul class="src-links">
+              <li><a href="https://www.fairwork.gov.au/newsroom/media-releases/2024-media-releases/february-2024/20240215-cba-penalty-media-release" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">Fair Work Ombudsman — $10.34M underpayment penalty</span>
+                <span class="src-link-tag">Feb 2024</span>
+              </a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
     </div>
 
-    <!-- NAB -->
-    <div class="bank-card nab">
-      <div class="card-header">
-        <div>
+    <!-- ── NAB ── -->
+    <div class="bank-card" style="--accent:var(--nab);--accent-bg:var(--nab-bg);--accent-mid:var(--nab-mid)">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-top">
           <div class="bank-name"><span class="bank-flag">🇦🇺</span> NAB</div>
-          <div class="bank-ticker">ASX: NAB</div>
+          <div class="card-badges">
+            <span class="badge-ticker">ASX: NAB</span>
+            <span class="badge-fy">FY END: SEP</span>
+          </div>
         </div>
-        <div style="text-align:right;">
-          <div class="fy-tag">FY END: SEP</div>
-        </div>
-      </div>
 
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-val">A$7.09B</div>
-          <div class="metric-key">Cash Earnings FY25</div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-val">A$7.09B</div>
+            <div class="metric-key">Cash Earnings FY25</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">1.74%</div>
+            <div class="metric-key">NIM</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">11.70%</div>
+            <div class="metric-key">CET1</div>
+          </div>
         </div>
-        <div class="metric">
-          <div class="metric-val">1.74%</div>
-          <div class="metric-key">NIM</div>
-        </div>
-        <div class="metric">
-          <div class="metric-val">11.70%</div>
-          <div class="metric-key">CET1</div>
-        </div>
-      </div>
 
-      <div class="biz-lines">
-        <strong>Business Lines</strong>
-        <span class="biz-tag">Personal Banking</span>
-        <span class="biz-tag">Business & Private Banking</span>
-        <span class="biz-tag">Corporate & Institutional</span>
-        <span class="biz-tag">New Zealand (BNZ)</span>
-      </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
-        Australia's largest business bank. ubank digital-only subsidiary with passkeys deployed. Business lending +9% FY25. Deposits fund 84% of total lending.
-      </div>
+        <div class="biz-section">
+          <span class="section-label">Business Lines</span>
+          <div class="biz-tags">
+            <span class="biz-tag">Personal Banking</span>
+            <span class="biz-tag">Business &amp; Private Banking</span>
+            <span class="biz-tag">Corporate &amp; Institutional</span>
+            <span class="biz-tag">New Zealand (BNZ)</span>
+          </div>
+        </div>
 
-      <div class="card-divider"></div>
-      <span class="files-label">Research Files</span>
-      <ul class="file-list">
-        <li class="file-item">
-          <a href="nab/business-lines.md" class="file-link">
+        <div class="divider"></div>
+
+        <span class="section-label">Research Files</span>
+        <ul class="file-list">
+          <li><a href="nab/business-lines.md" class="file-link">
             <span class="file-icon">📄</span>
-            <span>nab/business-lines.md</span>
-            <span class="badge badge-biz">Business Lines</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="nab/financial-summary.md" class="file-link">
+            <span class="file-name">nab/business-lines.md</span>
+            <span class="file-badge fb-biz">Business Lines</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="nab/financial-summary.md" class="file-link">
             <span class="file-icon">📊</span>
-            <span>nab/financial-summary.md</span>
-            <span class="badge badge-fin">Financials</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="nab/sources.md" class="file-link">
+            <span class="file-name">nab/financial-summary.md</span>
+            <span class="file-badge fb-fin">Financials</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="nab/sources.md" class="file-link">
             <span class="file-icon">🔗</span>
-            <span>nab/sources.md</span>
-            <span class="badge badge-src">Sources</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-      </ul>
+            <span class="file-name">nab/sources.md</span>
+            <span class="file-badge fb-src">Sources</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+        </ul>
+      </div>
+
+      <div class="sources-panel">
+        <button class="sources-toggle" onclick="toggleSources(this)">
+          <span>
+            <span class="sources-toggle-label">External Sources &amp; References</span>
+            <span class="sources-toggle-count">14 links</span>
+          </span>
+          <span class="sources-toggle-icon">▾</span>
+        </button>
+        <div class="sources-content">
+
+          <div class="src-group">
+            <div class="src-group-label">Investor Relations</div>
+            <ul class="src-links">
+              <li><a href="https://www.nab.com.au/about-us/shareholder-centre" target="_blank" class="src-link">
+                <span class="src-link-icon">🏦</span>
+                <span class="src-link-text">Shareholder Centre</span>
+              </a></li>
+              <li><a href="https://www.nab.com.au/about-us/shareholder-centre/financial-disclosures-and-reporting" target="_blank" class="src-link">
+                <span class="src-link-icon">📑</span>
+                <span class="src-link-text">Financial Disclosures &amp; Reporting</span>
+              </a></li>
+              <li><a href="https://www.nab.com.au/about-us/shareholder-centre/financial-disclosures-and-reporting/investor-briefings-and-presentations" target="_blank" class="src-link">
+                <span class="src-link-icon">📋</span>
+                <span class="src-link-text">Investor Briefings &amp; Presentations</span>
+              </a></li>
+              <li><a href="https://www.nab.com.au/about-us/shareholder-centre/regulatory-disclosures" target="_blank" class="src-link">
+                <span class="src-link-icon">📌</span>
+                <span class="src-link-text">Regulatory Disclosures (Pillar 3)</span>
+              </a></li>
+              <li><a href="https://news.nab.com.au/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">NAB Newsroom</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Annual Reports &amp; Results (PDF)</div>
+            <ul class="src-links">
+              <li><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2024-annual-report.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2024 Annual Report</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-management-discussion-and-analysis.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Full Year Results MDA</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-full-year-results-investor-presentation.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Results Investor Presentation</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.nab.com.au/content/dam/nab/documents/reports/corporate/2025-half-year-results-announcement.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">1H25 Results Announcement</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Technology &amp; AI News</div>
+            <ul class="src-links">
+              <li><a href="https://aws.amazon.com/solutions/case-studies/generative-ai-national-australia-bank/" target="_blank" class="src-link">
+                <span class="src-link-icon">🤖</span>
+                <span class="src-link-text">Amazon Q Developer — 1,000 devs, 18% productivity gain (AWS case study)</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+              <li><a href="https://www.itnews.com.au/news/nab-makes-secure-by-design-the-centrepiece-of-security-strategy-607719" target="_blank" class="src-link">
+                <span class="src-link-icon">🔐</span>
+                <span class="src-link-text">NAB secure by design strategy</span>
+                <span class="src-link-tag">2024</span>
+              </a></li>
+              <li><a href="https://ir.crowdstrike.com/news-releases/news-release-details/national-australia-bank-selects-crowdstrike-protect-smbs/" target="_blank" class="src-link">
+                <span class="src-link-icon">🛡️</span>
+                <span class="src-link-text">NAB + CrowdStrike — SMB cybersecurity partnership</span>
+                <span class="src-link-tag">2024</span>
+              </a></li>
+              <li><a href="https://www.mi-3.com.au/24-06-2025/nab-appoints-pete-steel-group-executive-digital-data-ai" target="_blank" class="src-link">
+                <span class="src-link-icon">👤</span>
+                <span class="src-link-text">Pete Steel appointed Group Executive — Digital, Data &amp; AI</span>
+                <span class="src-link-tag">Jun 2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Regulatory Actions</div>
+            <ul class="src-links">
+              <li><a href="https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2025-releases/25-165mr-nab-and-afsh-penalised-15-5-million-for-failing-customers-facing-financial-hardship/" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">ASIC: NAB penalised $15.5M for hardship response failures</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">BNZ (New Zealand)</div>
+            <ul class="src-links">
+              <li><a href="https://www.bnz.co.nz/about-us/news/bnz-2025-full-year-result" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">BNZ FY2025 Full Year Result</span>
+              </a></li>
+              <li><a href="https://www.bnz.co.nz/about-us/governance/financials" target="_blank" class="src-link">
+                <span class="src-link-icon">📊</span>
+                <span class="src-link-text">BNZ Financials</span>
+              </a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
     </div>
 
-    <!-- WESTPAC -->
-    <div class="bank-card westpac">
-      <div class="card-header">
-        <div>
+    <!-- ── WESTPAC ── -->
+    <div class="bank-card" style="--accent:var(--westpac);--accent-bg:var(--westpac-bg);--accent-mid:var(--westpac-mid)">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-top">
           <div class="bank-name"><span class="bank-flag">🇦🇺</span> Westpac</div>
-          <div class="bank-ticker">ASX: WBC</div>
+          <div class="card-badges">
+            <span class="badge-ticker">ASX: WBC</span>
+            <span class="badge-fy">FY END: SEP</span>
+          </div>
         </div>
-        <div style="text-align:right;">
-          <div class="fy-tag">FY END: SEP</div>
-        </div>
-      </div>
 
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-val">A$6.9B</div>
-          <div class="metric-key">Stat. NPAT FY25</div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-val">A$6.9B</div>
+            <div class="metric-key">Stat. NPAT FY25</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">1.94%</div>
+            <div class="metric-key">NIM</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">12.5%</div>
+            <div class="metric-key">CET1</div>
+          </div>
         </div>
-        <div class="metric">
-          <div class="metric-val">1.94%</div>
-          <div class="metric-key">NIM</div>
-        </div>
-        <div class="metric">
-          <div class="metric-val">12.5%</div>
-          <div class="metric-key">CET1</div>
-        </div>
-      </div>
 
-      <div class="biz-lines">
-        <strong>Business Lines</strong>
-        <span class="biz-tag">Consumer Bank</span>
-        <span class="biz-tag">Business Bank</span>
-        <span class="biz-tag">Institutional Bank</span>
-        <span class="biz-tag">New Zealand (Westpac NZ)</span>
-      </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
-        Multi-brand retail: Westpac, St George, BankSA, Bank of Melbourne, RAMS. ~9M consumer customers. Gross loans A$856B (+6% YoY).
-      </div>
+        <div class="biz-section">
+          <span class="section-label">Business Lines</span>
+          <div class="biz-tags">
+            <span class="biz-tag">Consumer Bank</span>
+            <span class="biz-tag">Business Bank</span>
+            <span class="biz-tag">Institutional Bank</span>
+            <span class="biz-tag">New Zealand (Westpac NZ)</span>
+          </div>
+        </div>
 
-      <div class="card-divider"></div>
-      <span class="files-label">Research Files</span>
-      <ul class="file-list">
-        <li class="file-item">
-          <a href="westpac/business-lines.md" class="file-link">
+        <div class="divider"></div>
+
+        <span class="section-label">Research Files</span>
+        <ul class="file-list">
+          <li><a href="westpac/business-lines.md" class="file-link">
             <span class="file-icon">📄</span>
-            <span>westpac/business-lines.md</span>
-            <span class="badge badge-biz">Business Lines</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="westpac/financial-summary.md" class="file-link">
+            <span class="file-name">westpac/business-lines.md</span>
+            <span class="file-badge fb-biz">Business Lines</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="westpac/financial-summary.md" class="file-link">
             <span class="file-icon">📊</span>
-            <span>westpac/financial-summary.md</span>
-            <span class="badge badge-fin">Financials</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="westpac/sources.md" class="file-link">
+            <span class="file-name">westpac/financial-summary.md</span>
+            <span class="file-badge fb-fin">Financials</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="westpac/sources.md" class="file-link">
             <span class="file-icon">🔗</span>
-            <span>westpac/sources.md</span>
-            <span class="badge badge-src">Sources</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-      </ul>
+            <span class="file-name">westpac/sources.md</span>
+            <span class="file-badge fb-src">Sources</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+        </ul>
+      </div>
+
+      <div class="sources-panel">
+        <button class="sources-toggle" onclick="toggleSources(this)">
+          <span>
+            <span class="sources-toggle-label">External Sources &amp; References</span>
+            <span class="sources-toggle-count">16 links</span>
+          </span>
+          <span class="sources-toggle-icon">▾</span>
+        </button>
+        <div class="sources-content">
+
+          <div class="src-group">
+            <div class="src-group-label">Investor Relations</div>
+            <ul class="src-links">
+              <li><a href="https://www.westpac.com.au/about-westpac/investor-centre/" target="_blank" class="src-link">
+                <span class="src-link-icon">🏦</span>
+                <span class="src-link-text">Investor Centre</span>
+              </a></li>
+              <li><a href="https://www.westpac.com.au/about-westpac/investor-centre/financial-information/annual-reports/" target="_blank" class="src-link">
+                <span class="src-link-icon">📑</span>
+                <span class="src-link-text">Annual Reports</span>
+              </a></li>
+              <li><a href="https://www.westpac.com.au/about-westpac/investor-centre/events-and-presentations/" target="_blank" class="src-link">
+                <span class="src-link-icon">📋</span>
+                <span class="src-link-text">Events &amp; Presentations</span>
+              </a></li>
+              <li><a href="https://www.westpac.com.au/about-westpac/investor-centre/financial-information/regulatory-disclosures/" target="_blank" class="src-link">
+                <span class="src-link-icon">📌</span>
+                <span class="src-link-text">Regulatory Disclosures (Pillar 3)</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Annual Reports &amp; Results (PDF)</div>
+            <ul class="src-links">
+              <li><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-annual-report-2024.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2024 Annual Report</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-financial-results-2025.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Full Year Financial Results</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-full-year-presentation-and-IDP-2025.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Results Presentation &amp; IDP</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+              <li><a href="https://www.westpac.com.au/content/dam/public/wbc/documents/pdf/aw/ic/wbc-1H25-financial-results-announcement-2025.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">1H25 Financial Results Announcement</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Technology &amp; AI News</div>
+            <ul class="src-links">
+              <li><a href="https://www.westpac.com.au/about-westpac/westpac-group/corporate-governance/artificial-intelligence-at-westpac/" target="_blank" class="src-link">
+                <span class="src-link-icon">🤖</span>
+                <span class="src-link-text">AI at Westpac — governance &amp; approach</span>
+              </a></li>
+              <li><a href="https://www.itnews.com.au/news/westpac-intelligence-layer-breaks-cover-621491" target="_blank" class="src-link">
+                <span class="src-link-icon">🧠</span>
+                <span class="src-link-text">Westpac Intelligence Layer breaks cover</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+              <li><a href="https://www.itnews.com.au/news/westpac-hires-cbas-data-chief-to-lead-ai-data-and-digital-617419" target="_blank" class="src-link">
+                <span class="src-link-icon">👤</span>
+                <span class="src-link-text">Westpac hires CBA data chief (Dr Andrew McMullan) for AI &amp; digital</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+              <li><a href="https://www.itnews.com.au/news/westpac-finishes-replanning-its-unite-tech-transformation-621490" target="_blank" class="src-link">
+                <span class="src-link-icon">⚙️</span>
+                <span class="src-link-text">Westpac UNITE tech transformation replanning complete</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+              <li><a href="https://ffnews.com/newsarticle/fintech/westpac-is-using-ai-to-put-scammers-out-of-business/" target="_blank" class="src-link">
+                <span class="src-link-icon">🛡️</span>
+                <span class="src-link-text">Westpac using AI to combat scammers</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+              <li><a href="https://www.westpac.com.au/about-westpac/media/full-year-result/2025-full-year-result/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">CEO Miller — FY2025 Full Year Result (first full year)</span>
+                <span class="src-link-tag">Nov 2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Regulatory Actions</div>
+            <ul class="src-links">
+              <li><a href="https://www.austrac.gov.au/news-and-media/our-recent-work/westpac-penalty-ordered" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">AUSTRAC: $1.3B civil penalty</span>
+                <span class="src-link-tag">2020</span>
+              </a></li>
+              <li><a href="https://www.apra.gov.au/news-and-publications/update-on-apra%E2%80%99s-westpac-investigation" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">APRA capital overlay — $500M removed</span>
+                <span class="src-link-tag">Jul 2024</span>
+              </a></li>
+              <li><a href="https://www.sharecafe.com.au/2025/10/15/apra-removes-westpacs-500m-capital-penalty/" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">APRA removes remaining $500M capital penalty</span>
+                <span class="src-link-tag">Oct 2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
     </div>
 
-    <!-- KIWIBANK -->
-    <div class="bank-card kiwibank">
-      <div class="card-header">
-        <div>
+    <!-- ── KIWIBANK ── -->
+    <div class="bank-card" style="--accent:var(--kiwibank);--accent-bg:var(--kiwibank-bg);--accent-mid:var(--kiwibank-mid)">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-top">
           <div class="bank-name"><span class="bank-flag">🇳🇿</span> Kiwibank</div>
-          <div class="bank-ticker">NZX: KWB</div>
+          <div class="card-badges">
+            <span class="badge-ticker">NZX: KWB</span>
+            <span class="badge-fy">FY END: JUN</span>
+          </div>
         </div>
-        <div style="text-align:right;">
-          <div class="fy-tag">FY END: JUN</div>
-        </div>
-      </div>
 
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-val">NZD$191M</div>
-          <div class="metric-key">NPAT FY25</div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-val">NZD$191M</div>
+            <div class="metric-key">NPAT FY25</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">2.18%</div>
+            <div class="metric-key">NIM H1 FY26</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">15.3%</div>
+            <div class="metric-key">Total Capital</div>
+          </div>
         </div>
-        <div class="metric">
-          <div class="metric-val">2.18%</div>
-          <div class="metric-key">NIM H1 FY26</div>
-        </div>
-        <div class="metric">
-          <div class="metric-val">~15.3%</div>
-          <div class="metric-key">Total Capital</div>
-        </div>
-      </div>
 
-      <div class="biz-lines">
-        <strong>Business Lines</strong>
-        <span class="biz-tag">Retail Banking</span>
-        <span class="biz-tag">Business Banking</span>
-        <span class="biz-tag">Agri</span>
-      </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
-        NZ's largest NZ-owned bank. 100% Crown-owned. 1M+ customers, ~9% market share. Full core banking transformation underway. Challenger to the Big Four Aus-owned banks.
-      </div>
+        <div class="biz-section">
+          <span class="section-label">Business Lines</span>
+          <div class="biz-tags">
+            <span class="biz-tag">Retail Banking</span>
+            <span class="biz-tag">Business Banking</span>
+            <span class="biz-tag">Agri</span>
+          </div>
+        </div>
 
-      <div class="card-divider"></div>
-      <span class="files-label">Research Files</span>
-      <ul class="file-list">
-        <li class="file-item">
-          <a href="kiwibank/business-lines.md" class="file-link">
+        <div class="divider"></div>
+
+        <span class="section-label">Research Files</span>
+        <ul class="file-list">
+          <li><a href="kiwibank/business-lines.md" class="file-link">
             <span class="file-icon">📄</span>
-            <span>kiwibank/business-lines.md</span>
-            <span class="badge badge-biz">Business Lines</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="kiwibank/financial-summary.md" class="file-link">
+            <span class="file-name">kiwibank/business-lines.md</span>
+            <span class="file-badge fb-biz">Business Lines</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="kiwibank/financial-summary.md" class="file-link">
             <span class="file-icon">📊</span>
-            <span>kiwibank/financial-summary.md</span>
-            <span class="badge badge-fin">Financials</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="kiwibank/press-releases.md" class="file-link">
+            <span class="file-name">kiwibank/financial-summary.md</span>
+            <span class="file-badge fb-fin">Financials</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="kiwibank/press-releases.md" class="file-link">
             <span class="file-icon">📰</span>
-            <span>kiwibank/press-releases.md</span>
-            <span class="badge badge-pr">Press Releases</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-        <li class="file-item">
-          <a href="kiwibank/sources.md" class="file-link">
+            <span class="file-name">kiwibank/press-releases.md</span>
+            <span class="file-badge fb-pr">Press Releases</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+          <li><a href="kiwibank/sources.md" class="file-link">
             <span class="file-icon">🔗</span>
-            <span>kiwibank/sources.md</span>
-            <span class="badge badge-src">Sources</span>
-            <span class="file-arrow">→</span>
-          </a>
-        </li>
-      </ul>
+            <span class="file-name">kiwibank/sources.md</span>
+            <span class="file-badge fb-src">Sources</span>
+            <span class="file-arrow">↗</span>
+          </a></li>
+        </ul>
+      </div>
+
+      <div class="sources-panel">
+        <button class="sources-toggle" onclick="toggleSources(this)">
+          <span>
+            <span class="sources-toggle-label">External Sources &amp; References</span>
+            <span class="sources-toggle-count">15 links</span>
+          </span>
+          <span class="sources-toggle-icon">▾</span>
+        </button>
+        <div class="sources-content">
+
+          <div class="src-group">
+            <div class="src-group-label">Investor Relations</div>
+            <ul class="src-links">
+              <li><a href="https://www.kiwibank.co.nz/about-us/governance/investor-centre/" target="_blank" class="src-link">
+                <span class="src-link-icon">🏦</span>
+                <span class="src-link-text">Investor Centre</span>
+              </a></li>
+              <li><a href="https://www.kiwibank.co.nz/about-us/governance/investor-centre/reports-and-presentations/" target="_blank" class="src-link">
+                <span class="src-link-icon">📋</span>
+                <span class="src-link-text">Reports &amp; Presentations</span>
+              </a></li>
+              <li><a href="https://bankdashboard.rbnz.govt.nz/" target="_blank" class="src-link">
+                <span class="src-link-icon">📊</span>
+                <span class="src-link-text">RBNZ Bank Financial Strength Dashboard</span>
+              </a></li>
+              <li><a href="https://www.nzx.com/companies/KWB/analysis" target="_blank" class="src-link">
+                <span class="src-link-icon">📈</span>
+                <span class="src-link-text">NZX: Kiwibank (KWB)</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Full Year Results</div>
+            <ul class="src-links">
+              <li><a href="https://www.kiwibank.co.nz/about-us/news-and-updates/media-releases/kiwibank-fy25-results/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">FY2025 Full Year Results</span>
+              </a></li>
+              <li><a href="https://www.kiwibank.co.nz/documents/kiwibank-full-year-results-2025/" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">FY2025 Results Document</span>
+              </a></li>
+              <li><a href="https://www.kiwibank.co.nz/about-us/news-and-updates/media-releases/kiwibank-full-year-results-for-the-year-ended-30-june-2024/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">FY2024 Full Year Results</span>
+              </a></li>
+              <li><a href="https://www.kiwibank.co.nz/about-us/news-and-updates/media-releases/kiwibank-half-year-results-december-2025/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">H1 FY2026 Half Year Results (Dec 2025)</span>
+              </a></li>
+              <li><a href="https://www.interest.co.nz/sites/default/files/2026-02/Kiwibank%20presentation.pdf" target="_blank" class="src-link">
+                <span class="src-link-icon">📄</span>
+                <span class="src-link-text">H1 FY2026 Results Presentation</span>
+                <span class="src-link-tag pdf">PDF</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Technology &amp; Strategy News</div>
+            <ul class="src-links">
+              <li><a href="https://www.mckinsey.com/capabilities/tech-and-ai/how-we-help-clients/rewired-in-action/kiwibank-building-a-better-bank-for-the-future-of-new-zealanders" target="_blank" class="src-link">
+                <span class="src-link-icon">📖</span>
+                <span class="src-link-text">McKinsey: Building a Better Bank — core banking transformation case study</span>
+                <span class="src-link-tag">2024–25</span>
+              </a></li>
+              <li><a href="https://zafin.com/insights/newsroom/press-releases/kiwibank-accelerates-core-transformation-with-zafins-centralized-product-catalog/" target="_blank" class="src-link">
+                <span class="src-link-icon">⚙️</span>
+                <span class="src-link-text">Zafin Product Catalog — core banking transformation</span>
+                <span class="src-link-tag">Oct 2025</span>
+              </a></li>
+              <li><a href="https://www.rnz.co.nz/news/business/574430/using-ai-to-bring-a-bit-more-humanity-back-into-banking" target="_blank" class="src-link">
+                <span class="src-link-icon">🤖</span>
+                <span class="src-link-text">AI — "Bring humanity back into banking" (RNZ)</span>
+                <span class="src-link-tag">2025</span>
+              </a></li>
+              <li><a href="https://www.comcom.govt.nz/news-and-media/news-and-events/2024/a-stronger-kiwibank-and-open-banking-could-shake-up-nz-banking-sector/" target="_blank" class="src-link">
+                <span class="src-link-icon">📊</span>
+                <span class="src-link-text">Commerce Commission: Kiwibank &amp; open banking market study</span>
+                <span class="src-link-tag">2024</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Capital &amp; Ownership</div>
+            <ul class="src-links">
+              <li><a href="https://www.rnz.co.nz/news/business/582301/kiwibank-scraps-500-million-capital-raising-plan" target="_blank" class="src-link">
+                <span class="src-link-icon">💰</span>
+                <span class="src-link-text">$500M capital raise scrapped (RNZ)</span>
+                <span class="src-link-tag">Dec 2025</span>
+              </a></li>
+              <li><a href="https://www.nzherald.co.nz/business/companies/banking-finance/plan-to-part-privatise-kiwibank-scrapped-thanks-to-reserve-bank-capital-rule-change/F26WUC3KXBFIJHLLDF7GBLGLTM/" target="_blank" class="src-link">
+                <span class="src-link-icon">📰</span>
+                <span class="src-link-text">Part-privatisation plan scrapped — RBNZ capital rule change (NZ Herald)</span>
+                <span class="src-link-tag">Dec 2025</span>
+              </a></li>
+            </ul>
+          </div>
+
+          <div class="src-group">
+            <div class="src-group-label">Regulatory Actions</div>
+            <ul class="src-links">
+              <li><a href="https://www.fma.govt.nz/news/all-releases/media-releases/kiwibank-to-pay-812500-penalty/" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">FMA: $812,500 penalty — fee waiver failure (35,000 customers)</span>
+                <span class="src-link-tag">2023</span>
+              </a></li>
+              <li><a href="https://www.fma.govt.nz/news/all-releases/media-releases/fma-warns-kiwibank/" target="_blank" class="src-link">
+                <span class="src-link-icon">⚖️</span>
+                <span class="src-link-text">FMA formal warning — joint account age-based fee waivers</span>
+                <span class="src-link-tag">2024</span>
+              </a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
     </div>
 
   </div><!-- /bank-grid -->
@@ -1005,14 +1546,22 @@
   <footer>
     <div class="footer-left">
       <a href="https://github.com/thelazyanalyst/ESA-FSI">github.com/thelazyanalyst/ESA-FSI</a>
-      &nbsp;·&nbsp; Phase 1 Research &nbsp;·&nbsp; CyberCX Secure AI Practice
+      &nbsp;·&nbsp; CyberCX Secure AI Practice &nbsp;·&nbsp; Phase 1 Research
     </div>
     <div class="footer-right">
-      <span><span class="status-dot"></span> &nbsp;Active</span>
-      <span>Research date: March 2026</span>
+      <span><span class="live-dot"></span>Active</span>
+      <span>5 banks · 16 files · Mar 2026</span>
     </div>
   </footer>
 
 </div>
+
+<script>
+  function toggleSources(btn) {
+    btn.classList.toggle('open');
+    const content = btn.nextElementSibling;
+    content.classList.toggle('open');
+  }
+</script>
 </body>
 </html>
