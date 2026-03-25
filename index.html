@@ -187,14 +187,19 @@
   /* ── GRID ── */
   .bank-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    grid-template-columns: repeat(6, 1fr);
     gap: 20px;
   }
 
-  /* Kiwibank spans full width if it ends up alone */
-  .bank-card:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    max-width: 760px;
+  /* Cards 1–3: 3-up row (each spans 2 of 6 cols) */
+  .bank-card {
+    grid-column: span 2;
+  }
+
+  /* Cards 4–5: 2-up row (each spans 3 of 6 cols) */
+  .bank-card:nth-child(4),
+  .bank-card:nth-child(5) {
+    grid-column: span 3;
   }
 
   /* ── BANK CARD ── */
@@ -583,7 +588,9 @@
     .wrap { padding: 0 20px 60px; }
     header { flex-direction: column; align-items: flex-start; gap: 16px; }
     .bank-grid { grid-template-columns: 1fr; }
-    .bank-card:last-child:nth-child(odd) { grid-column: auto; max-width: none; }
+    .bank-card,
+    .bank-card:nth-child(4),
+    .bank-card:nth-child(5) { grid-column: span 1; }
     .stats-bar { flex-wrap: wrap; }
     .stat { min-width: 50%; }
     .topbar { padding: 8px 20px; }
@@ -626,7 +633,7 @@
       <div class="stat-lbl">Institutions</div>
     </div>
     <div class="stat" style="--accent:var(--cba)">
-      <div class="stat-val">16</div>
+      <div class="stat-val">17</div>
       <div class="stat-lbl">Research Files</div>
     </div>
     <div class="stat" style="--accent:var(--nab)">
