@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiwibank — SABSA Contextual Architecture · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:           #edf0f5;
+    --bg-card:      #ffffff;
+    --bg-section:   #f5f7fa;
+    --border:       #dde3ec;
+    --border-dark:  #c8d1de;
+    --text:         #0f1e33;
+    --text-sub:     #445570;
+    --text-muted:   #8496ae;
+    --accent:       #1a8c50;
+    --accent-bg:    #e8f7ee;
+    --accent-mid:   #b8e8cc;
+    --font-ui:      'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --radius:       6px;
+    --shadow:       0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+
+    /* SABSA column colours */
+    --what:    #1a6eb5;  --what-bg:  #e8f1fc;  --what-mid:  #b8d4f3;
+    --why:     #b04800;  --why-bg:   #fdf0e8;  --why-mid:   #f8ceac;
+    --how:     #6b2eb8;  --how-bg:   #f3edfb;  --how-mid:   #d8beee;
+    --who:     #1a7a6a;  --who-bg:   #e8f6f3;  --who-mid:   #b5e5dc;
+    --where:   #7a6a1a;  --where-bg: #f7f4e8;  --where-mid: #e8dea0;
+    --when:    #8c1a50;  --when-bg:  #fae8f0;  --when-mid:  #f0b8cc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  /* ACCENT STRIPE */
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 28px;
+    border-radius: 2px;
+  }
+
+  /* META BAR */
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .meta-chip.sabsa {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-color: var(--accent-mid);
+  }
+
+  /* INTRO CARD */
+  .intro-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+  .intro-card h2 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .intro-card p {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.75;
+  }
+  .layer-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+  }
+  .layer-pill {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .lp-what  { background: var(--what-bg);  color: var(--what);  border-color: var(--what-mid); }
+  .lp-why   { background: var(--why-bg);   color: var(--why);   border-color: var(--why-mid); }
+  .lp-how   { background: var(--how-bg);   color: var(--how);   border-color: var(--how-mid); }
+  .lp-who   { background: var(--who-bg);   color: var(--who);   border-color: var(--who-mid); }
+  .lp-where { background: var(--where-bg); color: var(--where); border-color: var(--where-mid); }
+  .lp-when  { background: var(--when-bg);  color: var(--when);  border-color: var(--when-mid); }
+
+  /* SECTION BLOCK */
+  .section-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 18px 28px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .section-q {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .section-title-group { flex: 1; }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .section-subtitle {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .section-body { padding: 24px 28px; }
+
+  .sub-section { margin-bottom: 24px; }
+  .sub-section:last-child { margin-bottom: 0; }
+
+  .sub-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sub-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .sub-text {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.75;
+    margin-bottom: 10px;
+  }
+
+  .item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .item-list li {
+    font-size: 13.5px;
+    color: var(--text-sub);
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+  }
+  .item-list li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .item-list li strong { color: var(--text); font-weight: 600; }
+
+  /* ATTRIBUTES TABLE */
+  .attr-table-wrap { overflow-x: auto; margin: 4px 0 0; border-radius: 5px; border: 1px solid var(--border); }
+  .attr-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .attr-table thead { background: var(--bg-section); }
+  .attr-table th {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-sub);
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .attr-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .attr-table tr:last-child td { border-bottom: none; }
+  .attr-table tbody tr:hover td { background: var(--bg-section); }
+  .attr-name { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .kpi-val {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--accent);
+  }
+
+  /* RISK COLS */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+
+  .risk-col-head {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .risk-col-head.opps { color: #1a7a6a; }
+  .risk-col-head.threats { color: #b04800; }
+
+  /* PROCESS STEPS */
+  .process-steps {
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .process-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+    line-height: 1.6;
+  }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-num.what  { background: var(--what-bg);  color: var(--what);  border: 1px solid var(--what-mid); }
+  .step-num.why   { background: var(--why-bg);   color: var(--why);   border: 1px solid var(--why-mid); }
+  .step-num.how   { background: var(--how-bg);   color: var(--how);   border: 1px solid var(--how-mid); }
+  .step-num.who   { background: var(--who-bg);   color: var(--who);   border: 1px solid var(--who-mid); }
+  .step-num.where { background: var(--where-bg); color: var(--where); border: 1px solid var(--where-mid); }
+  .step-num.when  { background: var(--when-bg);  color: var(--when);  border: 1px solid var(--when-mid); }
+
+  /* PARTNER GRID */
+  .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .partner-chip {
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-sub);
+  }
+  .partner-chip span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+
+  /* DEADLINE TABLE */
+  .deadline-table-wrap { overflow-x: auto; margin-top: 4px; border-radius: 5px; border: 1px solid var(--border); }
+  .deadline-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .deadline-table th {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-sub);
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .deadline-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .deadline-table tr:last-child td { border-bottom: none; }
+  .deadline-table tbody tr:hover td { background: var(--bg-section); }
+  .dl-date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--when);
+    white-space: nowrap;
+  }
+
+  /* SECTION COLOUR THEMING */
+  .s-what  .section-header { background: var(--what-bg);  border-bottom-color: var(--what-mid); }
+  .s-what  .section-q, .s-what  .section-title { color: var(--what); }
+  .s-what  .section-subtitle { color: var(--what); opacity: 0.7; }
+
+  .s-why   .section-header { background: var(--why-bg);   border-bottom-color: var(--why-mid); }
+  .s-why   .section-q, .s-why   .section-title { color: var(--why); }
+  .s-why   .section-subtitle { color: var(--why); opacity: 0.7; }
+
+  .s-how   .section-header { background: var(--how-bg);   border-bottom-color: var(--how-mid); }
+  .s-how   .section-q, .s-how   .section-title { color: var(--how); }
+  .s-how   .section-subtitle { color: var(--how); opacity: 0.7; }
+
+  .s-who   .section-header { background: var(--who-bg);   border-bottom-color: var(--who-mid); }
+  .s-who   .section-q, .s-who   .section-title { color: var(--who); }
+  .s-who   .section-subtitle { color: var(--who); opacity: 0.7; }
+
+  .s-where .section-header { background: var(--where-bg); border-bottom-color: var(--where-mid); }
+  .s-where .section-q, .s-where .section-title { color: var(--where); }
+  .s-where .section-subtitle { color: var(--where); opacity: 0.7; }
+
+  .s-when  .section-header { background: var(--when-bg);  border-bottom-color: var(--when-mid); }
+  .s-when  .section-q, .s-when  .section-title { color: var(--when); }
+  .s-when  .section-subtitle { color: var(--when); opacity: 0.7; }
+
+  /* NAV FOOTER */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .section-body { padding: 20px; }
+    .section-header { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Kiwibank</span>
+    <span class="sep">/</span>
+    <span class="current">SABSA Contextual Architecture</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🏛 Kiwibank — SABSA Contextual Architecture</h1>
+      <div class="sub">Kiwibank · NZX: KWB · Derived from public sources · March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇳🇿</span>
+      <span class="bank-pill">NZX: KWB</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="meta-bar">
+    <span class="meta-chip sabsa">SABSA Framework</span>
+    <span class="meta-chip">Contextual Layer</span>
+    <span class="meta-chip">The Business View</span>
+    <span class="meta-chip">Public Sources Only</span>
+    <span class="meta-chip">Research Date: March 2026</span>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <h2>Contextual Architecture — The Business View</h2>
+    <p>The Contextual Architecture is the top layer of the SABSA framework. It captures the business context — who Kiwibank is, what it is trying to achieve, what risks it faces, and the environmental constraints it operates within. Everything in the layers below must be traceable back to this layer. This document is derived from Kiwibank's public press releases, annual results, CEO statements, and Commerce Commission proceedings (2022–2026).</p>
+    <div class="layer-pills">
+      <span class="layer-pill lp-what">What — Assets</span>
+      <span class="layer-pill lp-why">Why — Motivation</span>
+      <span class="layer-pill lp-how">How — Process</span>
+      <span class="layer-pill lp-who">Who — People</span>
+      <span class="layer-pill lp-where">Where — Location</span>
+      <span class="layer-pill lp-when">When — Time</span>
+    </div>
+  </div>
+
+  <!-- ── WHAT ── -->
+  <div class="section-block s-what">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHAT — Business Assets</div>
+        <div class="section-subtitle">Goals · Business Value · Business Attributes Taxonomy &amp; Profile</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Goals &amp; Decisions</div>
+        <p class="sub-text">Become a genuine, scaled competitor to the four Australian-owned banks. Double in size every five years. Achieve 25%+ of new NZ home lending originations and grow business lending at 3× market rate — without taking "edgy and risky" risks. Execute a full core banking transformation to deliver lasting product agility.</p>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Value</div>
+        <ul class="item-list">
+          <li><strong>1M+ customers</strong> across retail and business banking; NZD $37.6B total lending book (Dec 2025)</li>
+          <li><strong>NZ-owned brand</strong> — Crown mandate as the designated competitive challenger; "Maverick" positioning is a strategic asset</li>
+          <li><strong>Core banking transformation platform</strong> (Thought Machine, Zafin, nCino, AWS) — future product agility and cost competitiveness</li>
+          <li><strong>Branch network</strong> — largest in NZ; physical presence as a trust, accessibility, and distribution differentiator</li>
+          <li><strong>Regulatory goodwill</strong> — proactive Commerce Commission engagement; only NZ bank to remove open banking API fees</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Attributes Taxonomy &amp; Profile</div>
+        <div class="attr-table-wrap">
+          <table class="attr-table">
+            <thead>
+              <tr>
+                <th>Attribute</th>
+                <th>Performance Target (KPI)</th>
+                <th>Risk Indicator (KRI)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="attr-name">Competitive</td>
+                <td class="kpi-val">25%+ new home lending originations; business lending 3× market growth</td>
+                <td>Market share loss to Australian banks; product launch latency vs. competitors</td>
+              </tr>
+              <tr>
+                <td class="attr-name">Accessible</td>
+                <td class="kpi-val">Co-own and StartUp+ active customer count; below-market exclusion rates</td>
+                <td>Products withdrawn due to credit loss; media criticism of inclusion claims</td>
+              </tr>
+              <tr>
+                <td class="attr-name">Available</td>
+                <td class="kpi-val">"Second-best reliability in Southern Hemisphere"; 6× improvement in service downtime</td>
+                <td>Unplanned outages; payment processing failures during peak periods</td>
+              </tr>
+              <tr>
+                <td class="attr-name">Crime-Free</td>
+                <td class="kpi-val">Zero material scam losses attributable to platform failure; Confirmation of Payee live Nov 2024</td>
+                <td>APP fraud volumes; Code of Banking Practice breach findings</td>
+              </tr>
+              <tr>
+                <td class="attr-name">Compliant</td>
+                <td class="kpi-val">CDR payment APIs live June 2026; account info APIs live Dec 2026</td>
+                <td>Regulatory enforcement action; missed CDR deadlines</td>
+              </tr>
+              <tr>
+                <td class="attr-name">Profitable</td>
+                <td class="kpi-val">NPAT ≥ NZD $191M (FY25 baseline); cost-to-income ratio improving</td>
+                <td>NIM compression below 2.0%; cost growth exceeding income growth</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHY ── -->
+  <div class="section-block s-why">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHY — Business Motivation</div>
+        <div class="section-subtitle">Risk · Opportunities &amp; Threats · Risk Management Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Opportunities &amp; Threats</div>
+        <div class="risk-grid">
+          <div>
+            <div class="risk-col-head opps">Opportunities</div>
+            <ul class="item-list">
+              <li>Commerce Commission mandate to be a "disruptive competitor" — regulatory tailwind for capital, market access, and open banking</li>
+              <li>RBNZ capital requirement easing (~NZD $500M benefit) — balance sheet capacity without dilutive equity raise</li>
+              <li>Australian banks' legacy infrastructure creates a product speed advantage post-transformation</li>
+              <li>Open banking CDR framework enables fintech partnerships and new revenue streams</li>
+              <li>NZ economic recovery in 2026 — business confidence lifting; credit impairments falling sharply (H1 FY26: $5M vs $21M prior)</li>
+            </ul>
+          </div>
+          <div>
+            <div class="risk-col-head threats">Threats</div>
+            <ul class="item-list">
+              <li>NIM compression (down 11bps in H1 FY26) — volume growth required to sustain profitability</li>
+              <li>Core transformation execution risk — "run-and-replace"; 50%+ of tech stack in simultaneous remediation</li>
+              <li>Australian banks matching open banking moves — competitive advantage window is finite</li>
+              <li>APP fraud and scams — reputational and financial risk; Code of Banking Practice obligations from 30 Nov 2025</li>
+              <li>Cyber threats to cloud-native transformation infrastructure (AWS, Thought Machine, Snowflake)</li>
+              <li>Governance constraints — Crown ownership limits capital raise flexibility and IPO timing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Risk Management Strategy</div>
+        <ul class="item-list">
+          <li><strong>"Secure by design, compliant by design"</strong> — foundational engineering principles applied across the transformation programme</li>
+          <li>Transform the technology base to reduce operational and execution risk; cloud-native reduces legacy fragility</li>
+          <li>Proactive regulatory engagement — accepted all 14 Commerce Commission recommendations before mandated</li>
+          <li>Capital buffer maintained well above RBNZ minimums (15.3% total capital vs 4.5% CET1 floor)</li>
+          <li>Confirmation of Payee deployed among first NZ banks — reduces APP fraud liability ahead of regulatory deadline</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HOW ── -->
+  <div class="section-block s-how">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">HOW — Business Meta-Processes</div>
+        <div class="section-subtitle">Business Value Chain · Capabilities · Process Assurance Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Business Value Chain</div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num how">1</div><div>Attract customers through brand differentiation — NZ-owned identity, purpose-driven products, competitive pricing</div></div>
+          <div class="process-step"><div class="step-num how">2</div><div>Originate loans and accounts via digital-first channels (app, nCino) and nationwide branch network</div></div>
+          <div class="process-step"><div class="step-num how">3</div><div>Service and retain customers through AI-augmented contact centre and personalised in-app experiences</div></div>
+          <div class="process-step"><div class="step-num how">4</div><div>Fund lending through retail deposits and wholesale markets (NZD $400M Tier 2 bonds, 2025)</div></div>
+          <div class="process-step"><div class="step-num how">5</div><div>Transform the technology stack to enable faster, cheaper, and more competitive product delivery over the long term</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Core Capabilities</div>
+        <ul class="item-list">
+          <li><strong>Digital-first origination</strong> — retail and business lending via app and nCino platform; faster credit decisions than incumbents</li>
+          <li><strong>Real-time payment processing</strong> — ACI Worldwide cloud-hosted platform; first NZ bank to shift payment processing to a cloud-hosted managed service</li>
+          <li><strong>Product launch agility</strong> — Zafin centralised product catalog as single source of truth; reduces time-to-market for new products</li>
+          <li><strong>Open banking API provision</strong> — obconnect platform; zero-fee access (only NZ bank); payment APIs June 2026, account info Dec 2026</li>
+          <li><strong>AI-driven customer service</strong> — Genesys Cloud voicebot; 98% intent resolution without live agents; 28% reduction in call abandonment</li>
+          <li><strong>Fraud and scam prevention</strong> — Confirmation of Payee live Nov 2024; enhanced fraud tooling deployed FY25</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHO ── -->
+  <div class="section-block s-who">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHO — Business Governance</div>
+        <div class="section-subtitle">Organisational Structure · Extended Enterprise · Trust Framework</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Organisational Structure</div>
+        <ul class="item-list">
+          <li><strong>Ownership:</strong> 100% Crown-owned via Kiwi Group Capital (KGC); 51% Crown floor maintained in any future capital raise; long-term patient capital with no short-term shareholder return pressure</li>
+          <li><strong>CEO:</strong> Steve Jurkovich — externally visible, transformation advocate, NZ economic ambassador</li>
+          <li><strong>CDTO:</strong> Hamish Rumbold — NZ CIO of the Year 2024; leads core banking transformation (McKinsey cross-functional squad model)</li>
+          <li><strong>Governance:</strong> KGC board as governing entity; Crown as single shareholder with a mandate to build a competitive NZ-owned bank</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Extended Enterprise</div>
+        <div class="partner-grid">
+          <div class="partner-chip"><span>Core Banking</span>Thought Machine</div>
+          <div class="partner-chip"><span>Payments</span>ACI Worldwide</div>
+          <div class="partner-chip"><span>Product Catalog</span>Zafin</div>
+          <div class="partner-chip"><span>Loan Origination</span>nCino</div>
+          <div class="partner-chip"><span>Contact Centre</span>Genesys Cloud</div>
+          <div class="partner-chip"><span>Data Platform</span>Snowflake + Kafka</div>
+          <div class="partner-chip"><span>Cloud</span>AWS (primary)</div>
+          <div class="partner-chip"><span>CRM</span>Microsoft Dynamics</div>
+          <div class="partner-chip"><span>Open Banking</span>obconnect / Wych</div>
+          <div class="partner-chip"><span>Delivery Partner</span>Spark NZ</div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Key Regulators</div>
+        <ul class="item-list">
+          <li><strong>RBNZ</strong> — prudential regulator; capital requirements, liquidity standards</li>
+          <li><strong>Commerce Commission</strong> — competition regulator; Banking Competition Inquiry; 14 recommendations accepted by government</li>
+          <li><strong>MBIE / CDR framework</strong> — open banking obligations; designated data holder from 1 June 2026</li>
+          <li><strong>FMA</strong> — financial markets conduct; Code of Banking Practice obligations</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Trust Framework</div>
+        <ul class="item-list">
+          <li><strong>Crown as owner:</strong> long-term patient capital; national mandate creates a trusted "challenger" identity distinct from profit-maximising Australian banks</li>
+          <li><strong>Customers:</strong> trust anchored on NZ-owned brand, branch accessibility, scam protection commitments, and "people first" AI philosophy</li>
+          <li><strong>Fintechs:</strong> zero-fee open banking APIs position Kiwibank as preferred fintech integration partner in NZ</li>
+          <li><strong>Regulators:</strong> proactive compliance posture (early Confirmation of Payee adopter; accepted all 14 Commerce Commission recommendations) builds regulatory goodwill</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHERE ── -->
+  <div class="section-block s-where">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHERE — Business Geography</div>
+        <div class="section-subtitle">Operating Jurisdiction · Regulatory Domains · Infrastructure Geography</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Operating Jurisdiction</div>
+        <ul class="item-list">
+          <li><strong>New Zealand only</strong> — no international retail or commercial banking operations; NZ-focused capital raise (NZ institutional investors only)</li>
+          <li><strong>HQ:</strong> Wellington; <strong>Branch network:</strong> nationwide — largest in NZ; recent expansion includes Newmarket (Auckland) and Kerikeri</li>
+          <li>~9% overall NZ banking market share; ~8% home loan stock; capturing ~25% of new originations (2024)</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Regulatory Domains</div>
+        <ul class="item-list">
+          <li>Reserve Bank of New Zealand (RBNZ) — prudential regulation; standardised capital approach (not IRB like the Big Four)</li>
+          <li>Commerce Commission — competition regulation; outcome of Banking Competition Inquiry directly shapes Kiwibank's strategic positioning</li>
+          <li>Consumer Data Right (CDR) framework — open banking regulatory domain; Kiwibank as designated data holder</li>
+          <li>NZ Code of Banking Practice — scam/fraud obligations; effective 30 November 2025</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Infrastructure Geography</div>
+        <ul class="item-list">
+          <li><strong>Cloud-primary:</strong> AWS as primary cloud provider for core banking and data workloads</li>
+          <li><strong>Payment processing:</strong> ACI Worldwide cloud-hosted managed service — first NZ bank to shift payment processing to cloud; SaaS deployment on Microsoft Azure</li>
+          <li><strong>Data:</strong> Snowflake + Apache Kafka (real-time data streaming); centralised data platform</li>
+          <li>No significant on-premise datacentre footprint remaining post-transformation</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHEN ── -->
+  <div class="section-block s-when">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHEN — Business Time Dependence</div>
+        <div class="section-subtitle">Strategic Horizon · Regulatory Deadlines · Operational Time Dependencies</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Strategic Time Horizon</div>
+        <ul class="item-list">
+          <li><strong>Core transformation:</strong> ongoing; estimated 18 months–2 years to substantial completion (per CEO, 2025); IPO readiness conditional on tech de-risking</li>
+          <li><strong>Growth ambition:</strong> double in size every five years (~10% annual compound growth); FY25 baseline lending: NZD $35.8B</li>
+          <li><strong>Capital strategy:</strong> NZD $400M Tier 2 subordinated bond raise complete (2025); RBNZ capital easing (~NZD $500M benefit) removes near-term equity raise pressure</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Regulatory Deadlines</div>
+        <div class="deadline-table-wrap">
+          <table class="deadline-table">
+            <thead>
+              <tr><th>Deadline</th><th>Obligation</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="dl-date">30 Nov 2024</td><td>Confirmation of Payee (anti-scam)</td><td>Live — among first NZ banks</td></tr>
+              <tr><td class="dl-date">30 Nov 2025</td><td>Code of Banking Practice scam obligations</td><td>Compliant</td></tr>
+              <tr><td class="dl-date">1 Jun 2026</td><td>Designated data holder (CDR); payment initiation APIs</td><td>On track</td></tr>
+              <tr><td class="dl-date">30 Nov 2026</td><td>Account information APIs (open banking)</td><td>Planned</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Operational Time Dependencies</div>
+        <ul class="item-list">
+          <li><strong>Real-time payments:</strong> sub-second settlement expectation; ACI Worldwide platform live — any processing delay is a direct competitive and reputational risk</li>
+          <li><strong>Daily engagement:</strong> 70% of customers use the Kiwibank app more than once per day — uptime and response time are critical customer experience metrics</li>
+          <li><strong>Credit decisioning speed:</strong> faster lending decisions than legacy-encumbered competitors is a stated differentiator for SME banking</li>
+          <li><strong>Reporting cadence:</strong> half-yearly financial reporting (FY ends 30 June); continuous KPI/KRI monitoring via Snowflake data platform</li>
+          <li><strong>Transformation governance:</strong> ongoing sprint cadence (McKinsey cross-functional squad model); Architecture Board approval for major change</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PAGE FOOTER -->
+  <div class="page-footer">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="press-releases.html" class="sib-link">📰 Press Releases</a>
+      <a href="sources.html" class="sib-link">🔗 Sources</a>
+      <a href="sabsa-contextual.html" class="sib-link active">🏛 SABSA Contextual</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
