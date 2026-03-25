@@ -391,11 +391,11 @@ TEMPLATE = """\
     border: 1px solid var(--border);
   }}
 
-  /* NAV FOOTER */
-  .page-footer {{
-    margin-top: 48px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
+  /* PAGE NAV (top) */
+  .page-nav {{
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -473,15 +473,15 @@ TEMPLATE = """\
 
   <div class="accent-stripe"></div>
 
-  <div class="content">
-{content_html}
-  </div>
-
-  <div class="page-footer">
+  <div class="page-nav">
     <a href="../index.html" class="back-link">← Back to index</a>
     <div class="sibling-nav">
 {sibling_links}
     </div>
+  </div>
+
+  <div class="content">
+{content_html}
   </div>
 
 </div>
