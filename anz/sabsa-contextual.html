@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANZ Bank — SABSA Contextual Architecture · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:           #edf0f5;
+    --bg-card:      #ffffff;
+    --bg-section:   #f5f7fa;
+    --border:       #dde3ec;
+    --border-dark:  #c8d1de;
+    --text:         #0f1e33;
+    --text-sub:     #445570;
+    --text-muted:   #8496ae;
+    --accent:       #0076a8;
+    --accent-bg:    #e8f4fa;
+    --accent-mid:   #cce7f3;
+    --font-ui:      'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --radius:       6px;
+    --shadow:       0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+
+    --what:    #1a6eb5;  --what-bg:  #e8f1fc;  --what-mid:  #b8d4f3;
+    --why:     #b04800;  --why-bg:   #fdf0e8;  --why-mid:   #f8ceac;
+    --how:     #6b2eb8;  --how-bg:   #f3edfb;  --how-mid:   #d8beee;
+    --who:     #1a7a6a;  --who-bg:   #e8f6f3;  --who-mid:   #b5e5dc;
+    --where:   #7a6a1a;  --where-bg: #f7f4e8;  --where-mid: #e8dea0;
+    --when:    #8c1a50;  --when-bg:  #fae8f0;  --when-mid:  #f0b8cc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  .accent-stripe {
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 28px;
+    border-radius: 2px;
+  }
+
+  .meta-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .meta-chip.sabsa {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-color: var(--accent-mid);
+  }
+
+  .intro-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+  .intro-card h2 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .intro-card p {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.75;
+  }
+  .layer-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+  }
+  .layer-pill {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .lp-what  { background: var(--what-bg);  color: var(--what);  border-color: var(--what-mid); }
+  .lp-why   { background: var(--why-bg);   color: var(--why);   border-color: var(--why-mid); }
+  .lp-how   { background: var(--how-bg);   color: var(--how);   border-color: var(--how-mid); }
+  .lp-who   { background: var(--who-bg);   color: var(--who);   border-color: var(--who-mid); }
+  .lp-where { background: var(--where-bg); color: var(--where); border-color: var(--where-mid); }
+  .lp-when  { background: var(--when-bg);  color: var(--when);  border-color: var(--when-mid); }
+
+  .section-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 18px 28px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-q {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .section-subtitle {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .section-body { padding: 24px 28px; }
+  .sub-section { margin-bottom: 24px; }
+  .sub-section:last-child { margin-bottom: 0; }
+  .sub-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sub-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .sub-text {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.75;
+    margin-bottom: 10px;
+  }
+  .item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .item-list li {
+    font-size: 13.5px;
+    color: var(--text-sub);
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+  }
+  .item-list li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+  .item-list li strong { color: var(--text); font-weight: 600; }
+
+  .attr-table-wrap { overflow-x: auto; margin: 4px 0 0; border-radius: 5px; border: 1px solid var(--border); }
+  .attr-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .attr-table thead { background: var(--bg-section); }
+  .attr-table th {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-sub);
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .attr-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .attr-table tr:last-child td { border-bottom: none; }
+  .attr-table tbody tr:hover td { background: var(--bg-section); }
+  .attr-name { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .kpi-val { font-family: var(--font-mono); font-size: 11.5px; color: var(--accent); }
+
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+  .risk-col-head {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .risk-col-head.opps { color: #1a7a6a; }
+  .risk-col-head.threats { color: #b04800; }
+
+  .process-steps {
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .process-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+    line-height: 1.6;
+  }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-num.how { background: var(--how-bg); color: var(--how); border: 1px solid var(--how-mid); }
+
+  .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .partner-chip {
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-sub);
+  }
+  .partner-chip span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+
+  .deadline-table-wrap { overflow-x: auto; margin-top: 4px; border-radius: 5px; border: 1px solid var(--border); }
+  .deadline-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .deadline-table th {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-sub);
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .deadline-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .deadline-table tr:last-child td { border-bottom: none; }
+  .deadline-table tbody tr:hover td { background: var(--bg-section); }
+  .dl-date { font-family: var(--font-mono); font-size: 11px; color: var(--when); white-space: nowrap; }
+
+  .s-what  .section-header { background: var(--what-bg);  border-bottom-color: var(--what-mid); }
+  .s-what  .section-q, .s-what  .section-title { color: var(--what); }
+  .s-what  .section-subtitle { color: var(--what); opacity: 0.7; }
+  .s-why   .section-header { background: var(--why-bg);   border-bottom-color: var(--why-mid); }
+  .s-why   .section-q, .s-why   .section-title { color: var(--why); }
+  .s-why   .section-subtitle { color: var(--why); opacity: 0.7; }
+  .s-how   .section-header { background: var(--how-bg);   border-bottom-color: var(--how-mid); }
+  .s-how   .section-q, .s-how   .section-title { color: var(--how); }
+  .s-how   .section-subtitle { color: var(--how); opacity: 0.7; }
+  .s-who   .section-header { background: var(--who-bg);   border-bottom-color: var(--who-mid); }
+  .s-who   .section-q, .s-who   .section-title { color: var(--who); }
+  .s-who   .section-subtitle { color: var(--who); opacity: 0.7; }
+  .s-where .section-header { background: var(--where-bg); border-bottom-color: var(--where-mid); }
+  .s-where .section-q, .s-where .section-title { color: var(--where); }
+  .s-where .section-subtitle { color: var(--where); opacity: 0.7; }
+  .s-when  .section-header { background: var(--when-bg);  border-bottom-color: var(--when-mid); }
+  .s-when  .section-q, .s-when  .section-title { color: var(--when); }
+  .s-when  .section-subtitle { color: var(--when); opacity: 0.7; }
+
+  .page-nav {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .section-body { padding: 20px; }
+    .section-header { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>ANZ Bank</span>
+    <span class="sep">/</span>
+    <span class="current">SABSA Contextual Architecture</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🏛 ANZ Bank — SABSA Contextual Architecture</h1>
+      <div class="sub">ANZ · ASX: ANZ · Derived from public sources · March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: ANZ</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="page-nav">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link">🔗 Sources</a>
+      <a href="sabsa-contextual.html" class="sib-link active">🏛 SABSA Contextual</a>
+    </div>
+  </div>
+
+  <div class="meta-bar">
+    <span class="meta-chip sabsa">SABSA Framework</span>
+    <span class="meta-chip">Contextual Layer</span>
+    <span class="meta-chip">The Business View</span>
+    <span class="meta-chip">Public Sources Only</span>
+    <span class="meta-chip">Research Date: March 2026</span>
+  </div>
+
+  <div class="intro-card">
+    <h2>Contextual Architecture — The Business View</h2>
+    <p>The Contextual Architecture is the top layer of the SABSA framework. It captures the business context — who ANZ is, what it is trying to achieve, what risks it faces, and the environmental constraints it operates within. Everything in the layers below must be traceable back to this layer. This document is derived from ANZ's public annual results, CEO statements, investor presentations, and regulatory filings (2023–2026).</p>
+    <div class="layer-pills">
+      <span class="layer-pill lp-what">What — Assets</span>
+      <span class="layer-pill lp-why">Why — Motivation</span>
+      <span class="layer-pill lp-how">How — Process</span>
+      <span class="layer-pill lp-who">Who — People</span>
+      <span class="layer-pill lp-where">Where — Location</span>
+      <span class="layer-pill lp-when">When — Time</span>
+    </div>
+  </div>
+
+  <!-- ── WHAT ── -->
+  <div class="section-block s-what">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHAT — Business Assets</div>
+        <div class="section-subtitle">Goals · Values · Asset Taxonomy · Success Factors · Targets</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Goals &amp; Decisions</div>
+        <p class="sub-text">Execute the ANZ 2030 Strategy — reset culture, complete the Suncorp integration, reduce the cost base by A$800M, and build a platform for long-term growth. Phase 1 (FY26–FY27) is "get the basics right": culture accountability, non-financial risk remediation, Suncorp customer migration, and a single customer front-end. Phase 2 invests that cost savings into growth. The institutional franchise remains the profit engine; Australian retail must recover.</p>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Values</div>
+        <ul class="item-list">
+          <li><strong>Customer First</strong> — first of the ANZ 2030 pillars; a deliberate culture reset away from internal complexity toward customer outcomes</li>
+          <li><strong>Simplicity</strong> — reducing product, process, and organisational complexity; enabling faster decisions and lower cost to serve</li>
+          <li><strong>Resilience</strong> — non-financial risk remediation (APRA CEU, ASIC penalty) as a pre-condition for sustainable growth; "security must be built into products and services by design"</li>
+          <li><strong>Delivering Value</strong> — returns to shareholders and communities; A$800M cost savings reinvested into the business</li>
+          <li><strong>Accountability and transparency</strong> — CEO Nuno Matos explicitly named culture reset and decisiveness as the top priority on appointment</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Taxonomy of Business Assets</div>
+        <ul class="item-list">
+          <li><strong>Customer relationships</strong> — retail, SME, private banking, and institutional clients across Australia, New Zealand, and major international markets</li>
+          <li><strong>Institutional franchise</strong> — consistently ANZ's strongest performer; record revenue and profit in FY2024; RoE doubled 2016–2024; scalable digital platform (MIT CISR case study)</li>
+          <li><strong>Lending book</strong> — gross loans grew 13% YoY in FY25 (largely Suncorp); net loans +1% in Q1 FY26; total balance sheet ~A$1T+</li>
+          <li><strong>Suncorp Bank (acquired Jul 2024)</strong> — adds ~A$65B in loans, ~A$48B deposits; customer migration underway; full integration by June 2027</li>
+          <li><strong>ANZ Plus platform</strong> — next-generation digital consumer banking app, rebuilt from scratch; strategic successor to legacy retail app</li>
+          <li><strong>New Zealand franchise</strong> — ANZ Bank NZ is New Zealand's largest bank by assets; Cash NPAT A$2,286M FY24, A$1,161M 1H25; NIM 2.60%</li>
+          <li><strong>Technology infrastructure</strong> — multi-cloud (AWS + Azure); Salesforce Agentforce (first at scale in Asia-Pacific); Ensayo AI for software development; HCLTech partnership; ICT spend ~A$2.5B/year</li>
+          <li><strong>Capital and balance sheet</strong> — CET1 12.0% (FY25, pro-forma 12.26%); NOHC structure since January 2023; A$1.2B of share buyback completed 1H25</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Critical Success Factors</div>
+        <ul class="item-list">
+          <li><strong>Suncorp integration execution</strong> — customer migration to ANZ systems by June 2027 is the defining near-term operational risk; delays would extend integration costs and distract management</li>
+          <li><strong>Cost programme delivery</strong> — A$800M gross pre-tax annual savings target; 3,500 roles cut + 1,000 managed services exits; cost-to-income ratio below 50% (achieved Q1 FY26)</li>
+          <li><strong>Non-financial risk remediation</strong> — APRA CEU compliance and ASIC penalty remediation must be completed without further enforcement escalation</li>
+          <li><strong>Institutional franchise protection</strong> — record RoE must be defended; any operational or reputational disruption to the institutional platform would be disproportionately damaging</li>
+          <li><strong>Australian retail recovery</strong> — Australia Retail and Business &amp; Private Bank underperformed in FY24–FY25; margin recovery and Suncorp uplift are required for group performance</li>
+          <li><strong>Culture reset credibility</strong> — Nuno Matos has staked the ANZ 2030 narrative on accountability and clarity; failure to visibly shift culture would undermine investor confidence</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Targets</div>
+        <ul class="item-list">
+          <li><strong>Cost:</strong> A$800M gross pre-tax annual cost savings from FY26; cost-to-income ratio below 50% (Q1 FY26 achieved)</li>
+          <li><strong>Capital:</strong> CET1 target range ~11.5–12.5%; FY25 12.0% (pro-forma 12.26%)</li>
+          <li><strong>NIM:</strong> group NIM ~1.56% (FY25); NZ NIM 2.60% (FY25, up 3bps 2H25)</li>
+          <li><strong>Institutional RoE:</strong> maintain ~13–14% range established in FY24–FY25</li>
+          <li><strong>Suncorp:</strong> full customer migration by June 2027; integration synergies to flow through FY26–FY27</li>
+          <li><strong>Dividend:</strong> 166 cps FY25 (83 cps interim + 83 cps final); 70% franked</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHY ── -->
+  <div class="section-block s-why">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHY — Business Motivation</div>
+        <div class="section-subtitle">Risk · Opportunities &amp; Threats · Risk Management Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Opportunities &amp; Threats</div>
+        <div class="risk-grid">
+          <div>
+            <div class="risk-col-head opps">Opportunities</div>
+            <ul class="item-list">
+              <li>Suncorp acquisition adds scale in Australian retail and business banking — first full year of earnings in FY25</li>
+              <li>Institutional franchise is structurally advantaged — Asia-Pacific trade and capital flows growing; ANZ's institutional platform is a recognised digital leader (MIT CISR)</li>
+              <li>ANZ Plus as future retail growth engine — rebuilt from scratch for digital-native customers; avoids legacy migration cost</li>
+              <li>Salesforce Agentforce (first at scale in Asia-Pacific) — AI productivity gains in business banking could accelerate revenue growth and cost reduction simultaneously</li>
+              <li>Cost savings reinvestment — A$800M savings programme creates capital for strategic investment in FY27+</li>
+            </ul>
+          </div>
+          <div>
+            <div class="risk-col-head threats">Threats</div>
+            <ul class="item-list">
+              <li>Regulatory and legal risk — A$250M ASIC penalty (largest ever against an Australian bank) + APRA CEU; ~A$400M combined charge on FY25–FY26 earnings</li>
+              <li>Australian retail margin compression — non-bank and digital competitors continue to pressure home loan margins</li>
+              <li>Suncorp integration risk — customer migration complexity; cultural integration; system failure during migration window</li>
+              <li>Cyber and AI threats — "Generative AI, sophisticated criminal networks, and evolving regulations are reshaping both threats and responses" (ANZ Institutional, October 2025)</li>
+              <li>Culture and talent risk — 3,500 role reductions + managed services exits create execution risk and potential talent drain in critical transformation roles</li>
+              <li>NIM headwinds — competitive mortgage market and RBA rate cycle uncertainty continue to compress Australian retail NIM</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Risk Management Strategy</div>
+        <ul class="item-list">
+          <li><strong>Security by design</strong> — "Security must be built into the products and services by design" (ANZ Institutional, 2025); cybersecurity is the top technology investment priority for ANZ CIOs (Gartner, 2025)</li>
+          <li><strong>APRA CEU compliance</strong> — ~A$150M Root Cause Remediation Plan; multi-year programme to address non-financial risk failures identified in ASIC proceedings</li>
+          <li><strong>Multi-cloud risk diversification</strong> — AWS + Azure multi-cloud reduces single-provider dependency for critical banking workloads</li>
+          <li><strong>Third-party and supply chain security</strong> — scope explicitly extended to vendors, cloud providers, and digital supply chains</li>
+          <li><strong>Capital buffer</strong> — CET1 12.0%+ above APRA's "unquestionably strong" benchmark; NOHC structure provides capital flexibility</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HOW ── -->
+  <div class="section-block s-how">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">HOW — Business Meta-Processes</div>
+        <div class="section-subtitle">Business Value Chain · Capabilities · Process Assurance Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Business Value Chain</div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num how">1</div><div>Attract and acquire customers via branch, broker, digital (ANZ Plus app), and institutional relationship coverage across AU, NZ, and international markets</div></div>
+          <div class="process-step"><div class="step-num how">2</div><div>Originate and book loans, deposits, FX, and capital markets transactions; credit decisioning supported by AI and ML models</div></div>
+          <div class="process-step"><div class="step-num how">3</div><div>Service customers through digital channels (ANZ Plus, ANZ Internet Banking, ANZ GoMoney NZ), contact centres, and relationship managers; Salesforce Agentforce deployed for business bankers</div></div>
+          <div class="process-step"><div class="step-num how">4</div><div>Fund the balance sheet via retail and institutional deposits, wholesale markets, and capital raise; manage NIM through repricing and product mix</div></div>
+          <div class="process-step"><div class="step-num how">5</div><div>Integrate Suncorp Bank — migrate ~A$65B loan book and ~A$48B deposits onto ANZ systems by June 2027; extract synergies</div></div>
+          <div class="process-step"><div class="step-num how">6</div><div>Manage risk and regulatory obligations — APRA CEU remediation, ASIC penalty compliance, CDR obligations, and prudential capital management</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Core Capabilities</div>
+        <ul class="item-list">
+          <li><strong>Institutional banking platform</strong> — scalable digital services platform for global institutional clients; doubled RoE 2016–2024; connected to revenue-generating digital services</li>
+          <li><strong>ANZ Plus</strong> — next-generation consumer digital banking, rebuilt natively; strategic retail growth platform</li>
+          <li><strong>Salesforce Agentforce (AP-first)</strong> — AI agents for business bankers; surfaces leads, summarises customer data, prioritises activities; saves ~1 working month/year per banker</li>
+          <li><strong>Ensayo AI (with HCL + AWS)</strong> — AI applied across the software development lifecycle: coding, testing, and deployment automation</li>
+          <li><strong>Multi-cloud infrastructure</strong> — core banking applications containerised and migrating to AWS + Azure; ~A$2.5B ICT spend/year</li>
+          <li><strong>NZ market leadership</strong> — ANZ Bank NZ is largest NZ bank by assets; GoMoney app; KiwiSaver via ANZ Investments; strong and consistent profit contributor</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHO ── -->
+  <div class="section-block s-who">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHO — Business Governance</div>
+        <div class="section-subtitle">Organisational Structure · Extended Enterprise · Trust Framework</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Organisational Structure</div>
+        <ul class="item-list">
+          <li><strong>CEO:</strong> Nuno Matos (since May 2025) — recruited for cultural reset; ANZ 2030 strategy architect; committed to cost reduction and non-financial risk clearance</li>
+          <li><strong>ANZ NZ CEO:</strong> Antonia Watson (since December 2019) — stewards New Zealand's largest bank by assets</li>
+          <li><strong>Structure:</strong> Non-Operating Holding Company (NOHC) since January 2023; two APRA quantitative capital requirements apply at NOHC level</li>
+          <li><strong>Business divisions:</strong> Australia Retail; Business &amp; Private Bank; Institutional; New Zealand</li>
+          <li><strong>Ownership:</strong> ASX-listed (ASX: ANZ); dispersed institutional and retail shareholders; major Australian and global institutional investors</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Extended Enterprise</div>
+        <div class="partner-grid">
+          <div class="partner-chip"><span>CRM / AI Agents</span>Salesforce Agentforce</div>
+          <div class="partner-chip"><span>Cloud</span>AWS + Microsoft Azure</div>
+          <div class="partner-chip"><span>Digital Employee</span>HCLTech</div>
+          <div class="partner-chip"><span>AI Dev Lifecycle</span>Ensayo (HCL + AWS)</div>
+          <div class="partner-chip"><span>Acquired Bank</span>Suncorp Bank (Jul 2024)</div>
+          <div class="partner-chip"><span>NZ Subsidiary</span>ANZ Bank New Zealand</div>
+          <div class="partner-chip"><span>Investments NZ</span>ANZ Investments (KiwiSaver)</div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Key Regulators</div>
+        <ul class="item-list">
+          <li><strong>APRA</strong> — prudential regulator; Court Enforceable Undertaking (CEU) in force; CET1 "unquestionably strong" benchmark 10.25% for D-SIBs; NOHC capital requirements</li>
+          <li><strong>ASIC</strong> — market conduct regulator; A$250M penalty (December 2025, largest ever against an Australian bank)</li>
+          <li><strong>RBNZ</strong> — New Zealand prudential regulator; ANZ Bank NZ operates under RBNZ requirements</li>
+          <li><strong>ACCC</strong> — competition regulator; Suncorp acquisition approved subject to conditions</li>
+          <li><strong>AUSTRAC</strong> — financial intelligence and AML/CTF regulator; ongoing compliance obligations</li>
+          <li><strong>Treasury / CDR framework</strong> — open banking data obligations under Consumer Data Right</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Trust Framework</div>
+        <ul class="item-list">
+          <li><strong>Shareholders:</strong> trust contingent on delivering ANZ 2030 cost programme and NIM stabilisation; halting the A$800M buyback was a signal of strategic prioritisation over short-term returns</li>
+          <li><strong>Regulators:</strong> APRA CEU and ASIC penalty represent trust deficit in non-financial risk management; remediation programme is prerequisite for restoring regulatory confidence</li>
+          <li><strong>Institutional clients:</strong> trust anchored on ANZ's track record as Asia-Pacific's leading trade and capital markets bank; platform maturity and security posture are differentiators</li>
+          <li><strong>Retail customers:</strong> trust built on brand heritage, branch network, and digital transformation (ANZ Plus); Suncorp customers must be migrated without service disruption</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHERE ── -->
+  <div class="section-block s-where">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHERE — Business Geography</div>
+        <div class="section-subtitle">Operating Jurisdiction · Regulatory Domains · Infrastructure Geography</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Operating Jurisdictions</div>
+        <ul class="item-list">
+          <li><strong>Australia</strong> — primary home market; retail, business, private, and institutional banking; Suncorp Bank integrated FY25; APRA-regulated</li>
+          <li><strong>New Zealand</strong> — ANZ Bank NZ is NZ's largest bank by assets; full-service retail and commercial banking; RBNZ-regulated; Antonia Watson CEO</li>
+          <li><strong>Asia-Pacific (Institutional)</strong> — major presence in Singapore, Hong Kong, Japan, India, China; trade finance and capital markets; significant revenue contributor to Institutional division</li>
+          <li><strong>Other international (Institutional)</strong> — UK (London), US (New York); debt capital markets and FX; correspondent banking</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Regulatory Domains</div>
+        <ul class="item-list">
+          <li>APRA (AU) — prudential; NOHC structure; D-SIB capital requirements; Court Enforceable Undertaking</li>
+          <li>ASIC (AU) — market conduct; active enforcement jurisdiction post-2025 penalty</li>
+          <li>RBNZ (NZ) — ANZ Bank NZ prudential; standardised capital approach</li>
+          <li>MAS (Singapore), HKMA (HK), FSA (Japan) — institutional operations regulatory regimes</li>
+          <li>CDR / ACCC (AU) — open banking data obligations</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Infrastructure Geography</div>
+        <ul class="item-list">
+          <li><strong>Multi-cloud:</strong> AWS (primary) + Microsoft Azure; core banking applications containerised and migrating to public cloud</li>
+          <li><strong>Suncorp infrastructure:</strong> separate Suncorp systems operating in parallel during migration window (to June 2027); dual-infrastructure operational risk during this period</li>
+          <li><strong>NZ infrastructure:</strong> ANZ Bank NZ operates its own technology stack; GoMoney app; ANZ Investments KiwiSaver platform</li>
+          <li><strong>HCLTech partnership:</strong> digital employee experience transformation across 33 countries — international infrastructure management scope</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHEN ── -->
+  <div class="section-block s-when">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHEN — Business Time Dependence</div>
+        <div class="section-subtitle">Strategic Horizon · Regulatory Deadlines · Operational Time Dependencies</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Strategic Time Horizon</div>
+        <ul class="item-list">
+          <li><strong>Phase 1 (FY26–FY27):</strong> "Get the basics right" — culture reset, Suncorp migration, single customer front-end, A$800M cost programme, non-financial risk clearance</li>
+          <li><strong>Phase 2 (FY28+):</strong> Invest for growth — deploy cost savings into technology, product capability, and market share gains</li>
+          <li><strong>ANZ 2030:</strong> long-term strategic framework; FY30 as the horizon for structural transformation of the Australian retail franchise</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Regulatory Deadlines</div>
+        <div class="deadline-table-wrap">
+          <table class="deadline-table">
+            <thead>
+              <tr><th>Deadline</th><th>Obligation</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="dl-date">Jul 2024</td><td>Suncorp Bank acquisition completion</td><td>Completed</td></tr>
+              <tr><td class="dl-date">Dec 2025</td><td>ASIC penalty A$250M (Federal Court)</td><td>Settled — paid</td></tr>
+              <tr><td class="dl-date">Sep 2026</td><td>3,500 role reductions complete</td><td>60%+ done by Q1 FY26</td></tr>
+              <tr><td class="dl-date">Jun 2027</td><td>Suncorp customer migration to ANZ systems</td><td>In progress</td></tr>
+              <tr><td class="dl-date">Jan 2027</td><td>APRA AT1 phase-out (replace with CET1 + Tier 2)</td><td>Planning</td></tr>
+              <tr><td class="dl-date">Ongoing</td><td>APRA CEU — Root Cause Remediation Plan (~A$150M)</td><td>In progress</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Operational Time Dependencies</div>
+        <ul class="item-list">
+          <li><strong>Financial year:</strong> ends 30 September; half-year results ~May; full-year results ~November</li>
+          <li><strong>Real-time payments:</strong> NPP (New Payments Platform) availability and settlement finality are non-negotiable; any outage is immediate customer and regulatory risk</li>
+          <li><strong>Suncorp migration cadence:</strong> phased customer migration programme; each phase introduces temporary dual-system operational complexity</li>
+          <li><strong>Salesforce Agentforce:</strong> daily cadence — AI agents generate banker activity priorities at session start; disruption impacts frontline commercial banking productivity</li>
+          <li><strong>Reporting cadence:</strong> quarterly Q1/Q3 trading updates; half-year and full-year results; continuous APRA Pillar 3 reporting</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+</body>
+</html>

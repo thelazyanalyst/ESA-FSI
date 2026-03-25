@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAB — SABSA Contextual Architecture · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:           #edf0f5;
+    --bg-card:      #ffffff;
+    --bg-section:   #f5f7fa;
+    --border:       #dde3ec;
+    --border-dark:  #c8d1de;
+    --text:         #0f1e33;
+    --text-sub:     #445570;
+    --text-muted:   #8496ae;
+    --accent:       #c0271d;
+    --accent-bg:    #faecea;
+    --accent-mid:   #f4c8c5;
+    --font-ui:      'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --radius:       6px;
+    --shadow:       0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+
+    --what:    #1a6eb5;  --what-bg:  #e8f1fc;  --what-mid:  #b8d4f3;
+    --why:     #b04800;  --why-bg:   #fdf0e8;  --why-mid:   #f8ceac;
+    --how:     #6b2eb8;  --how-bg:   #f3edfb;  --how-mid:   #d8beee;
+    --who:     #1a7a6a;  --who-bg:   #e8f6f3;  --who-mid:   #b5e5dc;
+    --where:   #7a6a1a;  --where-bg: #f7f4e8;  --where-mid: #e8dea0;
+    --when:    #8c1a50;  --when-bg:  #fae8f0;  --when-mid:  #f0b8cc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  .topbar { background: var(--text); color: rgba(255,255,255,0.55); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; padding: 8px 48px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  .breadcrumb { padding: 20px 0 0; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  .page-header { padding: 28px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .page-header-left h1 { font-family: var(--font-display); font-size: clamp(22px, 3vw, 32px); font-weight: 400; line-height: 1.2; color: var(--text); margin-bottom: 6px; }
+  .page-header-left .sub { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.06em; }
+  .bank-badge { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .bank-pill { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; padding: 6px 14px; border-radius: 20px; background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-mid); font-weight: 500; }
+  .bank-flag-big { font-size: 28px; }
+
+  .accent-stripe { height: 3px; background: var(--accent); margin-bottom: 28px; border-radius: 2px; }
+
+  .meta-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 36px; }
+  .meta-chip { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; background: var(--bg-section); color: var(--text-muted); border: 1px solid var(--border); }
+  .meta-chip.sabsa { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-mid); }
+
+  .intro-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 32px; margin-bottom: 32px; }
+  .intro-card h2 { font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--text); margin-bottom: 10px; }
+  .intro-card p { font-size: 14px; color: var(--text-sub); line-height: 1.75; }
+  .layer-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .layer-pill { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 3px; font-weight: 500; border: 1px solid; }
+  .lp-what  { background: var(--what-bg);  color: var(--what);  border-color: var(--what-mid); }
+  .lp-why   { background: var(--why-bg);   color: var(--why);   border-color: var(--why-mid); }
+  .lp-how   { background: var(--how-bg);   color: var(--how);   border-color: var(--how-mid); }
+  .lp-who   { background: var(--who-bg);   color: var(--who);   border-color: var(--who-mid); }
+  .lp-where { background: var(--where-bg); color: var(--where); border-color: var(--where-mid); }
+  .lp-when  { background: var(--when-bg);  color: var(--when);  border-color: var(--when-mid); }
+
+  .section-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+  .section-header { padding: 18px 28px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+  .section-q { font-family: var(--font-mono); font-size: 22px; font-weight: 500; line-height: 1; flex-shrink: 0; }
+  .section-title-group { flex: 1; }
+  .section-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; }
+  .section-subtitle { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; margin-top: 3px; }
+  .section-body { padding: 24px 28px; }
+  .sub-section { margin-bottom: 24px; }
+  .sub-section:last-child { margin-bottom: 0; }
+  .sub-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .sub-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .sub-text { font-size: 14px; color: var(--text-sub); line-height: 1.75; margin-bottom: 10px; }
+  .item-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .item-list li { font-size: 13.5px; color: var(--text-sub); line-height: 1.6; padding-left: 16px; position: relative; }
+  .item-list li::before { content: '–'; position: absolute; left: 0; color: var(--text-muted); }
+  .item-list li strong { color: var(--text); font-weight: 600; }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+  .risk-col-head { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .risk-col-head.opps { color: #1a7a6a; }
+  .risk-col-head.threats { color: #b04800; }
+
+  .process-steps { display: flex; flex-direction: column; gap: 8px; }
+  .process-step { display: flex; align-items: flex-start; gap: 14px; font-size: 13.5px; color: var(--text-sub); line-height: 1.6; }
+  .step-num { font-family: var(--font-mono); font-size: 11px; font-weight: 500; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-num.how { background: var(--how-bg); color: var(--how); border: 1px solid var(--how-mid); }
+
+  .partner-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-top: 4px; }
+  .partner-chip { background: var(--bg-section); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; font-size: 12px; color: var(--text-sub); }
+  .partner-chip span { display: block; font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+
+  .deadline-table-wrap { overflow-x: auto; margin-top: 4px; border-radius: 5px; border: 1px solid var(--border); }
+  .deadline-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .deadline-table th { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.15em; text-transform: uppercase; padding: 9px 14px; text-align: left; font-weight: 500; color: var(--text-sub); background: var(--bg-section); border-bottom: 1px solid var(--border-dark); }
+  .deadline-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text-sub); vertical-align: top; line-height: 1.5; }
+  .deadline-table tr:last-child td { border-bottom: none; }
+  .deadline-table tbody tr:hover td { background: var(--bg-section); }
+  .dl-date { font-family: var(--font-mono); font-size: 11px; color: var(--when); white-space: nowrap; }
+
+  .s-what  .section-header { background: var(--what-bg);  border-bottom-color: var(--what-mid); }
+  .s-what  .section-q, .s-what  .section-title { color: var(--what); }
+  .s-what  .section-subtitle { color: var(--what); opacity: 0.7; }
+  .s-why   .section-header { background: var(--why-bg);   border-bottom-color: var(--why-mid); }
+  .s-why   .section-q, .s-why   .section-title { color: var(--why); }
+  .s-why   .section-subtitle { color: var(--why); opacity: 0.7; }
+  .s-how   .section-header { background: var(--how-bg);   border-bottom-color: var(--how-mid); }
+  .s-how   .section-q, .s-how   .section-title { color: var(--how); }
+  .s-how   .section-subtitle { color: var(--how); opacity: 0.7; }
+  .s-who   .section-header { background: var(--who-bg);   border-bottom-color: var(--who-mid); }
+  .s-who   .section-q, .s-who   .section-title { color: var(--who); }
+  .s-who   .section-subtitle { color: var(--who); opacity: 0.7; }
+  .s-where .section-header { background: var(--where-bg); border-bottom-color: var(--where-mid); }
+  .s-where .section-q, .s-where .section-title { color: var(--where); }
+  .s-where .section-subtitle { color: var(--where); opacity: 0.7; }
+  .s-when  .section-header { background: var(--when-bg);  border-bottom-color: var(--when-mid); }
+  .s-when  .section-q, .s-when  .section-title { color: var(--when); }
+  .s-when  .section-subtitle { color: var(--when); opacity: 0.7; }
+
+  .page-nav { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+  .back-link:hover { color: var(--accent); }
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-muted); text-decoration: none; transition: all 0.15s; background: var(--bg-card); }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .section-body { padding: 20px; }
+    .section-header { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>NAB</span>
+    <span class="sep">/</span>
+    <span class="current">SABSA Contextual Architecture</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🏛 NAB — SABSA Contextual Architecture</h1>
+      <div class="sub">National Australia Bank · ASX: NAB · Derived from public sources · March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: NAB</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="page-nav">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link">🔗 Sources</a>
+      <a href="sabsa-contextual.html" class="sib-link active">🏛 SABSA Contextual</a>
+    </div>
+  </div>
+
+  <div class="meta-bar">
+    <span class="meta-chip sabsa">SABSA Framework</span>
+    <span class="meta-chip">Contextual Layer</span>
+    <span class="meta-chip">The Business View</span>
+    <span class="meta-chip">Public Sources Only</span>
+    <span class="meta-chip">Research Date: March 2026</span>
+  </div>
+
+  <div class="intro-card">
+    <h2>Contextual Architecture — The Business View</h2>
+    <p>The Contextual Architecture is the top layer of the SABSA framework. It captures the business context — who NAB is, what it is trying to achieve, what risks it faces, and the environmental constraints it operates within. Everything in the layers below must be traceable back to this layer. This document is derived from NAB's public annual results, CEO statements, investor presentations, and cybersecurity disclosures (2023–2026).</p>
+    <div class="layer-pills">
+      <span class="layer-pill lp-what">What — Assets</span>
+      <span class="layer-pill lp-why">Why — Motivation</span>
+      <span class="layer-pill lp-how">How — Process</span>
+      <span class="layer-pill lp-who">Who — People</span>
+      <span class="layer-pill lp-where">Where — Location</span>
+      <span class="layer-pill lp-when">When — Time</span>
+    </div>
+  </div>
+
+  <!-- ── WHAT ── -->
+  <div class="section-block s-what">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHAT — Business Assets</div>
+        <div class="section-subtitle">Goals · Values · Asset Taxonomy · Success Factors · Targets</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Goals &amp; Decisions</div>
+        <p class="sub-text">Extend NAB's position as Australia's leading business bank. Grow business lending, drive deposit growth, and strengthen proprietary home lending. Deliver customer-centricity through digital, data, and AI. Execute ambitious social commitments: A$60B in housing finance by 2030 and A$1B in First Nations business lending by end 2026. Transform technology infrastructure toward cloud-native while reducing complexity through AI-augmented processes.</p>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Values</div>
+        <ul class="item-list">
+          <li><strong>Business bank leadership</strong> — identity built around serving SMEs, commercial, and agribusiness customers; Australia's leading business bank is NAB's core strategic claim</li>
+          <li><strong>"Secure by Design"</strong> — security as a design principle, not a control layer; "shift left" philosophy embeds security into development from inception</li>
+          <li><strong>Customer-centricity via AI</strong> — "Digital, data and AI are critical enablers for the delivery of our strategic ambition of customer-centricity" (CEO Andrew Irvine)</li>
+          <li><strong>Social impact</strong> — A$60B housing commitment; A$1B First Nations lending; specialist support for agri, health, and professional services communities</li>
+          <li><strong>SME empowerment</strong> — free CrowdStrike security for SMB banking customers (12 months); positions NAB as a security partner, not just a lender</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Taxonomy of Business Assets</div>
+        <ul class="item-list">
+          <li><strong>Business &amp; Private Banking franchise</strong> — NAB's dominant division; A$1.74B cash earnings (1H25); Australia's leading SME and commercial bank by reputation and lending market share</li>
+          <li><strong>Lending book</strong> — gross loans +5.9% YoY (FY25); business lending +9% FY25; deposits fund 84% of total lending — strong liability base</li>
+          <li><strong>ubank (digital subsidiary)</strong> — digital-only consumer bank; passkeys deployed; passwords phased out within 5 years; consumer banking growth engine</li>
+          <li><strong>BNZ (Bank of New Zealand)</strong> — wholly-owned NZ subsidiary; NZD $1,499M statutory net profit FY25; total lending +4.6%; deposits +5.8%</li>
+          <li><strong>Cloud and AI platform</strong> — 84% of on-premises infrastructure migrated to public multi-cloud (AWS + Azure); Amazon Q Developer deployed to 1,000 developers (18% productivity uplift; 40% production code from AI suggestions)</li>
+          <li><strong>"Customer brain"</strong> — centralised customer intelligence layer across all touchpoints; enables personalised engagement and cross-sell at scale</li>
+          <li><strong>Fusion Centre</strong> — integrated physical security, cybersecurity, and global operations; faster incident detection and response than separate function model</li>
+          <li><strong>Capital and balance sheet</strong> — CET1 11.70% (FY25); deposits fund 84% of lending; collective provisions / credit RWA 1.33%; IRB-accredited by APRA</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Critical Success Factors</div>
+        <ul class="item-list">
+          <li><strong>Business bank growth execution</strong> — sustaining +9% business lending growth and extending the leading market position is NAB's defining strategic test</li>
+          <li><strong>Proprietary home lending channel</strong> — growing proprietary channel share from 38% (FY24) to 41% (FY25) and beyond reduces broker dependency and margin dilution</li>
+          <li><strong>Cloud transformation completion</strong> — 84% migrated; Technology Modernisation Score reducing ~13%/year; must complete to unlock full AI and automation benefits</li>
+          <li><strong>AI productivity realisation</strong> — Amazon Q Developer, trust deed AI, and GenAI campaigns must generate measurable cost and revenue outcomes to justify ongoing investment</li>
+          <li><strong>Deposit growth maintenance</strong> — 84% deposit-funded lending is a strength; must retain deposit market share as RBA rate cycle evolves</li>
+          <li><strong>Cybersecurity posture</strong> — Fusion Centre and CrowdStrike partnership are differentiators; a material security incident would undermine the "Secure by Design" brand claim</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Targets</div>
+        <ul class="item-list">
+          <li><strong>Business lending:</strong> continue above-market growth; A$128B in new business lending supported in 2025; +9% YoY FY25</li>
+          <li><strong>Housing:</strong> A$60B in housing finance by 2030 (~55,000 first home buyers, 50,000 new homes)</li>
+          <li><strong>First Nations:</strong> A$1B in First Nations business lending by end 2026</li>
+          <li><strong>Proprietary home lending:</strong> grow channel share above 41% (FY25 level); target proprietary drawdowns as proportion of total</li>
+          <li><strong>NIM:</strong> 1.74% (FY25, up 3bps); defend through deposit repricing and business lending volume</li>
+          <li><strong>Capital:</strong> CET1 target &gt;11.25%; FY25 actual 11.70%; IRB capital efficiency maintained</li>
+          <li><strong>AI productivity:</strong> sustain 18%+ developer productivity via Amazon Q; expand GenAI initiatives across business banking and customer engagement</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHY ── -->
+  <div class="section-block s-why">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHY — Business Motivation</div>
+        <div class="section-subtitle">Risk · Opportunities &amp; Threats · Risk Management Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Opportunities &amp; Threats</div>
+        <div class="risk-grid">
+          <div>
+            <div class="risk-col-head opps">Opportunities</div>
+            <ul class="item-list">
+              <li>Business lending momentum — +9% FY25; A$128B new lending in 2025; SME market share growth as competitors retrench from business banking complexity</li>
+              <li>CrowdStrike SMB differentiator — free enterprise-grade security for SMB customers creates loyalty and cross-sell opportunity beyond lending</li>
+              <li>Amazon Q Developer at scale — 18% productivity uplift across 1,000 developers; 40% production code from AI suggestions; technology modernisation accelerates</li>
+              <li>First Nations and specialist sector banking — A$1B lending commitment creates new market segment relationships in agri, health, and Indigenous communities</li>
+              <li>ubank digital growth — passkeys deployed; passwordless banking ahead of competitors; attracts younger, digitally-native consumer segment</li>
+            </ul>
+          </div>
+          <div>
+            <div class="risk-col-head threats">Threats</div>
+            <ul class="item-list">
+              <li>Personal banking margin compression — Personal Banking down 9.2% (1H25); home loan competition from non-banks continues to pressure retail margins</li>
+              <li>CIB pressure — Corporate &amp; Institutional Banking down 7.6% (1H25); fee income and margins under pressure in institutional segment</li>
+              <li>Cyber threats to Fusion Centre model — physical-cyber integration creates a high-value target; integrated centre failure would disable multiple security functions simultaneously</li>
+              <li>AI risk in credit decisioning — "Customer brain" and GenAI models introduce model risk and algorithmic bias risk at scale; APRA scrutiny of AI governance increasing</li>
+              <li>Weak productivity as macro risk — CEO (2025 AGM) cited weak Australian productivity as a structural economic risk; reduces SME credit demand growth</li>
+              <li>Talent competition for AI specialists — Pete Steel (Group Exec, Digital, Data &amp; AI) recruited from Lloyds; competition for AI talent is global and intensifying</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Risk Management Strategy</div>
+        <ul class="item-list">
+          <li><strong>"Secure by Design"</strong> — five-pillar framework (Protect; Security Culture; Simplification &amp; Automation; Layered Security; Secure by Design); led by CSO Sandro Bucchianeri; security shifts left into the development lifecycle</li>
+          <li><strong>Fusion Centre model</strong> — physical security, cybersecurity, and global operations integrated for faster incident response; reduces mean time to detect and respond</li>
+          <li><strong>CrowdStrike enterprise endpoint security</strong> — NAB enterprise protection extended to SMB banking customers (12 months free); reduces third-party risk from SME partner ecosystem</li>
+          <li><strong>Graph databases for financial crime</strong> — fund flow monitoring and AML/fraud detection using graph analytics; detects complex money laundering network patterns</li>
+          <li><strong>Multi-cloud risk diversification</strong> — 84% of infrastructure on AWS + Azure; reduces single-provider operational dependency</li>
+          <li><strong>APRA and ACSC alignment</strong> — aligned to Australian Government Cyber Security Strategy; ACSC partnership for threat intelligence</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HOW ── -->
+  <div class="section-block s-how">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">HOW — Business Meta-Processes</div>
+        <div class="section-subtitle">Business Value Chain · Capabilities · Process Assurance Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Business Value Chain</div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num how">1</div><div>Attract business and retail customers through specialist relationship managers (agri, health, First Nations, professional services), NAB Connect, and ubank digital channels</div></div>
+          <div class="process-step"><div class="step-num how">2</div><div>Originate business loans (SME to corporate), home loans (proprietary + broker channels), and deposits; trust deed AI review reduces origination time (45 min → 5 min)</div></div>
+          <div class="process-step"><div class="step-num how">3</div><div>Service and retain via the "Customer brain" — centralised intelligence layer surfaces personalised insights across all touchpoints for relationship managers and digital servicing</div></div>
+          <div class="process-step"><div class="step-num how">4</div><div>Fund the balance sheet with retail and corporate deposits (84% of lending); manage NIM through deposit repricing and business lending mix</div></div>
+          <div class="process-step"><div class="step-num how">5</div><div>Develop and deploy software via Amazon Q Developer AI (18% productivity uplift; 40% production code from AI suggestions); accelerates product and platform delivery</div></div>
+          <div class="process-step"><div class="step-num how">6</div><div>Detect and respond to threats via the Fusion Centre — physical + cyber + operations combined; graph databases monitor fund flows for AML/fraud detection in real time</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Core Capabilities</div>
+        <ul class="item-list">
+          <li><strong>SME and business banking relationship model</strong> — specialist coverage (agri, health, First Nations, professional services); relationship manager supported by AI (trust deed review, banker chat assistant)</li>
+          <li><strong>Trust deed AI (GenAI)</strong> — reviews trust deeds in 5 min vs 45 min; saves ~10,000 hours/year across business banking; directly accelerates lending decisioning speed</li>
+          <li><strong>Amazon Q Developer</strong> — 1,000 developers using AI coding assistance; 18% productivity uplift; 40% of production code from AI suggestions; accelerates technology modernisation</li>
+          <li><strong>ubank (digital bank)</strong> — passkeys (passwordless); digital-native consumer banking; reduces password-related fraud risk while improving UX</li>
+          <li><strong>Fusion Centre</strong> — integrated physical, cyber, and global operations; real-time incident detection and response; CrowdStrike as enterprise endpoint platform</li>
+          <li><strong>NAB Connect</strong> — online business banking platform for commercial clients; transaction banking and treasury management</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHO ── -->
+  <div class="section-block s-who">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHO — Business Governance</div>
+        <div class="section-subtitle">Organisational Structure · Extended Enterprise · Trust Framework</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Organisational Structure</div>
+        <ul class="item-list">
+          <li><strong>CEO:</strong> Andrew Irvine (since April 2024) — customer-centricity and business bank growth mandate; housing and First Nations commitments</li>
+          <li><strong>Group Executive, Digital, Data &amp; AI:</strong> Pete Steel (from 5 January 2026; ex-Lloyds Banking Group) — accelerate AI adoption across NAB</li>
+          <li><strong>CSO:</strong> Sandro Bucchianeri — "Secure by Design" architect; Fusion Centre; "security shifts left into development from the start"</li>
+          <li><strong>Business divisions:</strong> Personal Banking; Business &amp; Private Banking; Corporate &amp; Institutional Banking (CIB); Bank of New Zealand (BNZ)</li>
+          <li><strong>Digital subsidiary:</strong> ubank — operated as separate digital-only brand; passwordless banking innovation</li>
+          <li><strong>Ownership:</strong> ASX-listed (ASX: NAB); dispersed institutional and retail shareholders</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Extended Enterprise</div>
+        <div class="partner-grid">
+          <div class="partner-chip"><span>AI Development</span>Amazon Q Developer (AWS)</div>
+          <div class="partner-chip"><span>Cloud</span>AWS + Microsoft Azure</div>
+          <div class="partner-chip"><span>Endpoint Security</span>CrowdStrike</div>
+          <div class="partner-chip"><span>Cyber Assessment</span>Microsoft</div>
+          <div class="partner-chip"><span>NZ Subsidiary</span>Bank of New Zealand (BNZ)</div>
+          <div class="partner-chip"><span>Digital Bank</span>ubank</div>
+          <div class="partner-chip"><span>Threat Intelligence</span>ACSC Partnership</div>
+          <div class="partner-chip"><span>Business Platform</span>NAB Connect</div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Key Regulators</div>
+        <ul class="item-list">
+          <li><strong>APRA</strong> — prudential; D-SIB; IRB accreditation; CET1 "unquestionably strong" benchmark 10.25%; AT1 phase-out Jan 2027</li>
+          <li><strong>ASIC</strong> — market conduct; financial services; responsible lending obligations</li>
+          <li><strong>AUSTRAC</strong> — AML/CTF; financial intelligence; graph database AML programme is a direct response to AUSTRAC risk</li>
+          <li><strong>ACCC / CDR</strong> — open banking data obligations</li>
+          <li><strong>RBNZ</strong> — BNZ prudential regulation in New Zealand</li>
+          <li><strong>ACS / Australian Government Cyber Security Strategy</strong> — aligned cyber security framework</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Trust Framework</div>
+        <ul class="item-list">
+          <li><strong>SME customers:</strong> trust built on specialist knowledge (agri, health, First Nations), speed of credit decisions (trust deed AI), and free CrowdStrike security for SMB clients</li>
+          <li><strong>Home buyers:</strong> A$60B housing commitment and First Nations lending target signal social commitment beyond profit maximisation</li>
+          <li><strong>Technology community:</strong> Amazon Q Developer and open AI productivity tooling position NAB as an employer of choice for AI-literate engineers</li>
+          <li><strong>Regulators:</strong> "Secure by Design" and ACSC partnership signal proactive regulatory alignment; graph AML programme demonstrates AUSTRAC compliance investment</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHERE ── -->
+  <div class="section-block s-where">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHERE — Business Geography</div>
+        <div class="section-subtitle">Operating Jurisdiction · Regulatory Domains · Infrastructure Geography</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Operating Jurisdictions</div>
+        <ul class="item-list">
+          <li><strong>Australia</strong> — primary home market; retail (including ubank), business, private, and institutional banking; APRA-regulated D-SIB; HQ Melbourne</li>
+          <li><strong>New Zealand</strong> — BNZ; NZD $1,499M statutory net profit FY25; full-service retail, business, corporate, and institutional banking; RBNZ-regulated</li>
+          <li><strong>International (CIB)</strong> — selective international presence for institutional clients; primarily serving Australian and NZ corporates with cross-border needs</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Regulatory Domains</div>
+        <ul class="item-list">
+          <li>APRA (AU) — prudential; D-SIB; A-IRB, F-IRB, supervisory slotting, and standardised approaches; AT1 phase-out Jan 2027</li>
+          <li>ASIC (AU) — market conduct; financial services licensing</li>
+          <li>AUSTRAC (AU) — AML/CTF; graph database programme is a direct compliance investment</li>
+          <li>ACCC / CDR (AU) — open banking data holder obligations</li>
+          <li>RBNZ (NZ) — BNZ prudential regulation; three segments: Private/Wealth/Insurance; CIB; Partnership Banking</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Infrastructure Geography</div>
+        <ul class="item-list">
+          <li><strong>Multi-cloud (84% migrated):</strong> AWS + Microsoft Azure; Technology Modernisation Score reducing ~13%/year; remaining on-premises infrastructure being phased out</li>
+          <li><strong>Amazon Q Developer:</strong> cloud-native AI development tooling deployed across 1,000 NAB developers; AWS-hosted</li>
+          <li><strong>Fusion Centre:</strong> Australian-based; integrates physical security and cyber operations in a single location for real-time coordination</li>
+          <li><strong>BNZ NZ infrastructure:</strong> separate NZ technology platform; three-segment structure; RBNZ data residency obligations</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHEN ── -->
+  <div class="section-block s-when">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHEN — Business Time Dependence</div>
+        <div class="section-subtitle">Strategic Horizon · Regulatory Deadlines · Operational Time Dependencies</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Strategic Time Horizon</div>
+        <ul class="item-list">
+          <li><strong>Housing commitment:</strong> A$60B in housing finance by 2030 (~55,000 first home buyers, 50,000 new homes) — 4-year delivery horizon from 2026</li>
+          <li><strong>First Nations lending:</strong> A$1B by end 2026 — near-term strategic commitment with public accountability</li>
+          <li><strong>Technology modernisation:</strong> Technology Modernisation Score reducing ~13%/year; full cloud transition horizon ~3–5 years from 2025</li>
+          <li><strong>AI expansion:</strong> Pete Steel (from Jan 2026) accelerating GenAI adoption bank-wide; multi-year enterprise AI transformation</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Regulatory Deadlines</div>
+        <div class="deadline-table-wrap">
+          <table class="deadline-table">
+            <thead>
+              <tr><th>Deadline</th><th>Obligation</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="dl-date">End 2026</td><td>A$1B First Nations business lending commitment</td><td>In progress</td></tr>
+              <tr><td class="dl-date">Jan 2027</td><td>APRA AT1 phase-out — replace with CET1 + Tier 2</td><td>Planning</td></tr>
+              <tr><td class="dl-date">Ongoing</td><td>AUSTRAC AML/CTF reporting; graph database monitoring</td><td>In compliance</td></tr>
+              <tr><td class="dl-date">Ongoing</td><td>CDR / open banking data holder obligations</td><td>In compliance</td></tr>
+              <tr><td class="dl-date">2030</td><td>A$60B housing finance delivery target</td><td>In progress</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Operational Time Dependencies</div>
+        <ul class="item-list">
+          <li><strong>Financial year ends 30 September:</strong> half-year results ~May; full-year results ~November; quarterly trading updates</li>
+          <li><strong>Trust deed AI cadence:</strong> business banker daily workflow; 5-minute review vs 45-minute manual — time compression is a direct sales productivity multiplier</li>
+          <li><strong>Fusion Centre monitoring:</strong> 24/7 real-time threat detection; any degradation in monitoring coverage directly increases mean time to detect security incidents</li>
+          <li><strong>Deposit repricing timing:</strong> deposit funding 84% of lending; RBA rate decisions trigger repricing windows — timing mismatches create NIM volatility</li>
+          <li><strong>Amazon Q Developer daily usage:</strong> AI coding assistance integrated into daily developer workflow; disruption impacts technology delivery velocity directly</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+</body>
+</html>

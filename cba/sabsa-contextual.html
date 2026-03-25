@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commonwealth Bank — SABSA Contextual Architecture · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:           #edf0f5;
+    --bg-card:      #ffffff;
+    --bg-section:   #f5f7fa;
+    --border:       #dde3ec;
+    --border-dark:  #c8d1de;
+    --text:         #0f1e33;
+    --text-sub:     #445570;
+    --text-muted:   #8496ae;
+    --accent:       #b87200;
+    --accent-bg:    #fef6e8;
+    --accent-mid:   #fde5b0;
+    --font-ui:      'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --radius:       6px;
+    --shadow:       0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+
+    --what:    #1a6eb5;  --what-bg:  #e8f1fc;  --what-mid:  #b8d4f3;
+    --why:     #b04800;  --why-bg:   #fdf0e8;  --why-mid:   #f8ceac;
+    --how:     #6b2eb8;  --how-bg:   #f3edfb;  --how-mid:   #d8beee;
+    --who:     #1a7a6a;  --who-bg:   #e8f6f3;  --who-mid:   #b5e5dc;
+    --where:   #7a6a1a;  --where-bg: #f7f4e8;  --where-mid: #e8dea0;
+    --when:    #8c1a50;  --when-bg:  #fae8f0;  --when-mid:  #f0b8cc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  .topbar {
+    background: var(--text);
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  .breadcrumb {
+    padding: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  .page-header {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page-header-left h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-header-left .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .bank-badge { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .bank-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-mid);
+    font-weight: 500;
+  }
+  .bank-flag-big { font-size: 28px; }
+
+  .accent-stripe { height: 3px; background: var(--accent); margin-bottom: 28px; border-radius: 2px; }
+
+  .meta-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 36px; }
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--bg-section);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .meta-chip.sabsa { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-mid); }
+
+  .intro-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+  .intro-card h2 { font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--text); margin-bottom: 10px; }
+  .intro-card p { font-size: 14px; color: var(--text-sub); line-height: 1.75; }
+  .layer-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .layer-pill {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .lp-what  { background: var(--what-bg);  color: var(--what);  border-color: var(--what-mid); }
+  .lp-why   { background: var(--why-bg);   color: var(--why);   border-color: var(--why-mid); }
+  .lp-how   { background: var(--how-bg);   color: var(--how);   border-color: var(--how-mid); }
+  .lp-who   { background: var(--who-bg);   color: var(--who);   border-color: var(--who-mid); }
+  .lp-where { background: var(--where-bg); color: var(--where); border-color: var(--where-mid); }
+  .lp-when  { background: var(--when-bg);  color: var(--when);  border-color: var(--when-mid); }
+
+  .section-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+  .section-header { padding: 18px 28px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+  .section-q { font-family: var(--font-mono); font-size: 22px; font-weight: 500; line-height: 1; flex-shrink: 0; }
+  .section-title-group { flex: 1; }
+  .section-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; }
+  .section-subtitle { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; margin-top: 3px; }
+  .section-body { padding: 24px 28px; }
+  .sub-section { margin-bottom: 24px; }
+  .sub-section:last-child { margin-bottom: 0; }
+  .sub-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sub-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .sub-text { font-size: 14px; color: var(--text-sub); line-height: 1.75; margin-bottom: 10px; }
+  .item-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .item-list li { font-size: 13.5px; color: var(--text-sub); line-height: 1.6; padding-left: 16px; position: relative; }
+  .item-list li::before { content: '–'; position: absolute; left: 0; color: var(--text-muted); }
+  .item-list li strong { color: var(--text); font-weight: 600; }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+  .risk-col-head { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .risk-col-head.opps { color: #1a7a6a; }
+  .risk-col-head.threats { color: #b04800; }
+
+  .process-steps { counter-reset: step; display: flex; flex-direction: column; gap: 8px; }
+  .process-step { display: flex; align-items: flex-start; gap: 14px; font-size: 13.5px; color: var(--text-sub); line-height: 1.6; }
+  .step-num { font-family: var(--font-mono); font-size: 11px; font-weight: 500; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-num.how { background: var(--how-bg); color: var(--how); border: 1px solid var(--how-mid); }
+
+  .partner-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-top: 4px; }
+  .partner-chip { background: var(--bg-section); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; font-size: 12px; color: var(--text-sub); }
+  .partner-chip span { display: block; font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+
+  .deadline-table-wrap { overflow-x: auto; margin-top: 4px; border-radius: 5px; border: 1px solid var(--border); }
+  .deadline-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .deadline-table th { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.15em; text-transform: uppercase; padding: 9px 14px; text-align: left; font-weight: 500; color: var(--text-sub); background: var(--bg-section); border-bottom: 1px solid var(--border-dark); }
+  .deadline-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text-sub); vertical-align: top; line-height: 1.5; }
+  .deadline-table tr:last-child td { border-bottom: none; }
+  .deadline-table tbody tr:hover td { background: var(--bg-section); }
+  .dl-date { font-family: var(--font-mono); font-size: 11px; color: var(--when); white-space: nowrap; }
+
+  .s-what  .section-header { background: var(--what-bg);  border-bottom-color: var(--what-mid); }
+  .s-what  .section-q, .s-what  .section-title { color: var(--what); }
+  .s-what  .section-subtitle { color: var(--what); opacity: 0.7; }
+  .s-why   .section-header { background: var(--why-bg);   border-bottom-color: var(--why-mid); }
+  .s-why   .section-q, .s-why   .section-title { color: var(--why); }
+  .s-why   .section-subtitle { color: var(--why); opacity: 0.7; }
+  .s-how   .section-header { background: var(--how-bg);   border-bottom-color: var(--how-mid); }
+  .s-how   .section-q, .s-how   .section-title { color: var(--how); }
+  .s-how   .section-subtitle { color: var(--how); opacity: 0.7; }
+  .s-who   .section-header { background: var(--who-bg);   border-bottom-color: var(--who-mid); }
+  .s-who   .section-q, .s-who   .section-title { color: var(--who); }
+  .s-who   .section-subtitle { color: var(--who); opacity: 0.7; }
+  .s-where .section-header { background: var(--where-bg); border-bottom-color: var(--where-mid); }
+  .s-where .section-q, .s-where .section-title { color: var(--where); }
+  .s-where .section-subtitle { color: var(--where); opacity: 0.7; }
+  .s-when  .section-header { background: var(--when-bg);  border-bottom-color: var(--when-mid); }
+  .s-when  .section-q, .s-when  .section-title { color: var(--when); }
+  .s-when  .section-subtitle { color: var(--when); opacity: 0.7; }
+
+  .page-nav { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+  .back-link:hover { color: var(--accent); }
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-muted); text-decoration: none; transition: all 0.15s; background: var(--bg-card); }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .section-body { padding: 20px; }
+    .section-header { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Commonwealth Bank</span>
+    <span class="sep">/</span>
+    <span class="current">SABSA Contextual Architecture</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🏛 Commonwealth Bank — SABSA Contextual Architecture</h1>
+      <div class="sub">CBA · ASX: CBA · Derived from public sources · March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: CBA</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="page-nav">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link">🔗 Sources</a>
+      <a href="sabsa-contextual.html" class="sib-link active">🏛 SABSA Contextual</a>
+    </div>
+  </div>
+
+  <div class="meta-bar">
+    <span class="meta-chip sabsa">SABSA Framework</span>
+    <span class="meta-chip">Contextual Layer</span>
+    <span class="meta-chip">The Business View</span>
+    <span class="meta-chip">Public Sources Only</span>
+    <span class="meta-chip">Research Date: March 2026</span>
+  </div>
+
+  <div class="intro-card">
+    <h2>Contextual Architecture — The Business View</h2>
+    <p>The Contextual Architecture is the top layer of the SABSA framework. It captures the business context — who CBA is, what it is trying to achieve, what risks it faces, and the environmental constraints it operates within. Everything in the layers below must be traceable back to this layer. This document is derived from CBA's public annual results, CEO statements, investor presentations, and technology disclosures (2023–2026).</p>
+    <div class="layer-pills">
+      <span class="layer-pill lp-what">What — Assets</span>
+      <span class="layer-pill lp-why">Why — Motivation</span>
+      <span class="layer-pill lp-how">How — Process</span>
+      <span class="layer-pill lp-who">Who — People</span>
+      <span class="layer-pill lp-where">Where — Location</span>
+      <span class="layer-pill lp-when">When — Time</span>
+    </div>
+  </div>
+
+  <!-- ── WHAT ── -->
+  <div class="section-block s-what">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHAT — Business Assets</div>
+        <div class="section-subtitle">Goals · Values · Asset Taxonomy · Success Factors · Targets</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Goals &amp; Decisions</div>
+        <p class="sub-text">Maintain and extend CBA's position as Australia's most profitable bank and most digitally advanced financial institution. Operate as a "technology company with a banking licence" — where technology investment is a strategic moat, not a cost to be minimised. Sustain above-peer cost efficiency (cost-to-income below 42%), grow business and home lending, and continue to lead in AI-driven fraud prevention and customer personalisation.</p>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Values</div>
+        <ul class="item-list">
+          <li><strong>"Technology company with a banking licence"</strong> — Matt Comyn's recurring strategic identity; technology is described as a "strategic moat" protected from cost-cutting</li>
+          <li><strong>Customer protection as competitive differentiation</strong> — NameCheck, CallerCheck, and fraud AI not just compliance tools but brand trust assets; AUD 350M in fraud prevented FY24</li>
+          <li><strong>AI leadership with responsibility</strong> — 2,000+ ML models, 55M AI decisions/day; investment in AI literacy (30,000+ staff trained; Future Workforce Program)</li>
+          <li><strong>Financial inclusion</strong> — Benefits Finder AI matches customers to government entitlements; Unloan offers accessible digital home loans</li>
+          <li><strong>Long-term investment discipline</strong> — AUD 8B+ in technology over five years; technology spend protected from short-term cost pressure by CFO commitment</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Taxonomy of Business Assets</div>
+        <ul class="item-list">
+          <li><strong>Customer relationships</strong> — 8M+ digitally active customers; CommBank app ranked #1 in Australia; 70%+ of transactions digital</li>
+          <li><strong>Home loan book</strong> — ~A$574B home loans (Nov 2024); ~68% of total lending; #1 Australian home lender; Unloan digital brand for new origination</li>
+          <li><strong>Business lending book</strong> — A$168B (Dec 2025, +12% half-on-half); Business Banking is 42% of Group cash NPAT in H1 FY26</li>
+          <li><strong>CommBank app and digital infrastructure</strong> — #1 ranked banking app in Australia; central to customer engagement, fraud prevention, and cross-sell</li>
+          <li><strong>AI and data platform</strong> — 2,000+ ML models trained on ~157B data points; 55M AI decisions/day; Evident AI Index global rank #4 (2025); Azure OpenAI integration for 5,000+ staff</li>
+          <li><strong>ASB Bank (New Zealand)</strong> — wholly owned; NZD $1,350M NPAT FY25; NZD $18.8B KiwiSaver FUM; total capital 16.3%</li>
+          <li><strong>x15ventures</strong> — fintech portfolio (Backr, Vonto, Unloan) for adjacent growth beyond core banking</li>
+          <li><strong>Capital position</strong> — CET1 12.0% (Mar 2025); operates well above APRA "unquestionably strong" benchmark of 10.5%; AUD 2B+ annual technology investment</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Critical Success Factors</div>
+        <ul class="item-list">
+          <li><strong>Technology lead maintenance</strong> — AUD 2B+ annual investment must continue to widen the gap over peers; any slowdown risks losing the "technology moat" differentiation</li>
+          <li><strong>AI fraud prevention effectiveness</strong> — 76% reduction in scam losses from peak; any material deterioration in fraud prevention outcomes is a direct brand and regulatory risk</li>
+          <li><strong>NIM management</strong> — NIM of 2.04% (H1 FY26, down 4bps); home lending margin under competitive pressure; volume growth in business lending must compensate</li>
+          <li><strong>Cost-to-income discipline</strong> — below 42% target; technology investment must generate measurable productivity returns to sustain this ratio</li>
+          <li><strong>Cybersecurity posture</strong> — cited as "top three" board-level risk; cyber incidents on a bank of CBA's profile would be disproportionately reputational and financial</li>
+          <li><strong>Regulatory compliance</strong> — APRA AT1 phase-out (Jan 2027); CDR/open banking obligations; AUSTRAC AML/CTF compliance</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Targets</div>
+        <ul class="item-list">
+          <li><strong>Profitability:</strong> Cash NPAT A$10.25B FY25; H1 FY26 A$5.45B (+7.4% vs H1 FY25); operating income +6.6% H1 FY26</li>
+          <li><strong>Cost-to-income:</strong> below 42% (strategic target); pre-provision profit A$8.13B H1 FY26 (+5.3%)</li>
+          <li><strong>Business lending:</strong> A$168B book (Dec 2025); +12% half-on-half growth; 42% of Group cash NPAT in H1 FY26</li>
+          <li><strong>Home lending:</strong> A$574B (Nov 2024); +7% growth in H1 FY26; protect #1 market position</li>
+          <li><strong>AI fraud:</strong> sustain 76% reduction in scam losses from peak; continue 20% half-on-half improvement trajectory</li>
+          <li><strong>Dividend:</strong> A$2.35 per share interim (H1 FY26, +10c on prior); sustain fully franked dividend growth</li>
+          <li><strong>Capital:</strong> CET1 ~12.0–12.5%; above APRA "unquestionably strong" 10.5% benchmark; manage AT1 phase-out from Jan 2027</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHY ── -->
+  <div class="section-block s-why">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHY — Business Motivation</div>
+        <div class="section-subtitle">Risk · Opportunities &amp; Threats · Risk Management Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Opportunities &amp; Threats</div>
+        <div class="risk-grid">
+          <div>
+            <div class="risk-col-head opps">Opportunities</div>
+            <ul class="item-list">
+              <li>Business banking growth — A$168B book growing at +12%; margin 336bps; opportunity to extend #1 position further in SME and commercial</li>
+              <li>AI leadership compounds — 2,000+ models and 55M daily decisions create a data flywheel advantage that widens with scale; Evident AI #4 globally</li>
+              <li>x15ventures — optionality from fintech portfolio; Unloan and Backr can capture segments outside traditional banking without cannibalising core margins</li>
+              <li>Open banking / CDR — as largest bank, CBA can leverage data scale advantage in personalisation and product recommendations via Benefits Finder-style tools</li>
+              <li>ASB NZ growth — KiwiSaver FUM +12% (A$18.8B); NZ open banking tailwind; home lending +7%</li>
+            </ul>
+          </div>
+          <div>
+            <div class="risk-col-head threats">Threats</div>
+            <ul class="item-list">
+              <li>NIM compression — NIM 2.04% (down 4bps H1 FY26); competitive home lending market and funding cost pressure continue to erode margin</li>
+              <li>Cybersecurity at scale — operating at #4 AI rank globally and 55M decisions/day makes CBA a high-value target; adversarial AI represents an escalating threat</li>
+              <li>Regulatory burden — APRA AT1 phase-out (Jan 2027) requires capital restructuring; CDR obligations ongoing; AUSTRAC AML/CTF compliance costs</li>
+              <li>Scam and fraud sophistication — despite 76% reduction from peak, AI-driven social engineering is evolving; Code of Banking Practice liability for APP fraud</li>
+              <li>Competition from non-banks and neobanks — Unloan itself signals that digital-only lenders can disrupt the incumbent home loan model</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Risk Management Strategy</div>
+        <ul class="item-list">
+          <li><strong>Technology as risk control</strong> — AUD 900M+ in AI/cyber/fraud investment (FY25); fraud prevention AI directly reduces financial and reputational risk</li>
+          <li><strong>Dedicated cyber operations</strong> — dedicated SOC; ~300 additional cyber staff hired 2022–2024; cybersecurity rated "top three" board-level risk</li>
+          <li><strong>ACSC partnership</strong> — member of Australian Cyber Security Centre partnership programme; early threat intelligence access</li>
+          <li><strong>Capital buffer above regulatory minimum</strong> — CET1 well above 10.5% "unquestionably strong" threshold; provides buffer for unexpected losses</li>
+          <li><strong>AI governance</strong> — 30,000+ staff AI-trained; Future Workforce Program ($90M); responsible AI framework governing 2,000+ models</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HOW ── -->
+  <div class="section-block s-how">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">HOW — Business Meta-Processes</div>
+        <div class="section-subtitle">Business Value Chain · Capabilities · Process Assurance Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Business Value Chain</div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num how">1</div><div>Attract and acquire customers through the CommBank app (#1 in Australia), branch network, brokers, and digital brands (Unloan); biometric onboarding via app</div></div>
+          <div class="process-step"><div class="step-num how">2</div><div>Originate home loans, business loans, and personal finance; ML-driven credit decisioning; digital origination via Unloan for home loans</div></div>
+          <div class="process-step"><div class="step-num how">3</div><div>Service and retain via the CommBank app; AI personalisation (Benefits Finder); NameCheck and CallerCheck fraud tools embedded in payment flows</div></div>
+          <div class="process-step"><div class="step-num how">4</div><div>Institutional and wholesale banking via IB&amp;M — debt capital markets, transaction banking, FX/rates for large corporates and government</div></div>
+          <div class="process-step"><div class="step-num how">5</div><div>Manage risk with 2,000+ ML models running 55M daily decisions — credit risk, fraud detection, AML/CTF, and market risk across the full balance sheet</div></div>
+          <div class="process-step"><div class="step-num how">6</div><div>Incubate and scale adjacent businesses via x15ventures — Backr, Vonto, Unloan — building beyond the core banking licence</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Core Capabilities</div>
+        <ul class="item-list">
+          <li><strong>CommBank app</strong> — #1 ranked in Australia; 8M+ digitally active customers; central to customer engagement, fraud prevention (NameCheck, CallerCheck), and cross-sell</li>
+          <li><strong>AI and ML platform</strong> — 2,000+ models; 55M AI decisions/day; Azure OpenAI for 5,000+ staff; Benefits Finder personalisation; ranked #4 globally (Evident AI Index 2025)</li>
+          <li><strong>Fraud prevention</strong> — NameCheck, CallerCheck, real-time payment fraud ML; 76% reduction in customer scam losses from peak (H2 FY23 → H2 FY25); A$350M prevented FY24</li>
+          <li><strong>Multi-cloud infrastructure</strong> — AWS + Microsoft Azure; AUD 8B+ invested over five years; supports 55M AI decisions/day at scale</li>
+          <li><strong>Unloan</strong> — fully digital home loan brand; demonstrates that CBA can operate neobank-style within the group structure</li>
+          <li><strong>ASB NZ banking platform</strong> — FastNet Classic, ASB Mobile; NZD $18.8B KiwiSaver FUM; NZ-specific regulatory compliance</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHO ── -->
+  <div class="section-block s-who">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHO — Business Governance</div>
+        <div class="section-subtitle">Organisational Structure · Extended Enterprise · Trust Framework</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Organisational Structure</div>
+        <ul class="item-list">
+          <li><strong>CEO:</strong> Matt Comyn (since April 2018) — sustained strategic vision; "technology company with a banking licence" identity; AI leadership mandate</li>
+          <li><strong>CFO:</strong> Alan Docherty — technology investment protected as "strategic moat"; cost-to-income below 42% target</li>
+          <li><strong>Business divisions:</strong> Retail Banking Services; Business Banking; Institutional Banking &amp; Markets (IB&amp;M); New Zealand (ASB)</li>
+          <li><strong>Innovation arm:</strong> x15ventures — separate venture entity for fintech portfolio (Backr, Vonto, Unloan)</li>
+          <li><strong>Ownership:</strong> ASX-listed (ASX: CBA); largest company on the ASX by market capitalisation; dispersed institutional and retail shareholders</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Extended Enterprise</div>
+        <div class="partner-grid">
+          <div class="partner-chip"><span>Cloud AI</span>Microsoft Azure OpenAI</div>
+          <div class="partner-chip"><span>Cloud</span>AWS + Microsoft Azure</div>
+          <div class="partner-chip"><span>Digital Home Loans</span>Unloan</div>
+          <div class="partner-chip"><span>SME Platform</span>Backr (x15ventures)</div>
+          <div class="partner-chip"><span>Data Intelligence</span>Vonto (x15ventures)</div>
+          <div class="partner-chip"><span>NZ Subsidiary</span>ASB Bank</div>
+          <div class="partner-chip"><span>Cyber</span>ACSC Partnership</div>
+          <div class="partner-chip"><span>Workforce AI</span>Future Workforce Program</div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Key Regulators</div>
+        <ul class="item-list">
+          <li><strong>APRA</strong> — prudential regulator; D-SIB designation; CET1 "unquestionably strong" benchmark 10.5%; AT1 phase-out from Jan 2027</li>
+          <li><strong>ASIC</strong> — market conduct and financial services; product and advice obligations</li>
+          <li><strong>AUSTRAC</strong> — AML/CTF obligations; financial intelligence reporting</li>
+          <li><strong>ACCC / CDR framework</strong> — open banking; CBA as designated data holder for Consumer Data Right</li>
+          <li><strong>RBNZ</strong> — ASB Bank prudential regulation in New Zealand</li>
+          <li><strong>FMA (NZ)</strong> — financial markets conduct for ASB; KiwiSaver obligations</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Trust Framework</div>
+        <ul class="item-list">
+          <li><strong>Customers:</strong> trust built on #1 app, fraud prevention tools (NameCheck/CallerCheck), and Benefits Finder financial wellness; 8M+ digitally active relationships</li>
+          <li><strong>Shareholders:</strong> trust maintained through consistent dividend growth (A$2.35 H1 FY26 interim), earnings resilience, and clear technology investment thesis</li>
+          <li><strong>Regulators:</strong> ACSC partnership signals proactive engagement; AI governance framework (30,000+ staff trained) demonstrates responsible deployment</li>
+          <li><strong>SME customers:</strong> Business Banking's 42% NPAT share and +12% lending growth reflect strong trust in CBA as a business partner</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHERE ── -->
+  <div class="section-block s-where">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHERE — Business Geography</div>
+        <div class="section-subtitle">Operating Jurisdiction · Regulatory Domains · Infrastructure Geography</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Operating Jurisdictions</div>
+        <ul class="item-list">
+          <li><strong>Australia</strong> — primary home market; retail, business, and institutional banking; #1 by home loans, #1 banking app; APRA-regulated</li>
+          <li><strong>New Zealand</strong> — ASB Bank; NZD $1,350M NPAT FY25; full-service retail, business, and rural banking; NZD $18.8B KiwiSaver FUM; RBNZ-regulated</li>
+          <li><strong>Institutional (international)</strong> — IB&amp;M has international presence via debt capital markets, FX, and correspondent banking; primary focus is Australian and NZ corporates with international operations</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Regulatory Domains</div>
+        <ul class="item-list">
+          <li>APRA (AU) — prudential; D-SIB; CET1 10.5% benchmark; AT1 phase-out Jan 2027; Pillar 3 disclosure</li>
+          <li>ASIC (AU) — conduct; advice; product disclosure; responsible lending</li>
+          <li>AUSTRAC (AU) — AML/CTF; financial intelligence reporting</li>
+          <li>ACCC / CDR (AU) — open banking data holder obligations</li>
+          <li>RBNZ (NZ) — ASB Bank prudential; capital 16.3% total (vs 12.5% RBNZ minimum)</li>
+          <li>FMA (NZ) — ASB conduct; KiwiSaver governance</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Infrastructure Geography</div>
+        <ul class="item-list">
+          <li><strong>Multi-cloud:</strong> AWS + Microsoft Azure; AUD 8B+ invested over five years; supports 2,000+ ML models and 55M AI decisions/day</li>
+          <li><strong>Azure OpenAI:</strong> deployed for 5,000+ CBA staff for internal productivity (coding, customer service, document summarisation)</li>
+          <li><strong>ASB NZ infrastructure:</strong> ASB Mobile and FastNet Classic platforms; NZ-specific cloud and data infrastructure</li>
+          <li><strong>Dedicated SOC:</strong> cyber operations centre with ~300+ additional staff hired 2022–2024; Australian-based</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHEN ── -->
+  <div class="section-block s-when">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHEN — Business Time Dependence</div>
+        <div class="section-subtitle">Strategic Horizon · Regulatory Deadlines · Operational Time Dependencies</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Strategic Time Horizon</div>
+        <ul class="item-list">
+          <li><strong>Technology investment:</strong> AUD 8B+ over 5 years to FY24; AUD 2B+ per year ongoing; sustained investment required to maintain AI leadership gap</li>
+          <li><strong>AI workforce transition:</strong> Future Workforce Program (3-year, $90M); 30,000+ staff trained; ongoing capability build to FY27</li>
+          <li><strong>Business lending growth:</strong> 42% of Group NPAT in H1 FY26; +12% growth trajectory to be sustained across the medium term</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Regulatory Deadlines</div>
+        <div class="deadline-table-wrap">
+          <table class="deadline-table">
+            <thead>
+              <tr><th>Deadline</th><th>Obligation</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="dl-date">Jan 2027</td><td>APRA AT1 phase-out — replace 1.5% AT1 with 0.25% CET1 + 1.25% Tier 2</td><td>Planning — capital restructuring required</td></tr>
+              <tr><td class="dl-date">Ongoing</td><td>CDR / open banking data holder obligations</td><td>In compliance</td></tr>
+              <tr><td class="dl-date">Ongoing</td><td>AUSTRAC AML/CTF annual reporting and compliance</td><td>In compliance</td></tr>
+              <tr><td class="dl-date">Half-yearly</td><td>APRA Pillar 3 capital and risk disclosures</td><td>Current</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Operational Time Dependencies</div>
+        <ul class="item-list">
+          <li><strong>55M AI decisions/day:</strong> real-time risk and personalisation decisions run continuously; model drift or platform outage has immediate customer and fraud-exposure consequences</li>
+          <li><strong>Real-time fraud detection:</strong> NameCheck and CallerCheck operate at payment initiation — sub-second response required; any degradation creates fraud liability</li>
+          <li><strong>Financial year ends 30 June:</strong> H1 results ~February; full-year results ~August; interim and final dividends semi-annually</li>
+          <li><strong>CommBank app uptime:</strong> 8M+ daily active users; app availability is a direct customer experience and brand metric; any outage is immediately visible and media-reported</li>
+          <li><strong>Benefits Finder:</strong> government entitlements are time-sensitive; AI matching must reflect current policy in real time to be accurate and trusted</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+</body>
+</html>

@@ -15,10 +15,11 @@ BANK_META = {
 }
 
 FILE_LABELS = {
-    "business-lines":   ("Business Lines & Processes", "📄"),
-    "financial-summary":("Financial Summary",          "📊"),
-    "sources":          ("Sources & References",       "🔗"),
-    "press-releases":   ("Press Releases",             "📰"),
+    "business-lines":    ("Business Lines & Processes", "📄"),
+    "financial-summary": ("Financial Summary",          "📊"),
+    "sources":           ("Sources & References",       "🔗"),
+    "press-releases":    ("Press Releases",             "📰"),
+    "sabsa-contextual":  ("SABSA Contextual",           "🏛"),
 }
 
 
@@ -491,9 +492,10 @@ TEMPLATE = """\
 
 
 def sibling_links_html(bank: str, current_file: str, meta: dict) -> str:
-    files = ["business-lines", "financial-summary", "sources"]
     if bank == "kiwibank":
-        files = ["business-lines", "financial-summary", "press-releases", "sources"]
+        files = ["business-lines", "financial-summary", "press-releases", "sources", "sabsa-contextual"]
+    else:
+        files = ["business-lines", "financial-summary", "sources", "sabsa-contextual"]
     parts = []
     for f in files:
         label, icon = FILE_LABELS[f]

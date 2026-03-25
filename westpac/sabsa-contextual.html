@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Westpac — SABSA Contextual Architecture · ESA-FSI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:           #edf0f5;
+    --bg-card:      #ffffff;
+    --bg-section:   #f5f7fa;
+    --border:       #dde3ec;
+    --border-dark:  #c8d1de;
+    --text:         #0f1e33;
+    --text-sub:     #445570;
+    --text-muted:   #8496ae;
+    --accent:       #a81030;
+    --accent-bg:    #f9eaed;
+    --accent-mid:   #f0c0cb;
+    --font-ui:      'Figtree', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --radius:       6px;
+    --shadow:       0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+
+    --what:    #1a6eb5;  --what-bg:  #e8f1fc;  --what-mid:  #b8d4f3;
+    --why:     #b04800;  --why-bg:   #fdf0e8;  --why-mid:   #f8ceac;
+    --how:     #6b2eb8;  --how-bg:   #f3edfb;  --how-mid:   #d8beee;
+    --who:     #1a7a6a;  --who-bg:   #e8f6f3;  --who-mid:   #b5e5dc;
+    --where:   #7a6a1a;  --where-bg: #f7f4e8;  --where-mid: #e8dea0;
+    --when:    #8c1a50;  --when-bg:  #fae8f0;  --when-mid:  #f0b8cc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+
+  .topbar { background: var(--text); color: rgba(255,255,255,0.55); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; padding: 8px 48px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.15s; }
+  .topbar a:hover { color: #fff; }
+  .topbar .hi { color: rgba(255,255,255,0.9); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 40px 80px; }
+
+  .breadcrumb { padding: 20px 0 0; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--accent); }
+
+  .page-header { padding: 28px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .page-header-left h1 { font-family: var(--font-display); font-size: clamp(22px, 3vw, 32px); font-weight: 400; line-height: 1.2; color: var(--text); margin-bottom: 6px; }
+  .page-header-left .sub { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.06em; }
+  .bank-badge { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .bank-pill { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; padding: 6px 14px; border-radius: 20px; background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-mid); font-weight: 500; }
+  .bank-flag-big { font-size: 28px; }
+
+  .accent-stripe { height: 3px; background: var(--accent); margin-bottom: 28px; border-radius: 2px; }
+
+  .meta-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 36px; }
+  .meta-chip { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; background: var(--bg-section); color: var(--text-muted); border: 1px solid var(--border); }
+  .meta-chip.sabsa { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-mid); }
+
+  .intro-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 32px; margin-bottom: 32px; }
+  .intro-card h2 { font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--text); margin-bottom: 10px; }
+  .intro-card p { font-size: 14px; color: var(--text-sub); line-height: 1.75; }
+  .layer-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .layer-pill { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 3px; font-weight: 500; border: 1px solid; }
+  .lp-what  { background: var(--what-bg);  color: var(--what);  border-color: var(--what-mid); }
+  .lp-why   { background: var(--why-bg);   color: var(--why);   border-color: var(--why-mid); }
+  .lp-how   { background: var(--how-bg);   color: var(--how);   border-color: var(--how-mid); }
+  .lp-who   { background: var(--who-bg);   color: var(--who);   border-color: var(--who-mid); }
+  .lp-where { background: var(--where-bg); color: var(--where); border-color: var(--where-mid); }
+  .lp-when  { background: var(--when-bg);  color: var(--when);  border-color: var(--when-mid); }
+
+  .section-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+  .section-header { padding: 18px 28px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+  .section-q { font-family: var(--font-mono); font-size: 22px; font-weight: 500; line-height: 1; flex-shrink: 0; }
+  .section-title-group { flex: 1; }
+  .section-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; }
+  .section-subtitle { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; margin-top: 3px; }
+  .section-body { padding: 24px 28px; }
+  .sub-section { margin-bottom: 24px; }
+  .sub-section:last-child { margin-bottom: 0; }
+  .sub-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .sub-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .sub-text { font-size: 14px; color: var(--text-sub); line-height: 1.75; margin-bottom: 10px; }
+  .item-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .item-list li { font-size: 13.5px; color: var(--text-sub); line-height: 1.6; padding-left: 16px; position: relative; }
+  .item-list li::before { content: '–'; position: absolute; left: 0; color: var(--text-muted); }
+  .item-list li strong { color: var(--text); font-weight: 600; }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+  .risk-col-head { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .risk-col-head.opps { color: #1a7a6a; }
+  .risk-col-head.threats { color: #b04800; }
+
+  .process-steps { display: flex; flex-direction: column; gap: 8px; }
+  .process-step { display: flex; align-items: flex-start; gap: 14px; font-size: 13.5px; color: var(--text-sub); line-height: 1.6; }
+  .step-num { font-family: var(--font-mono); font-size: 11px; font-weight: 500; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-num.how { background: var(--how-bg); color: var(--how); border: 1px solid var(--how-mid); }
+
+  .partner-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-top: 4px; }
+  .partner-chip { background: var(--bg-section); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; font-size: 12px; color: var(--text-sub); }
+  .partner-chip span { display: block; font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+
+  .deadline-table-wrap { overflow-x: auto; margin-top: 4px; border-radius: 5px; border: 1px solid var(--border); }
+  .deadline-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .deadline-table th { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.15em; text-transform: uppercase; padding: 9px 14px; text-align: left; font-weight: 500; color: var(--text-sub); background: var(--bg-section); border-bottom: 1px solid var(--border-dark); }
+  .deadline-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text-sub); vertical-align: top; line-height: 1.5; }
+  .deadline-table tr:last-child td { border-bottom: none; }
+  .deadline-table tbody tr:hover td { background: var(--bg-section); }
+  .dl-date { font-family: var(--font-mono); font-size: 11px; color: var(--when); white-space: nowrap; }
+
+  .s-what  .section-header { background: var(--what-bg);  border-bottom-color: var(--what-mid); }
+  .s-what  .section-q, .s-what  .section-title { color: var(--what); }
+  .s-what  .section-subtitle { color: var(--what); opacity: 0.7; }
+  .s-why   .section-header { background: var(--why-bg);   border-bottom-color: var(--why-mid); }
+  .s-why   .section-q, .s-why   .section-title { color: var(--why); }
+  .s-why   .section-subtitle { color: var(--why); opacity: 0.7; }
+  .s-how   .section-header { background: var(--how-bg);   border-bottom-color: var(--how-mid); }
+  .s-how   .section-q, .s-how   .section-title { color: var(--how); }
+  .s-how   .section-subtitle { color: var(--how); opacity: 0.7; }
+  .s-who   .section-header { background: var(--who-bg);   border-bottom-color: var(--who-mid); }
+  .s-who   .section-q, .s-who   .section-title { color: var(--who); }
+  .s-who   .section-subtitle { color: var(--who); opacity: 0.7; }
+  .s-where .section-header { background: var(--where-bg); border-bottom-color: var(--where-mid); }
+  .s-where .section-q, .s-where .section-title { color: var(--where); }
+  .s-where .section-subtitle { color: var(--where); opacity: 0.7; }
+  .s-when  .section-header { background: var(--when-bg);  border-bottom-color: var(--when-mid); }
+  .s-when  .section-q, .s-when  .section-title { color: var(--when); }
+  .s-when  .section-subtitle { color: var(--when); opacity: 0.7; }
+
+  .page-nav { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+  .back-link:hover { color: var(--accent); }
+  .sibling-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sib-link { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-muted); text-decoration: none; transition: all 0.15s; background: var(--bg-card); }
+  .sib-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .sib-link.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); pointer-events: none; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 16px 60px; }
+    .topbar { padding: 8px 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .section-body { padding: 20px; }
+    .section-header { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="hi">ESA-FSI</span>
+  <div style="display:flex;gap:20px;">
+    <a href="../index.html">← Index</a>
+    <span>Phase 1 Research · March 2026</span>
+    <a href="https://github.com/thelazyanalyst/ESA-FSI" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Index</a>
+    <span class="sep">/</span>
+    <span>Westpac</span>
+    <span class="sep">/</span>
+    <span class="current">SABSA Contextual Architecture</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>🏛 Westpac — SABSA Contextual Architecture</h1>
+      <div class="sub">Westpac Banking Corporation · ASX: WBC · Derived from public sources · March 2026</div>
+    </div>
+    <div class="bank-badge">
+      <span class="bank-flag-big">🇦🇺</span>
+      <span class="bank-pill">ASX: WBC</span>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <div class="page-nav">
+    <a href="../index.html" class="back-link">← Back to index</a>
+    <div class="sibling-nav">
+      <a href="business-lines.html" class="sib-link">📄 Business Lines</a>
+      <a href="financial-summary.html" class="sib-link">📊 Financial Summary</a>
+      <a href="sources.html" class="sib-link">🔗 Sources</a>
+      <a href="sabsa-contextual.html" class="sib-link active">🏛 SABSA Contextual</a>
+    </div>
+  </div>
+
+  <div class="meta-bar">
+    <span class="meta-chip sabsa">SABSA Framework</span>
+    <span class="meta-chip">Contextual Layer</span>
+    <span class="meta-chip">The Business View</span>
+    <span class="meta-chip">Public Sources Only</span>
+    <span class="meta-chip">Research Date: March 2026</span>
+  </div>
+
+  <div class="intro-card">
+    <h2>Contextual Architecture — The Business View</h2>
+    <p>The Contextual Architecture is the top layer of the SABSA framework. It captures the business context — who Westpac is, what it is trying to achieve, what risks it faces, and the environmental constraints it operates within. Everything in the layers below must be traceable back to this layer. This document is derived from Westpac's public annual results, CEO statements, UNITE programme updates, and regulatory filings (2023–2026).</p>
+    <div class="layer-pills">
+      <span class="layer-pill lp-what">What — Assets</span>
+      <span class="layer-pill lp-why">Why — Motivation</span>
+      <span class="layer-pill lp-how">How — Process</span>
+      <span class="layer-pill lp-who">Who — People</span>
+      <span class="layer-pill lp-where">Where — Location</span>
+      <span class="layer-pill lp-when">When — Time</span>
+    </div>
+  </div>
+
+  <!-- ── WHAT ── -->
+  <div class="section-block s-what">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHAT — Business Assets</div>
+        <div class="section-subtitle">Goals · Values · Asset Taxonomy · Success Factors · Targets</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Goals &amp; Decisions</div>
+        <p class="sub-text">Complete the UNITE technology simplification programme and realise A$750M in annual savings by 2030. "Stay the course" — CEO Anthony Miller has signalled continuity rather than a radical strategic pivot from his predecessor. Strengthen the multi-brand consumer banking model, grow Business &amp; Wealth, sustain WIB momentum, and expand regional banking services. Build an enterprise-wide AI capability via the Intelligence Layer and clean the regulatory slate (APRA capital overlay fully removed October 2025).</p>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Values</div>
+        <ul class="item-list">
+          <li><strong>Responsible AI</strong> — eight published Responsible AI Principles governing design, delivery, deployment, and use of AI systems; AI governance as a board-level commitment</li>
+          <li><strong>Community and regional banking</strong> — "We haven't always got our regional banking strategy right in the past" (CEO Miller); trialling banker services in communities without major bank branches; reorienting toward education investment</li>
+          <li><strong>Customer protection</strong> — SafeBlock/SafeCall: A$400M+ in customer losses prevented since 2023; 76% decrease in customer scam losses from peak (H2 FY23 → H2 FY25)</li>
+          <li><strong>Accountability and transparency</strong> — AUSTRAC A$1.3B penalty (2020) followed by sustained multi-year risk transformation; APRA capital overlay fully removed October 2025 as proof of completion</li>
+          <li><strong>Enterprise-wide AI mindset</strong> — Intelligence Layer described by CEO Miller as an example of the "enterprise-wide mindset" required for AI adoption; not siloed by business unit</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Taxonomy of Business Assets</div>
+        <ul class="item-list">
+          <li><strong>Multi-brand consumer franchise</strong> — Westpac, St George, BankSA, Bank of Melbourne, RAMS; ~9M Australian consumer customers; geographic and demographic diversification through brand strategy</li>
+          <li><strong>Business &amp; Wealth division</strong> — BT Financial Group (Panorama, BT Wrap) + commercial banking; A$2.2B net profit FY25; largest profit contributor in 1H25</li>
+          <li><strong>Westpac Institutional Bank (WIB)</strong> — strongest growth division; A$1.6B net profit FY25 (+15%); international presence (UK, Singapore, HK, Tokyo, Beijing, Shanghai, Mumbai, Jakarta, NY, Fiji, PNG)</li>
+          <li><strong>Westpac New Zealand</strong> — NZD ~$1,197M net profit FY25 (+13%); home lending NZD $71.3B; business lending NZD $34.2B</li>
+          <li><strong>UNITE platform</strong> — ~A$2B+ investment; 41 initiatives in progress; Intelligence Layer (enterprise AI); A$750M annual savings target by 2030</li>
+          <li><strong>Intelligence Layer</strong> — enterprise-wide centralised AI infrastructure; enables data-driven decisions across all business units; AI call assistant for fraud/scam detection on live calls</li>
+          <li><strong>SafeBlock / SafeCall</strong> — A$400M+ in customer losses prevented since 2023; 76% reduction in scam losses from peak; NZ fraud prevention up 11% (early 2025)</li>
+          <li><strong>Capital position</strong> — CET1 12.5% (FY25); APRA A$1.0B capital overlay fully removed October 2025; gross loans A$856B (+6% YoY)</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Critical Success Factors</div>
+        <ul class="item-list">
+          <li><strong>UNITE programme delivery</strong> — A$660M invested FY25; A$850–950M FY26; full benefit accrual extended to FY29; programme execution is the single biggest operational risk and opportunity</li>
+          <li><strong>Intelligence Layer adoption</strong> — enterprise AI capability is only valuable if adopted consistently across all business units; CEO Miller has named it as the AI model for the whole bank</li>
+          <li><strong>APRA relationship normalisation</strong> — capital overlay removal (Oct 2025) confirms risk transformation completion; maintaining this standing is essential for capital flexibility</li>
+          <li><strong>Consumer bank NIM management</strong> — NIM 1.94% (down 1bp FY25); multi-brand strategy must drive sufficient volume to compensate for margin pressure</li>
+          <li><strong>WIB momentum</strong> — +15% FY25 is the strongest divisional performance; international institutional franchise must be sustained through any macro or geopolitical headwinds</li>
+          <li><strong>Regional banking credibility</strong> — CEO Miller's regional banking reset (350 additional customer-facing bankers; all states through 2026) must demonstrate tangible outcomes to justify the cost</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--what)">Business Targets</div>
+        <ul class="item-list">
+          <li><strong>UNITE savings:</strong> A$750M annual savings target by 2030; FY26 UNITE investment A$850–950M; full benefit by FY29</li>
+          <li><strong>Profitability:</strong> Statutory net profit FY25 A$6.9B; net profit excl. Notable Items A$7.0B; ROTE 11.1% (excl. Notable Items)</li>
+          <li><strong>Gross loans:</strong> A$856B FY25 (+6% YoY); sustain growth across Consumer, Business, WIB, and NZ</li>
+          <li><strong>NIM:</strong> 1.94% (FY25, down 1bp); defend through volume growth and product mix management</li>
+          <li><strong>Capital:</strong> CET1 12.5% FY25; maintain above APRA "unquestionably strong" 10.5%; LCR &gt;100%</li>
+          <li><strong>Customer scam protection:</strong> sustain A$400M+ in annual fraud losses prevented; continue 76% reduction trajectory from peak</li>
+          <li><strong>Regional banking:</strong> 350 additional bankers added; expand to all states through 2026</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHY ── -->
+  <div class="section-block s-why">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHY — Business Motivation</div>
+        <div class="section-subtitle">Risk · Opportunities &amp; Threats · Risk Management Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Opportunities &amp; Threats</div>
+        <div class="risk-grid">
+          <div>
+            <div class="risk-col-head opps">Opportunities</div>
+            <ul class="item-list">
+              <li>APRA overlay removal (Oct 2025) — A$1.0B capital overhead eliminated; frees capital for growth, dividend, or buyback; marks end of the post-AUSTRAC regulatory penalty era</li>
+              <li>UNITE savings realisation — A$750M annual savings by 2030 creates significant profit leverage if programme delivers on schedule</li>
+              <li>Intelligence Layer compounding — enterprise-wide AI platform creates a scalable data advantage; AI call assistant for fraud/scam detection is "a game-changer" (CEO Miller)</li>
+              <li>WIB international momentum — +15% FY25; Asia-Pacific trade and capital flows provide structural tailwind for institutional business</li>
+              <li>Regional banking reset — underbanked communities create a genuine growth opportunity if Westpac can execute community banker model effectively across all states</li>
+            </ul>
+          </div>
+          <div>
+            <div class="risk-col-head threats">Threats</div>
+            <ul class="item-list">
+              <li>UNITE execution risk — programme extended to FY29 (from FY28); any further delay increases investment cost and postpones savings; A$660M already spent in FY25 alone</li>
+              <li>AUSTRAC compliance legacy — A$1.3B penalty (2020) required sustained multi-year remediation; re-emergence of AML/CTF compliance failures would be catastrophic</li>
+              <li>NIM compression — 1.94% (down 1bp); consumer bank home lending margins under sustained competitive pressure; multi-brand strategy adds complexity without always adding margin</li>
+              <li>Energy and macro volatility — CEO Miller (March 2026) specifically cited energy price spikes as complicating RBA's interest rate decisions; macro uncertainty affects credit demand</li>
+              <li>APRA RWA overlay risk — A$1B overlay from December 2024 (customer risk grade proxy issue on non-retail exposures subset) pending rectification; any failure to rectify could reimpose capital drag</li>
+              <li>AI adversarial risk at scale — AI call assistant and Intelligence Layer are high-value targets for adversarial manipulation; responsible AI principles must be backed by robust controls</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--why)">Risk Management Strategy</div>
+        <ul class="item-list">
+          <li><strong>Eight Responsible AI Principles</strong> — published framework covering design, delivery, deployment, and use; positions Westpac as a leader in responsible AI governance among Australian banks</li>
+          <li><strong>SafeBlock / SafeCall</strong> — A$400M+ in customer losses prevented since 2023; real-time AI fraud detection on live customer phone calls via AI call assistant; NZ fraud up 11% (early 2025)</li>
+          <li><strong>AUSTRAC remediation completion</strong> — multi-year risk transformation programme completed October 2025 (APRA overlay fully removed); sustained investment in AML/CTF controls</li>
+          <li><strong>Intelligence Layer governance</strong> — enterprise-wide AI infrastructure controlled centrally; avoids ungoverned shadow AI proliferation across business units</li>
+          <li><strong>Capital management above benchmarks</strong> — CET1 12.5%; LCR 131%; well above APRA minimums; capital flexibility restored post-overlay removal</li>
+          <li><strong>Dr Andrew McMullan (Chief Data, Digital &amp; AI Officer)</strong> — recruited from CBA (September 2025); mandate to accelerate AI adoption with governance; CBA pedigree brings proven responsible AI experience</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HOW ── -->
+  <div class="section-block s-how">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">HOW — Business Meta-Processes</div>
+        <div class="section-subtitle">Business Value Chain · Capabilities · Process Assurance Strategy</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Business Value Chain</div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num how">1</div><div>Attract and acquire ~9M consumer customers through five brands (Westpac, St George, BankSA, Bank of Melbourne, RAMS) and regional banking community presence; 350 additional bankers deployed</div></div>
+          <div class="process-step"><div class="step-num how">2</div><div>Originate home loans, personal lending, business lending, wealth products (BT Panorama/Wrap), and institutional finance across all divisions</div></div>
+          <div class="process-step"><div class="step-num how">3</div><div>Service and retain via digital banking channels and community bankers; Kasisto conversational AI as the "central conversational AI brain" for banking interactions</div></div>
+          <div class="process-step"><div class="step-num how">4</div><div>Protect customers in real time — AI call assistant flags scam coaching on live customer calls; SafeBlock and SafeCall prevent fraud at transaction initiation</div></div>
+          <div class="process-step"><div class="step-num how">5</div><div>Simplify technology via UNITE — 60 consolidated initiatives; 41 in progress; decommission legacy platforms and migrate to the Intelligence Layer architecture</div></div>
+          <div class="process-step"><div class="step-num how">6</div><div>Manage risk and capital under APRA oversight; LCR 131%; ROTE 11.1%; AUSTRAC AML/CTF compliance sustained post-2020 penalty</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--how)">Core Capabilities</div>
+        <ul class="item-list">
+          <li><strong>Intelligence Layer</strong> — enterprise-wide centralised AI infrastructure enabling data-driven decisions across all business units; the defining UNITE technology investment</li>
+          <li><strong>AI call assistant</strong> — real-time analysis of customer phone calls in fraud/scam specialist teams; flags scam coaching indicators live during calls; CEO Miller called it "a game-changer"</li>
+          <li><strong>SafeBlock / SafeCall</strong> — A$400M+ in customer losses prevented since 2023; AI-driven fraud prevention tools at payment and call initiation</li>
+          <li><strong>Kasisto conversational AI</strong> — "central conversational AI brain" for banking interactions; underpins digital customer service across products</li>
+          <li><strong>BT Panorama / BT Wrap</strong> — digital investment platforms for financial advisers and self-directed investors; wealth management capability within the Business &amp; Wealth division</li>
+          <li><strong>Multi-brand distribution</strong> — five consumer brands operating with shared infrastructure via UNITE; geographic and demographic reach across all Australian states</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHO ── -->
+  <div class="section-block s-who">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHO — Business Governance</div>
+        <div class="section-subtitle">Organisational Structure · Extended Enterprise · Trust Framework</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Organisational Structure</div>
+        <ul class="item-list">
+          <li><strong>CEO:</strong> Anthony Miller (since December 2024) — "stay the course" strategy; UNITE continuity; regional banking reset; community education investment</li>
+          <li><strong>Chief Data, Digital &amp; AI Officer:</strong> Dr Andrew McMullan (from September 2025; ex-CBA) — accelerate AI adoption bank-wide with responsible AI governance</li>
+          <li><strong>Business divisions:</strong> Consumer Bank; Business &amp; Wealth; Westpac Institutional Bank (WIB); Westpac New Zealand</li>
+          <li><strong>Consumer Bank brands:</strong> Westpac, St George, BankSA, Bank of Melbourne, RAMS — multi-brand strategy targeting different state and demographic segments</li>
+          <li><strong>Ownership:</strong> ASX-listed (ASX: WBC); dispersed institutional and retail shareholders; one of Australia's oldest companies (est. 1817)</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Extended Enterprise</div>
+        <div class="partner-grid">
+          <div class="partner-chip"><span>AI Infrastructure</span>Intelligence Layer (internal)</div>
+          <div class="partner-chip"><span>Conversational AI</span>Kasisto</div>
+          <div class="partner-chip"><span>Wealth Platform</span>BT Panorama / BT Wrap</div>
+          <div class="partner-chip"><span>NZ Subsidiary</span>Westpac New Zealand</div>
+          <div class="partner-chip"><span>Fraud Prevention</span>SafeBlock / SafeCall</div>
+          <div class="partner-chip"><span>AI Officer (CDDAIO)</span>Dr Andrew McMullan</div>
+          <div class="partner-chip"><span>UNITE Programme</span>Multi-vendor transformation</div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Key Regulators</div>
+        <ul class="item-list">
+          <li><strong>APRA</strong> — prudential; D-SIB; capital overlay fully removed October 2025; A$1B RWA overlay imposed December 2024 (pending rectification); LCR &gt;100%; Advanced IRB + SMA</li>
+          <li><strong>AUSTRAC</strong> — AML/CTF; A$1.3B penalty (2020) paid and remediation complete; ongoing compliance obligations</li>
+          <li><strong>ASIC</strong> — market conduct; financial services; product disclosure</li>
+          <li><strong>ACCC / CDR</strong> — open banking data holder obligations</li>
+          <li><strong>RBNZ</strong> — Westpac New Zealand prudential regulation</li>
+          <li><strong>International regulators</strong> — FCA (UK), MAS (Singapore), HKMA, FSA (Japan) for WIB operations</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--who)">Trust Framework</div>
+        <ul class="item-list">
+          <li><strong>Regulators:</strong> trust rebuilding after AUSTRAC penalty (2020); APRA overlay removal (Oct 2025) is the regulatory signal that the multi-year risk transformation is complete; must sustain this standing</li>
+          <li><strong>Retail customers:</strong> trust built on SafeBlock/SafeCall (A$400M+ losses prevented), AI call assistant for scam detection, and community banking reset (regional bankers)</li>
+          <li><strong>Shareholders:</strong> trust contingent on UNITE delivering A$750M savings by 2030; 76 cps interim dividend (1H25) signals earnings confidence</li>
+          <li><strong>Institutional clients:</strong> WIB trust built on international infrastructure (10+ countries) and track record in debt capital markets, project finance, and FX</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHERE ── -->
+  <div class="section-block s-where">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHERE — Business Geography</div>
+        <div class="section-subtitle">Operating Jurisdiction · Regulatory Domains · Infrastructure Geography</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Operating Jurisdictions</div>
+        <ul class="item-list">
+          <li><strong>Australia</strong> — primary market; multi-brand Consumer Bank (~9M customers); Business &amp; Wealth; APRA-regulated D-SIB; HQ Sydney</li>
+          <li><strong>New Zealand</strong> — Westpac New Zealand; NZD ~$1,197M net profit FY25 (+13%); full-service retail, business, and institutional banking; RBNZ-regulated</li>
+          <li><strong>International (WIB)</strong> — UK, Singapore, Hong Kong, Tokyo, Beijing, Shanghai, Mumbai, Jakarta, New York, Fiji, Papua New Guinea; debt capital markets, corporate finance, FX, trade finance</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Regulatory Domains</div>
+        <ul class="item-list">
+          <li>APRA (AU) — prudential; D-SIB; Advanced IRB + SMA; capital overlay removed Oct 2025; new A$1B RWA overlay Dec 2024 (pending rectification)</li>
+          <li>AUSTRAC (AU) — AML/CTF; A$1.3B penalty settled 2020; sustained compliance programme</li>
+          <li>ASIC (AU) — market conduct; financial services</li>
+          <li>ACCC / CDR (AU) — open banking data holder obligations</li>
+          <li>RBNZ (NZ) — Westpac NZ prudential regulation</li>
+          <li>FCA (UK), MAS (Singapore), HKMA (HK), FSA (Japan) — WIB international operations</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--where)">Infrastructure Geography</div>
+        <ul class="item-list">
+          <li><strong>UNITE platform (AU):</strong> multi-vendor transformation; Intelligence Layer as central AI infrastructure; 60 consolidated initiatives; hosted on modernised cloud-hybrid architecture</li>
+          <li><strong>International WIB infrastructure:</strong> operations in 10+ countries; technology platforms supporting debt capital markets, FX, and trade finance in multiple time zones</li>
+          <li><strong>Westpac NZ infrastructure:</strong> separate NZ banking platform; RBNZ data residency and local infrastructure requirements</li>
+          <li><strong>AI call assistant:</strong> deployed in Australian fraud/scam specialist contact centres; real-time analysis of live customer calls</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── WHEN ── -->
+  <div class="section-block s-when">
+    <div class="section-header">
+      <div class="section-q">?</div>
+      <div class="section-title-group">
+        <div class="section-title">WHEN — Business Time Dependence</div>
+        <div class="section-subtitle">Strategic Horizon · Regulatory Deadlines · Operational Time Dependencies</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Strategic Time Horizon</div>
+        <ul class="item-list">
+          <li><strong>UNITE savings horizon:</strong> full benefit accrual extended to FY29 (from FY28); A$750M annual savings by 2030 — 4-year delivery window from 2026</li>
+          <li><strong>Regional banking reset:</strong> 350 additional customer-facing bankers deployed; rollout to all Australian states through 2026</li>
+          <li><strong>AI leadership:</strong> Dr Andrew McMullan (from Sep 2025) leading multi-year enterprise AI transformation via Intelligence Layer; medium-term horizon to FY28+</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Regulatory Deadlines</div>
+        <div class="deadline-table-wrap">
+          <table class="deadline-table">
+            <thead>
+              <tr><th>Deadline</th><th>Obligation</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="dl-date">Jul 2024</td><td>APRA capital overlay — first A$500M tranche removed</td><td>Completed</td></tr>
+              <tr><td class="dl-date">Oct 2025</td><td>APRA capital overlay — remaining A$500M removed (full removal)</td><td>Completed — risk transformation confirmed</td></tr>
+              <tr><td class="dl-date">Dec 2024</td><td>APRA A$1B RWA overlay imposed (customer risk grade proxy subset)</td><td>Pending rectification</td></tr>
+              <tr><td class="dl-date">Jan 2027</td><td>APRA AT1 phase-out — replace with CET1 + Tier 2</td><td>Planning</td></tr>
+              <tr><td class="dl-date">Ongoing</td><td>AUSTRAC AML/CTF reporting and compliance maintenance</td><td>In compliance</td></tr>
+              <tr><td class="dl-date">2030</td><td>UNITE programme — A$750M annual savings target</td><td>In progress; FY29 full benefit</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label" style="color:var(--when)">Operational Time Dependencies</div>
+        <ul class="item-list">
+          <li><strong>Financial year ends 30 September:</strong> half-year results ~May; full-year results ~November; quarterly trading updates; Notable Items exclusion for comparability</li>
+          <li><strong>AI call assistant (real-time):</strong> fraud/scam coaching detection during live customer calls — latency in AI analysis would allow scam to proceed; sub-second response required</li>
+          <li><strong>SafeBlock / SafeCall (real-time):</strong> fraud prevention at payment initiation — any platform degradation directly increases customer fraud exposure</li>
+          <li><strong>UNITE sprint cadence:</strong> 41 initiatives in progress simultaneously; interdependencies require tight programme governance; any cascading delay extends FY29 benefit horizon</li>
+          <li><strong>RBA rate decisions:</strong> CEO Miller (March 2026) cited energy price spikes complicating RBA rate decisions; NIM and deposit repricing are time-sensitive to rate cycle</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+</body>
+</html>
